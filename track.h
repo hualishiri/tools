@@ -20,6 +20,7 @@ class Track2D{
 public:
   typedef std::vector<TrackUnit*> TrackUnitSet;
   struct TrackState{
+    unsigned long long id;
     Point2D point;
     long long tick;
     float acc;
@@ -51,10 +52,17 @@ public:
   double GetLength() const;
   long long GetSumTick() const;
 
-  Track2D(TrackUnitSet* track_unit_set, long long interval, float init_speed)
-    :track_unit_set_(track_unit_set), init_speed_(init_speed), interval_(interval){}
+  Track2D(unsigned long long id, 
+      TrackUnitSet* track_unit_set, 
+      long long interval, 
+      float init_speed)
+    :id_(id),
+    track_unit_set_(track_unit_set), 
+    init_speed_(init_speed), 
+    interval_(interval){}
     
 private:
+  unsigned long long id_;
   TrackUnitSet* track_unit_set_;
   float init_speed_;
   const long long interval_;    //the inverval of iteration

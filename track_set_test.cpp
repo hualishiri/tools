@@ -55,13 +55,13 @@ public:
     track_unit_set1->push_back(new TrackUnit(line, acc_constant, interval, (*track_unit_set1)[i++]->GetEndSpeed()));
     track_unit_set1->push_back(new TrackUnit(circle, acc_uniform, interval, (*track_unit_set1)[i++]->GetEndSpeed()));
     
-    Track2D track0(track_unit_set, interval, init_speed);
-    Track2D track1(track_unit_set, interval, init_speed);
-    Track2D track2(track_unit_set, interval, init_speed);
-    Track2D track3(track_unit_set, interval, init_speed);
-    Track2D track4(track_unit_set, interval, init_speed);
-    Track2D track5(track_unit_set, interval, init_speed);
-    Track2D track6(track_unit_set1, interval, init_speed);
+    Track2D track0(0xDEADBEEF01, track_unit_set, interval, init_speed);
+    Track2D track1(0xDEADBEEF02, track_unit_set, interval, init_speed);
+    Track2D track2(0xDEADBEEF03, track_unit_set, interval, init_speed);
+    Track2D track3(0xDEADBEEF04, track_unit_set, interval, init_speed);
+    Track2D track4(0xDEADBEEF05, track_unit_set, interval, init_speed);
+    Track2D track5(0xDEADBEEF06, track_unit_set, interval, init_speed);
+    Track2D track6(0xDEADBEEF07, track_unit_set1, interval, init_speed);
 
     std::vector<Track2D*> track_set;
     track_set.push_back(&track0);
@@ -95,7 +95,7 @@ public:
       << std::setw(20) << "speed"
       << std::setw(20) << "distance" << std::endl;
       for(std::size_t i = 0; i != track_set_state.track_set_state.size(); ++i)
-        std::cout << std::setw(20) << i
+        std::cout << std::setw(20) << std::hex << track_set_state.track_set_state[i].id
         << std::setw(10) << track_set_state.track_set_state[i].point.x
         << std::setw(10) << track_set_state.track_set_state[i].point.y
         << std::setw(20) << track_set_state.track_set_state[i].tick 

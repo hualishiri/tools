@@ -24,6 +24,7 @@ public:
     Acceleration* acc_uniform = new UniformAcceleration();
     Acceleration* acc_constant = new ConstantAcceleration(0.0000001);
     TrackSet2D::TrackSet track_set_rep;
+    unsigned long long index = 0xdeadbeef00000001;
     for(int i=0; i!=len; ++i){
       for(int j=0; j!=len; ++j){
         if(i == j) continue;
@@ -34,7 +35,7 @@ public:
         Track2D::TrackUnitSet* track_unit_set = new Track2D::TrackUnitSet();
         track_unit_set->push_back(track_unit1);
         track_unit_set->push_back(track_unit2);
-        Track2D* track = new Track2D(track_unit_set, interval, init_speed[i]);
+        Track2D* track = new Track2D(index++, track_unit_set, interval, init_speed[i]);
         track_set_rep.push_back(track);
       }
     }
@@ -48,7 +49,7 @@ public:
     //
     RadarSet2D::RadarSet rep_radar_set;
     for(int i=0; i!=len; ++i){
-      rep_radar_set.push_back(new MechanicalRadar2D(location[2*i], location[2*i+1], 3));
+      rep_radar_set.push_back(new MechanicalRadar2D(index++, location[2*i], location[2*i+1], 3));
     }
     RadarSet2D* radar_set = new RadarSet2D(&rep_radar_set); 
 

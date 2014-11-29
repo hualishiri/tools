@@ -15,6 +15,7 @@ class Point2D;
 class Radar2D{
 public:
   struct RadarState{
+    unsigned long long id;
     std::vector<Point2D> targets;
   };
   virtual void GetState(const TrackSet2D::TrackSetState& track_set_state,
@@ -23,8 +24,9 @@ public:
 
 class MechanicalRadar2D : public Radar2D{
 public:
-  MechanicalRadar2D(double x, double y, double max_distance_detect)
-    :x_(x),
+  MechanicalRadar2D(unsigned long long id, double x, double y, double max_distance_detect)
+    :id_(id),
+     x_(x),
      y_(y),
     max_distance_detect_(max_distance_detect){}
 
@@ -32,6 +34,7 @@ virtual void GetState(const TrackSet2D::TrackSetState& track_set_state,
     RadarState& radar_state);
   
 private:
+  unsigned long long id_;
   double x_;
   double y_;
   double max_distance_detect_;

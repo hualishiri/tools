@@ -14,9 +14,9 @@ public:
     Function();
   }
   void Function(){
-    Radar2D* radar1 = new MechanicalRadar2D(0.0, 0.0, 10);   
-    Radar2D* radar2 = new MechanicalRadar2D(0.0, 10.0, 10);   
-    Radar2D* radar3 = new MechanicalRadar2D(0.0, 5.0, 10);   
+    Radar2D* radar1 = new MechanicalRadar2D(0x1, 0.0, 0.0, 10);   
+    Radar2D* radar2 = new MechanicalRadar2D(0x2, 0.0, 10.0, 10);   
+    Radar2D* radar3 = new MechanicalRadar2D(0x3, 0.0, 5.0, 10);   
 
     RadarSet2D::RadarSet rep_radar_set;
     rep_radar_set.push_back(radar1);
@@ -56,7 +56,9 @@ public:
     radar_set.GetState(track_set_state, radar_set_state);
   
     for(std::size_t j=0; j!=radar_set_state.radar_set_state.size(); ++j){
-      std::cout << j << ":=========================================" << std::endl;
+      std::cout << "radar id: " 
+       << radar_set_state.radar_set_state[j].id 
+       << " :=========================================" << std::endl;
       for(std::size_t i=0; i!=radar_set_state.radar_set_state[j].targets.size(); ++i){
         std::cout << "["
           << radar_set_state.radar_set_state[j].targets[i].x

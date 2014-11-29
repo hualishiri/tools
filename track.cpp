@@ -64,6 +64,7 @@ void Track2D::Iterator::Next(){
 }
 
 void Track2D::Iterator::Value(TrackState& track_state) const{
+  track_state.id = track_->id_;
   track_state.point.x = origin_current_.x + track_unit_state_.point.x;
   track_state.point.y = origin_current_.y + track_unit_state_.point.y;
   track_state.tick = tick_current_;

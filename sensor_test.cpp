@@ -19,7 +19,7 @@ public:
   }
 
   void FunctionTest1(){
-    Radar2D *radar = new MechanicalRadar2D(0.0, 0.0, 20.0);
+    Radar2D *radar = new MechanicalRadar2D(0x1, 0.0, 0.0, 20.0);
     double track_states[] = {0.3, 0.5, 
     1.5, 2.3, 
     3.7, 4.8,

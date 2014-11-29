@@ -39,17 +39,19 @@ public:
     track_unit_set->push_back(new TrackUnit(circle, acc_uniform, interval, (*track_unit_set)[i++]->GetEndSpeed()));
     track_unit_set->push_back(new TrackUnit(circle, acc_constant, interval, (*track_unit_set)[i++]->GetEndSpeed()));
     
-    Track2D track(track_unit_set, interval, init_speed);
+    Track2D track(0x1, track_unit_set, interval, init_speed);
     Track2D::Iterator iter(&track);
     Track2D::TrackState track_state;
-    std::cout << std::setw(20) << "position" 
+    std::cout << std::setw(20) << "track id" 
+    << std::setw(20) << "tposition"
     << std::setw(20) << "time"
     << std::setw(20) << "acc"
     << std::setw(20) << "speed"
     << std::setw(20) << "distance" << std::endl;
     while(iter.Valid()){
       iter.Value(track_state);
-      std::cout << std::setw(10) << track_state.point.x
+      std::cout << std::setw(20) << track_state.id
+      << std::setw(10) << track_state.point.x
       << std::setw(10) << track_state.point.y
       << std::setw(20) << track_state.tick
       << std::setw(20) << track_state.acc
