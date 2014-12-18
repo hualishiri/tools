@@ -45,6 +45,7 @@ double Circle2D::Angle(double x, double y) const{
     return M_PI + atan(y/x);
   if(x > 0.0 && y < 0.0 )
     return 2*M_PI + atan(y/x);
+  return 0.0;
 }
 
 double Circle2D::Length(const Point2D& p) const{
@@ -131,5 +132,6 @@ double Eclipse2D::Angle(double x, double y) const{
     return M_PI + atan(y/x);
   if(x > 0.0 && y < 0.0 )
     return 2*M_PI + atan(y/x);
+  return 0.0;
 }
 } //namespace tools

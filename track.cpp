@@ -1,6 +1,7 @@
 #include "track.h"
 
 #include <cassert>
+#include <iostream>
 
 #include "track_unit.h"
 
@@ -30,7 +31,7 @@ long long Track2D::GetSumTick() const{
 }
 
 Track2D::Iterator::Iterator(Track2D* track){
-  track_ = track_;
+  track_ = track;
   interval_ = track_->interval_;
   kTickSum_ = track_->GetSumTick();
   tick_current_ = 0;
@@ -38,8 +39,11 @@ Track2D::Iterator::Iterator(Track2D* track){
   distance_current_ = 0.0;
   iter_track_ = track_->track_unit_set_->begin();
   iter_track_unit_ = new TrackUnit::Iterator(*iter_track_);
+  iter_track_unit_->Next();
   origin_current_.x = 0.0;
   origin_current_.y = 0.0;
+  track_unit_state_.acc = 0.0;
+  track_unit_state_.distance = 0.0;
 }
 
 bool Track2D::Iterator::Valid() const{
@@ -54,14 +58,18 @@ void Track2D::Iterator::Next(){
       origin_current_.x += temp_.x;
       origin_current_.y += temp_.y;
       delete iter_track_unit_;
-      ++iter_track_;
+      if(++iter_track_ != track_->track_unit_set_->end()){
       iter_track_unit_ = new TrackUnit::Iterator(*iter_track_);
       iter_track_unit_->Next();
+      }else{
+        ++tick_current_;
+        return;
+      }
     }
     iter_track_unit_->Value(track_unit_state_);
     speed_current_ = track_unit_state_.speed;
-    ++tick_current_;
     iter_track_unit_->Next();
+    ++tick_current_;
   }
 }
 
@@ -80,6 +88,13 @@ void Track2D::Iterator::Reset(){
   origin_current_.x = origin_current_.y = 0;
   iter_track_ = track_->track_unit_set_->begin();
   iter_track_unit_ = new TrackUnit::Iterator(*iter_track_);
+  iter_track_unit_->Next();
+  track_unit_state_.point.x = 0.0;
+  track_unit_state_.point.y = 0.0;
+  track_unit_state_.acc = 0.0;
+  track_unit_state_.speed = 0.0;
+  track_unit_state_.distance = 0.0;
+  
 }
 
 } //namespace tools

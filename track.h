@@ -36,9 +36,9 @@ public:
   private:
     float interval_;
     float speed_current_;
-    unsigned long long tick_current_;
+    long long tick_current_;
     long long kTickSum_;
-    long long distance_current_;
+    double distance_current_;
     double distance_dot_;
     Point2D origin_current_;
     Point2D temp_;
@@ -51,7 +51,7 @@ public:
   double GetLength() const;
   long long GetSumTick() const;
 
-  Track2D(TrackUnitSet* track_unit_set, float init_speed, long long interval)
+  Track2D(TrackUnitSet* track_unit_set, long long interval, float init_speed)
     :track_unit_set_(track_unit_set), init_speed_(init_speed), interval_(interval){}
     
 private:

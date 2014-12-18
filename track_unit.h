@@ -60,8 +60,8 @@ public:
     TrackUnit* track_unit_;
   };
   TrackUnit(Shape2D* shape, Acceleration* acc, float interval, float init_speed)
-    :shape_(shape), acc_(acc), interval_(interval), speed_end_(0.0), tick_sum_(0),
-    init_speed_(init_speed){}
+    :init_speed_(init_speed), interval_(interval), shape_(shape), acc_(acc), 
+    speed_end_(0.0), tick_sum_(0){}
   long long GetSumTick();
   float GetEndSpeed();
   void GetEndPoint(Point2D& point);
