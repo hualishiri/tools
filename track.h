@@ -21,7 +21,7 @@ public:
   typedef std::vector<TrackUnit*> TrackUnitSet;
   struct TrackState{
     Point2D point;
-    unsigned long long tick;
+    long long tick;
     float acc;
     float speed;
     double distance;

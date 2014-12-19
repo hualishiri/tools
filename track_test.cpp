@@ -15,7 +15,7 @@ public:
 
   void FunctionTest1(){
     float interval = 1.0;
-    float init_speed = 0.00026997840172;
+    float init_speed = 0.00026997840172*10000;
     int i=0;
     Shape2D* line = new Line2D(Point2D(0.789872, 0.721040));
     Shape2D* circle = new Circle2D(Point2D(0.789872, 0.721040), 3.1415);
