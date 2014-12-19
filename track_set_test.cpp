@@ -13,7 +13,7 @@ public:
 
   void TestFunctioin1(){
     float interval = 1.0;
-    float init_speed = 0.00026997840172*10000;
+    float init_speed = 0.00026997840172;
     int i=0;
     Shape2D* line = new Line2D(Point2D(0.789872, 0.721040));
     Shape2D* circle = new Circle2D(Point2D(0.789872, 0.721040), 3.1415);
@@ -85,7 +85,7 @@ public:
 
     TrackSet2D::Iterator iter(&track_set_2d);
     TrackSet2D::TrackSetState track_set_state;
-
+    int count = 0;
     while(iter.Valid()){
       iter.Value(track_set_state);
       std::cout << std::setw(20) << "track no" 
@@ -105,7 +105,9 @@ public:
         << std::endl;
       iter.Next();
       std::cout << std::endl;
+      ++count;
     }
+    std::cout << "sum tick: " << count << std::endl;
   }
 };
 

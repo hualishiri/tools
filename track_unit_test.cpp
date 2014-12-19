@@ -25,9 +25,9 @@ public:
     Acceleration* acc_uniform = new UniformAcceleration();
     Acceleration* acc_constant = new ConstantAcceleration(0.1);
     Acceleration* acc_variable = new VariableAcceleration(MyFun);
-    Shape2D* shape = new Line2D(Point2D(40.176254, 40.346812));
+    Shape2D* shape = new Line2D(Point2D(40, 40));
     Shape2D* shape_circle = new Circle2D(Point2D(40.176254, 40.176254), 3.14156233);
-    float interval = 10000;
+    float interval = 1;
     float speed = 1; 
     TrackUnit track_unit(shape_circle, acc_variable, interval, speed);
     TrackUnit::Iterator iter(&track_unit);

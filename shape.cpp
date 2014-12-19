@@ -9,7 +9,7 @@ namespace tools{
 //本算法基于二维平面实现的
 
 bool Equal(double lhs_std, double rhs){
-  if(lhs_std - rhs < 0.0000001 && lhs_std - rhs > -0.00000000000001)
+  if(lhs_std - rhs < 0.00000000001 && lhs_std - rhs > -0.00000000000001)
     return true;
   else
     return false;

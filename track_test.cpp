@@ -14,7 +14,7 @@ public:
   }
 
   void FunctionTest1(){
-    float interval = 1.0;
+    float interval = 1.0*0.1;
     float init_speed = 0.00026997840172*10000;
     int i=0;
     Shape2D* line = new Line2D(Point2D(0.789872, 0.721040));
@@ -57,7 +57,7 @@ public:
       << std::setw(20) << track_state.distance << std::endl;       
       iter.Next();
     }
-    
+    /*
     iter.Reset();
     while(iter.Valid()){
       iter.Value(track_state);
@@ -68,7 +68,7 @@ public:
       << std::setw(20) << track_state.speed
       << std::setw(20) << track_state.distance << std::endl;       
       iter.Next();
-    }
+    }*/
 
 
     std::cout << "Length: " << track.GetLength() << std::endl;

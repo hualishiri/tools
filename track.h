@@ -35,7 +35,7 @@ public:
     void Value(TrackState& track_state) const;
   private:
     float interval_;
-    float speed_current_;
+    //float speed_current_;
     long long tick_current_;
     long long kTickSum_;
     double distance_current_;

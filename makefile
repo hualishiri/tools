@@ -1,12 +1,18 @@
-execute : compile
+track_set_execute : track_set_compile 
 	./track_set_test
-compile : clean shape.o track_unit.o track.o track_set.o track_set_test.o
+track_set_compile : clean shape.o track_unit.o track.o track_set.o track_set_test.o
 	g++ -std=c++11 -o track_set_test shape.o track_unit.o track.o track_set.o track_set_test.o -g
-track_test : clean shape.o track_unit.o track.o track_test.o
+track_test_execute : track_test_compile
+	./track_test
+track_test_compile : clean shape.o track_unit.o track.o track_test.o
 	g++ -std=c++11 -o track_test track_test.o track.o track_unit.o shape.o -g 
-track_unit_test : shape.o track_unit.o track_unit_test.o
+track_unit_test_execute : track_unit_test_compile
+	./track_unit_test
+track_unit_test_compile : shape.o track_unit.o track_unit_test.o
 	g++ -std=c++11 -o track_unit_test track_unit_test.o track_unit.o shape.o -g
-shape_test : shape.o shape_test.o
+shape_test_execute : shape_test_compile
+	./shape_test
+shape_test_compile: shape.o shape_test.o
 	g++ -std=c++11 -o shape_test shape.o shape_test.o -g
 
 shape.o : shape.cpp shape.h

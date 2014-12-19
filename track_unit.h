@@ -3,6 +3,8 @@
 
 #include "shape.h"
 
+#include <cassert>
+
 namespace tools{
 
 class Shape2D;
@@ -61,7 +63,11 @@ public:
   };
   TrackUnit(Shape2D* shape, Acceleration* acc, float interval, float init_speed)
     :init_speed_(init_speed), interval_(interval), shape_(shape), acc_(acc), 
-    speed_end_(0.0), tick_sum_(0){}
+    speed_end_(0.0), tick_sum_(0){
+      assert(shape && acc);
+      assert(interval > 0);
+      assert(init_speed >= 0);
+    }
   long long GetSumTick();
   float GetEndSpeed();
   void GetEndPoint(Point2D& point);
