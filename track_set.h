@@ -34,6 +34,8 @@ public:
       TrackSetPosition* track_set_init_pos, 
       float interval)
     :rep_track_set_(track_set), interval_(interval){}
+  long long GetSumTick() const;
+  double GetSumLength() const;
 private:
   TrackSet* rep_track_set_;
   TrackSetPosition* track_set_init_pos_;

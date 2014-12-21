@@ -35,12 +35,8 @@ public:
 
 class OperaWar : public Opera{
 public:
-  virtual void Initialize(OperaOption* option);
   virtual bool Valid();
   virtual void Next();
-  virtual void GetState(OperaState* state);
-  virtual void Finalize();
-  virtual unsigned long GetSumTime() const;
 
 private:
   OperaOption* option_;

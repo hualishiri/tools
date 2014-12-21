@@ -108,6 +108,8 @@ public:
       ++count;
     }
     std::cout << "sum tick: " << count << std::endl;
+    std::cout << "sum tick:" << track_set_2d.GetSumTick() << std::endl;
+    std::cout << "sum length:" << track_set_2d.GetSumLength() << std::endl;
   }
 };
 

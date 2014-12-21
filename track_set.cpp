@@ -2,6 +2,30 @@
 
 namespace tools{
 
+long long TrackSet2D::GetSumTick() const{
+  long long sum_tick = 0;
+  long long temp = 0;
+  for(TrackSet::iterator iter = rep_track_set_->begin();
+      iter != rep_track_set_->end(); ++iter){
+      temp = (*iter)->GetSumTick();
+      if( temp > sum_tick )
+        sum_tick = temp;
+  }
+  return sum_tick;
+}
+
+double TrackSet2D::GetSumLength() const{
+  double sum_length = 0.0;
+  double temp = 0.0;
+  for(TrackSet::iterator iter = rep_track_set_->begin();
+      iter != rep_track_set_->end(); ++iter){
+    temp = (*iter)->GetLength();
+    if(temp > sum_length)
+      sum_length = temp;
+  }
+  return sum_length;
+}
+
 TrackSet2D::Iterator::Iterator(TrackSet2D* track_set){
   track_set_ = track_set;
   rep_track_set_ = track_set_->rep_track_set_;

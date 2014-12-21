@@ -58,7 +58,6 @@ void Track2D::Iterator::Next(){
       iter_track_unit_ = new TrackUnit::Iterator(*iter_track_);
     }else if(iter_track_unit_->Valid()){
       iter_track_unit_->Value(track_unit_state_);
-      //speed_current_ = track_unit_state_.speed;
       iter_track_unit_->Next();
     }
     ++tick_current_;
