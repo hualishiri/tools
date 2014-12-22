@@ -1,46 +1,36 @@
 #include "opera.h"
 
-#include <cassert>
-
 namespace tools{
 
-void OperaWar::Initialize(OperaOption* option){
-  assert(option->tracks->size() == option->targets->size());
-
-  option_ = option;
-  time_current_ = 0;
-  time_sum_ = GetSumTime();
-}
-bool OperaWar::Valid(){
-  return time_current_ <= time_sum_;
-}
-void OperaWar::Next(){
-  time_current_ += option_->kInternal;
-
-}
-void OperaWar::GetState(OperaState* state){
-  const unsigned int batchs = option_->targets->size();
-
-  /*for (auto iter = option_->targets->begin();
-    iter != option_->targets->end(); ++iter, ++iter_option){
-    if ((*iter)->Valid()){
-      (*iter)->GetState(*iter_option);
-      (*iter)->Next();
-    }
-  }*/
-
-  //TODO: something
-
-  state->target_states = option_->target_init_states;
-  state->sensor_states = option_->sensor_states;
-}
-void OperaWar::Finalize(){
-  //TODO: Something
+long long Opera2D::GetSumTick() const{
+  return track_set_->GetSumTick();
 }
 
-unsigned long OperaWar::GetSumTime() const{
-  //TODO: Something
-  return 1000;
+Opera2D::Iterator::Iterator(Opera2D* opera){
+  opera_ = opera;
+  iter_track_set_ = new TrackSet2D::Iterator(opera_->track_set_);
+}
+
+Opera2D::Iterator::~Iterator(){
+  delete iter_track_set_;
+}
+
+bool Opera2D::Iterator::Valid() const{
+  return iter_track_set_->Valid();
+}
+
+void Opera2D::Iterator::Next(){
+  iter_track_set_->Next();
+}
+
+void Opera2D::Iterator::Value(OperaState& opera_state){
+  iter_track_set_->Value(opera_state.track_set_state);
+  opera_->radar_set_->GetState(opera_state.track_set_state, 
+    opera_state.radar_set_state);
+}
+
+void Opera2D::Iterator::Reset(){
+  iter_track_set_->Reset();
 }
 
 } //namespace tools
