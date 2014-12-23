@@ -57,42 +57,37 @@ public:
     Opera2D::Iterator iter(opera);
     Opera2D::OperaState opera_state;
     long long tick_cur = 1;
-      std::cout << std::setw(20) << "tick no" 
+    while(iter.Valid()){
+      std::cout << "==============================================="<< std::endl;
+      //一次时间迭代
+      iter.Value(opera_state);
+      std::cout << std::setw(20) << "tick_no" 
+      << std::setw(20) << "track_no"
       << std::setw(20) << "position"
       << std::setw(20) << "time"
       << std::setw(20) << "acc"
       << std::setw(20) << "speed"
       << std::setw(20) << "distance" << std::endl;
-    while(iter.Valid()){
-      std::cout << std::setw(20) << "tick number: " << tick_cur << std::endl;
-      iter.Value(opera_state);
-      std::cout << "track information ==========================" << std::endl;
-      for(int i=0; i!=opera_state.track_set_state.track_set_state.size(); ++i){
-        std::cout << std::setw(20) << "track no" 
-        << std::setw(20) << "position"
-        << std::setw(20) << "time"
-        << std::setw(20) << "acc"
-        << std::setw(20) << "speed"
-        << std::setw(20) << "distance" << std::endl;
         for(std::size_t j = 0; j != opera_state.track_set_state.track_set_state.size(); ++j)
-          std::cout << std::setw(20) << j
-          << std::setw(10) << opera_state.track_set_state.track_set_state[j].point.x
-          << std::setw(10) << opera_state.track_set_state.track_set_state[j].point.y
+          std::cout << std::setw(20) << tick_cur
+          << std::setw(20) << j << " "
+          << std::setprecision(6) << opera_state.track_set_state.track_set_state[j].point.x << ","
+          << std::setprecision(6) << opera_state.track_set_state.track_set_state[j].point.y
           << std::setw(20) << opera_state.track_set_state.track_set_state[j].tick 
           << std::setw(20) << opera_state.track_set_state.track_set_state[j].acc 
           << std::setw(20) << opera_state.track_set_state.track_set_state[j].speed
           << std::setw(20) << opera_state.track_set_state.track_set_state[j].distance
           << std::endl;
-      }
       std::cout << "radar information ==========================" << std::endl;
-      for(int i=0; i!=opera_state.radar_set_state.radar_set_state.size(); ++i){
+      for(std::size_t i=0; i!=opera_state.radar_set_state.radar_set_state.size(); ++i){
         std::cout << std::setw(10) << "radar id: " 
           << std::setw(10) << i; 
-        for(int j=0; j!=opera_state.radar_set_state.radar_set_state[i]->targets.size(); ++j){
-          std::cout << std::setw(10)
-            << opera_state.radar_set_state.radar_set_state[i]->targets[j].x
-            << std::setw(10)
-            << opera_state.radar_set_state.radar_set_state[i]->targets[j].y;
+        for(std::size_t j=0; j!=opera_state.radar_set_state.radar_set_state[i].targets.size(); ++j){
+          std::cout << "["
+            << opera_state.radar_set_state.radar_set_state[i].targets[j].x
+            << ","
+            << opera_state.radar_set_state.radar_set_state[i].targets[j].y
+            << "]";
         }
         std::cout << std::endl;
       }

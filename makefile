@@ -3,11 +3,11 @@ GPP = g++ -std=c++11 -g -Wall
 opera_execute : opera_compile
 		./opera_test
 opera_compile : opera_test.o shape.o track_unit.o	track.o track_set.o sensor.o sensor_set.o opera.o
-		$(GPP) -o opera_test
+		$(GPP) -o opera_test opera_test.o shape.o track_unit.o track.o track_set.o sensor.o sensor_set.o opera.o
 sensor_set_execute : sensor_set_compile
 		./sensor_set_test
-sensor_set_compile : sensor_set_test.o shape.o track_unit.o track_set.o sensor.o track.o 
-	$(GPP) -o sensor_set_test
+sensor_set_compile : sensor_set_test.o shape.o track_unit.o track_set.o sensor.o track.o sensor_set.o
+	$(GPP) -o sensor_set_test sensor_set_test.o shape.o track_unit.o track_set.o sensor.o track.o sensor_set.o
 sensor_execute : sensor_compile
 	./sensor_test
 sensor_compile : shape.o track_unit.o track_set.o sensor.o track.o sensor_test.o
@@ -61,4 +61,4 @@ opera_test.o : opera_test.cpp
 	$(GPP) -c opera_test.cpp
 
 clean :
-		-rm -f *.o *_test
+		-rm -f *.o *_test *out
