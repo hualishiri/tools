@@ -2,6 +2,7 @@
 #define TOOLS_TRACK_SET_H_
 
 #include <vector>
+#include <cassert>
 
 #include "track.h"
 
@@ -33,7 +34,9 @@ public:
   TrackSet2D(TrackSet* track_set,
       TrackSetPosition* track_set_init_pos, 
       float interval)
-    :rep_track_set_(track_set), interval_(interval){}
+    :rep_track_set_(track_set), interval_(interval){
+      assert(track_set->size() == track_set_init_pos->size());
+    }
   long long GetSumTick() const;
   double GetSumLength() const;
 private:
