@@ -25,6 +25,18 @@ double TrackSet2D::GetSumLength() const{
   }
   return sum_length;
 }
+void TrackSet2D::Iterator::PositionChange(const TrackSetPosition& pos, 
+    TrackSetState& track_set_state){
+    TrackSetPosition::const_iterator iter = pos.begin();
+    std::vector<Track2D::TrackState>::iterator iter_state 
+      = track_set_state.track_set_state.begin();
+    while(iter != pos.end()){
+      iter_state->point.x += (*iter)->x;
+      iter_state->point.y += (*iter)->y;
+      ++iter;
+      ++iter_state;
+    }
+}
 
 TrackSet2D::Iterator::Iterator(TrackSet2D* track_set){
   track_set_ = track_set;
@@ -57,6 +69,7 @@ void TrackSet2D::Iterator::Value(TrackSetState& track_set_state){
       iter->Value(track_state);
       track_set_state.track_set_state.push_back(track_state);
     }
+    PositionChange(*(track_set_->track_set_init_pos_), track_set_state);
 }
 
 void TrackSet2D::Iterator::Reset(){

@@ -73,13 +73,13 @@ public:
     track_set.push_back(&track6);
 
     std::vector<Point2D*> init_points;
-    init_points.push_back(new Point2D(0.0, 0.0));
-    init_points.push_back(new Point2D(0.0, 0.0));
-    init_points.push_back(new Point2D(0.0, 0.0));
-    init_points.push_back(new Point2D(0.0, 0.0));
-    init_points.push_back(new Point2D(0.0, 0.0));
-    init_points.push_back(new Point2D(0.0, 0.0));
-    init_points.push_back(new Point2D(0.0, 0.0));
+    init_points.push_back(new Point2D(100.0, 100.0));
+    init_points.push_back(new Point2D(100.0, 100.0));
+    init_points.push_back(new Point2D(100.0, 100.0));
+    init_points.push_back(new Point2D(100.0, 100.0));
+    init_points.push_back(new Point2D(100.0, 100.0));
+    init_points.push_back(new Point2D(100.0, 100.0));
+    init_points.push_back(new Point2D(100.0, 100.0));
 
     TrackSet2D track_set_2d(&track_set, &init_points, interval);
 
