@@ -1,7 +1,6 @@
 #include "track.h"
 
 #include <cassert>
-#include <iostream>
 
 #include "track_unit.h"
 
@@ -12,8 +11,9 @@ bool Equal(long double lhs, long double rhs);
 double Track2D::GetLength() const{
   double length = 0.0;
   TrackUnitSet::iterator iter = track_unit_set_->begin();
-  for(; iter != track_unit_set_->end(); ++iter)
+  for(; iter != track_unit_set_->end(); ++iter){
     length += (*iter)->GetSumLength();
+  }
 	return length;
 }
 
@@ -32,11 +32,10 @@ Track2D::Iterator::Iterator(Track2D* track){
   kTickSum_ = track_->GetSumTick();
   iter_track_ = track_->track_unit_set_->begin();
   iter_track_unit_ = new TrackUnit::Iterator(*iter_track_);
-
+  
   TrackUnit::TrackUnitState track_unit_state;
   tick_current_ = 1;
   iter_track_unit_->Value(track_unit_state_);
-  //speed_current_ = track_unit_state.speed; 
   distance_current_ = 0.0;
   origin_current_.x = 0.0;
   origin_current_.y = 0.0;
@@ -47,20 +46,24 @@ bool Track2D::Iterator::Valid() const{
 }
 
 void Track2D::Iterator::Next(){
-    if(!iter_track_unit_->Valid() 
+  if(iter_track_unit_->Valid()){
+    iter_track_unit_->Next();
+    if(!iter_track_unit_->Valid()
         && ++iter_track_ != track_->track_unit_set_->end()){
-      distance_current_ += (*iter_track_)->GetSumLength();
+      distance_current_+= (*(iter_track_-1))->GetSumLength();
       (*iter_track_)->GetEndPoint(temp_);
       origin_current_.x += temp_.x;
       origin_current_.y += temp_.y;
       delete iter_track_unit_;
       iter_track_unit_ = NULL;
       iter_track_unit_ = new TrackUnit::Iterator(*iter_track_);
-    }else if(iter_track_unit_->Valid()){
       iter_track_unit_->Value(track_unit_state_);
-      iter_track_unit_->Next();
+    }else if(iter_track_ != track_->track_unit_set_->end()){
+      iter_track_unit_->Value(track_unit_state_);
     }
-    ++tick_current_;
+  }
+  ++tick_current_;
+  
 }
 
 void Track2D::Iterator::Value(TrackState& track_state) const{
@@ -75,7 +78,7 @@ void Track2D::Iterator::Value(TrackState& track_state) const{
 
 void Track2D::Iterator::Reset(){
   tick_current_ = 1;
-  distance_current_ = 0; 
+  distance_current_ = 0.0; 
   origin_current_.x = origin_current_.y = 0;
   iter_track_ = track_->track_unit_set_->begin();
   iter_track_unit_ = new TrackUnit::Iterator(*iter_track_);

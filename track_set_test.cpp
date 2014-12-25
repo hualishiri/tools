@@ -12,7 +12,7 @@ public:
   }
 
   void TestFunctioin1(){
-    float interval = 1.0;
+    float interval = 1000.0;
     float init_speed = 0.00026997840172;
     int i=0;
     Shape2D* line = new Line2D(Point2D(0.789872, 0.721040));

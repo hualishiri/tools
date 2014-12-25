@@ -7,15 +7,15 @@
 #include <stdint.h>
 
 #include "track_set.h"
+#include "shape.h"
 
 namespace tools{
-
-class Point2D;
 
 class Radar2D{
 public:
   struct RadarState{
     unsigned long long id;
+    Point2D point;
     std::vector<Point2D> targets;
   };
   virtual void GetState(const TrackSet2D::TrackSetState& track_set_state,

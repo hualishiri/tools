@@ -11,12 +11,15 @@ double Distance2D(const Point2D& lhs, const Point2D& rhs){
 void MechanicalRadar2D::GetState(const TrackSet2D::TrackSetState& track_set_state,
     RadarState& radar_state){
   radar_state.id = id_;
+  radar_state.point.x = x_;
+  radar_state.point.y = y_;
   radar_state.targets.clear();
   for(std::vector<Track2D::TrackState>::const_iterator iter 
       = track_set_state.track_set_state.begin();
       iter != track_set_state.track_set_state.end(); ++iter){
-    if(IsCaptured(Point2D(x_, y_), iter->point))
+    if(IsCaptured(Point2D(x_, y_), iter->point)){
       radar_state.targets.push_back(iter->point);  
+    }
   }
 }
 

@@ -1,33 +1,33 @@
 GPP = g++ -std=c++11 -g -Wall 
 
-opera_execute : opera_compile
-		./opera_test
-opera_compile : opera_test.o shape.o track_unit.o	track.o track_set.o sensor.o sensor_set.o opera.o
-		$(GPP) -o opera_test opera_test.o shape.o track_unit.o track.o track_set.o sensor.o sensor_set.o opera.o
-sensor_set_execute : sensor_set_compile
-		./sensor_set_test
-sensor_set_compile : sensor_set_test.o shape.o track_unit.o track_set.o sensor.o track.o sensor_set.o
-	$(GPP) -o sensor_set_test sensor_set_test.o shape.o track_unit.o track_set.o sensor.o track.o sensor_set.o
-sensor_execute : sensor_compile
-	./sensor_test
-sensor_compile : shape.o track_unit.o track_set.o sensor.o track.o sensor_test.o
-	$(GPP) -o sensor_test shape.o track_unit.o track_set.o sensor.o track.o sensor_test.o
-track_set_execute : track_set_compile 
-	./track_set_test
-track_set_compile : clean shape.o track_unit.o track.o track_set.o track_set_test.o
-	$(GPP) -o track_set_test shape.o track_unit.o track.o track_set.o track_set_test.o
-track_test_execute : track_test_compile
-	./track_test
-track_test_compile : clean shape.o track_unit.o track.o track_test.o
-	$(GPP) -o track_test track_test.o track.o track_unit.o shape.o -g 
-track_unit_test_execute : track_unit_test_compile
-	./track_unit_test
-track_unit_test_compile : shape.o track_unit.o track_unit_test.o
-	$(GPP) -o track_unit_test track_unit_test.o track_unit.o shape.o -g
-shape_test_execute : shape_test_compile
-	./shape_test
-shape_test_compile: shape.o shape_test.o
-	$(GPP) -o shape_test shape.o shape_test.o -g
+eopera : copera
+		./opera
+copera : clean opera_test.o shape.o track_unit.o	track.o track_set.o sensor.o sensor_set.o opera.o
+		$(GPP) -o opera opera_test.o shape.o track_unit.o track.o track_set.o sensor.o sensor_set.o opera.o
+esensor_set : csensor_set
+		./sensor_set
+csensor_set:clean  sensor_set_test.o shape.o track_unit.o track_set.o sensor.o track.o sensor_set.o
+	$(GPP) -o sensor_set sensor_set_test.o shape.o track_unit.o track_set.o sensor.o track.o sensor_set.o
+esensor : csensor
+	./sensor
+csensor :clean  shape.o track_unit.o track_set.o sensor.o track.o sensor_test.o
+	$(GPP) -o sensor shape.o track_unit.o track_set.o sensor.o track.o sensor_test.o
+etrack_set : ctrack_set
+	./track_set
+ctrack_set :clean  shape.o track_unit.o track.o track_set.o track_set_test.o
+	$(GPP) -o track_set shape.o track_unit.o track.o track_set.o track_set_test.o
+etrack : ctrack
+	./track
+ctrack : clean shape.o track_unit.o track.o track_test.o
+	$(GPP) -o track track_test.o track.o track_unit.o shape.o -g 
+etrack_unit : track_unit_test_compile
+	./track_unit
+ctrack_unit:clean  shape.o track_unit.o track_unit_test.o
+	$(GPP) -o track_unit track_unit_test.o track_unit.o shape.o -g
+eshape : cshape
+	./shape
+cshape :clean shape.o shape_test.o
+	$(GPP) -o shape shape.o shape_test.o -g
 
 shape.o : shape.cpp shape.h
 	$(GPP) -c shape.cpp
