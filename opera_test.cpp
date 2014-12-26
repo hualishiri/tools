@@ -14,7 +14,7 @@ public:
     double location[] = {
 116.420654, 39.857135,  //北京
 117.210526, 39.136095,  //天津
-121.471514, 31.236071/*,  //上海
+121.471514, 31.236071,  //上海
 87.444049, 43.812134,	//乌鲁木齐
 91.049919, 29.867456,	//拉萨
 112.059632, 3.903721,	//曾母暗沙
@@ -31,12 +31,12 @@ public:
 106.209292, 38.230189,	//银川
 102.640216, 25.1281,	//昆明
 103.928027, 30.681863,	//成都
-108.895294,	34.420422	//西安*/
+108.895294,	34.420422	//西安
     };
     std::cout << std::setprecision(12) << location[0] << std::endl;
     int len = sizeof(location)/sizeof(double)/2;
     float init_speed = 0.02f;
-    float interval = 1.0f;
+    float interval = 10.0f;
     Acceleration* acc_uniform = new UniformAcceleration();
     Acceleration* acc_constant = new ConstantAcceleration(0.0000001);
     TrackSet2D::TrackSet track_set_rep;
@@ -57,7 +57,7 @@ public:
         track_unit_set->push_back(track_unit1);
         track_unit_set->push_back(track_unit2);
         track_unit_set1->push_back(track_unit);
-        Track2D* track = new Track2D(index++, track_unit_set1, interval, init_speed);
+        Track2D* track = new Track2D(index++, track_unit_set, interval, init_speed);
         track_set_rep.push_back(track);
       }
     }
@@ -67,7 +67,7 @@ public:
     for(int i = 0; i != num_of_track; ++i){
       index_i = i / (len-1);
       track_set_position.push_back(new Point2D(location[index_i*2], location[index_i*2+1]));
-      std::cout << "[" << index_i*2 << "," << index_i*2+1 << "]";
+      std::cout << "[" << location[index_i*2] << "," << location[index_i*2+1] << "]";
     }
     std::cout << std::endl;
     TrackSet2D track_set(&track_set_rep, &track_set_position, interval);

@@ -60,6 +60,7 @@ public:
     track_unit_set_(track_unit_set), 
     init_speed_(init_speed), 
     interval_(interval){}
+  unsigned long long id(){ return id_; }
     
 private:
   unsigned long long id_;

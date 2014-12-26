@@ -48,6 +48,8 @@ private:
   TrackSetPosition* track_set_init_pos_;
   float interval_;
 
+  const Point2D& GetInitPosition(unsigned long long id) const;
+
   friend class Iterator;
 };
 

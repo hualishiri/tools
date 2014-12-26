@@ -1,4 +1,4 @@
-GPP = g++ -std=c++11 -g -Wall 
+GPP = g++ -std=c++11 -g -Wall  -pg
 
 eopera : copera
 		./opera
@@ -62,3 +62,4 @@ opera_test.o : opera_test.cpp
 
 clean :
 		-rm -f *.o *_test *out
+		-rm -f shape track_unit track track_set sensor sensor_set opera
