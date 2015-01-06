@@ -24,6 +24,16 @@ public:
     TestUpdateRadarState();
     TestDeleteRadarState();
     TestClearRadarState();
+
+    TestCreateLine();
+    TestUpdateLine();
+    TestDeleteLine();
+    TestClearLine();
+  
+    TestCreateEclipse();
+    TestUpdateEclipse();
+    TestDeleteEclipse();
+    TestClearEclipse();
   }
 private:
   void TestCreateObject(){
@@ -179,6 +189,158 @@ private:
     strstream << ");";
     JSClearRadarState(radar_id).execute(temp);
     assert(strcmp(temp.c_str(), strstream.str().c_str()) == 0);
+  }
+
+  void TestCreateLine(){
+    std::string temp;
+    std::stringstream strstream;
+    Line line = {342412, 123.4134, 73.132, 19.1411, 32.1341};
+    strstream << "createLine("
+      << line.id << ","
+      << line.start_x << ","
+      << line.start_y << ","
+      << line.end_x << ","
+      << line.end_y
+      << ");";
+    JSCreateLine(&line).execute(temp);
+    assert(0 == strcmp(temp.c_str(), strstream.str().c_str()));
+  }
+  void TestUpdateLine(){
+    std::string temp;
+    std::stringstream strstream;
+    Line line = {342412, 123.4134, 73.132, 19.1411, 32.1341};
+    strstream << "updateLine("
+      << line.id << ","
+      << line.start_x << ","
+      << line.start_y << ","
+      << line.end_x << ","
+      << line.end_y
+      << ");";
+    JSUpdateLine(&line).execute(temp);
+    assert(0 == strcmp(temp.c_str(), strstream.str().c_str()));
+  }
+  void TestDeleteLine(){
+    std::string temp;
+    std::stringstream strstream;
+    unsigned long long id = 141421;
+    strstream << "deleteLine("
+      << id
+      << ");";
+    JSDeleteLine(id).execute(temp);
+    assert(0 == strcmp(temp.c_str(), strstream.str().c_str()));
+  }
+  void TestClearLine(){
+    std::string temp;
+    std::string temp_std = "clearLine();";
+    JSClearLine().execute(temp);
+    assert(0 == strcmp(temp.c_str(), temp_std.c_str()));
+  }
+
+  void TestCreateCircle(){
+    std::string temp;
+    std::stringstream strstream;
+    Circle circle = {431289, 23.1341, 18.12431, 98.12421, 32.1341, 3.14};
+    JSCreateCircle(&circle).execute(temp);
+    strstream << "createCircle(" 
+      << circle.id << ","
+      << circle.start_x << ","
+      << circle.start_y << ","
+      << circle.radius_x << ","
+      << circle.radius_y << ","
+      << circle.angle
+      << ");";
+    assert(0 == strcmp(temp.c_str(), strstream.str().c_str()));
+  }
+  void TestUpdateiCircle(){
+    std::string temp;
+    std::stringstream strstream;
+    Circle circle = {431289, 23.1341, 18.12431, 98.12421, 32.1341, 3.14};
+    JSUpdateCircle(&circle).execute(temp);
+    strstream << "updateCircle(" 
+      << circle.id << ","
+      << circle.start_x << ","
+      << circle.start_y << ","
+      << circle.radius_x << ","
+      << circle.radius_y << ","
+      << circle.angle
+      << ");";
+    assert(0 == strcmp(temp.c_str(), strstream.str().c_str()));
+  }
+  void TestDeleteCircle(){
+    std::string temp;
+    std::stringstream strstream;
+    unsigned long long id = 141421;
+    strstream << "deleteCircle("
+      << id
+      << ");";
+    JSDeleteCircle(id).execute(temp);
+    assert(0 == strcmp(temp.c_str(), strstream.str().c_str()));
+  }
+  void TestClearCircle(){
+    std::string temp;
+    std::string temp_std = "clearCircle();";
+    JSClearCircle().execute(temp);
+    assert(0 == strcmp(temp.c_str(), temp_std.c_str()));
+  }
+
+  void TestCreateEclipse(){
+    std::string temp;
+    std::stringstream strstream;
+    Eclipse eclipse = {431289, 23.1341, 18.12431, 
+      98.12421, 32.1341, 
+      41.12432, 12.4321,
+      3.14};
+    JSCreateEclipse(&eclipse).execute(temp);
+    strstream << "createEclipse(" 
+      << eclipse.id << ","
+      << eclipse.start_x << ","
+      << eclipse.start_y << ","
+      << eclipse.radius_x << ","
+      << eclipse.radius_y << ","
+      << eclipse.end_x << ","
+      << eclipse.end_y << ","
+      << eclipse.angle
+      << ");";
+    assert(0 == strcmp(temp.c_str(), strstream.str().c_str()));
+  }
+
+  void TestUpdateEclipse(){
+    std::string temp;
+    std::stringstream strstream;
+    Eclipse eclipse = {431289, 23.1341, 18.12431, 
+      98.12421, 32.1341, 
+      41.12432, 12.4321,
+      3.14};
+    JSUpdateEclipse(&eclipse).execute(temp);
+    strstream << "updateEclipse(" 
+      << eclipse.id << ","
+      << eclipse.start_x << ","
+      << eclipse.start_y << ","
+      << eclipse.radius_x << ","
+      << eclipse.radius_y << ","
+      << eclipse.end_x << ","
+      << eclipse.end_y << ","
+      << eclipse.angle
+      << ");";
+    assert(0 == strcmp(temp.c_str(), strstream.str().c_str()));
+  }
+
+  void TestDeleteEclipse(){
+    std::string temp;
+    std::stringstream strstream;
+    unsigned long long id = 141421;
+    strstream << "deleteEclipse("
+      << id
+      << ");";
+    JSDeleteEclipse(id).execute(temp);
+    assert(0 == strcmp(temp.c_str(), strstream.str().c_str()));
+  }
+
+  void TestClearEclipse(){
+    std::string temp;
+    std::string temp_std = "clearEclipse();";
+    JSClearEclipse().execute(temp);
+    assert(0 == strcmp(temp.c_str(), temp_std.c_str()));
   }
 };
 

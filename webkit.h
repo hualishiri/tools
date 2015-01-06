@@ -4,6 +4,8 @@
 #include <cstring>
 #include <sstream>
 
+namespace tools{
+
 class JavaScript{
 public:
     virtual void execute(std::string& js) = 0;
@@ -129,5 +131,123 @@ public:
 private:
     unsigned long long radar_id_;
 };
+
+struct Line{
+  unsigned long long id;
+  double start_x;
+  double start_y;
+  double end_x;
+  double end_y;
+};
+
+class JSCreateLine:public JavaScript{
+public:
+  JSCreateLine(Line* line) : line_ (line){}
+  virtual void execute(std::string &js);
+private:
+  Line* line_;
+};
+
+class JSUpdateLine:public JavaScript{
+public:
+  JSUpdateLine(Line* line) : line_ (line){}
+  virtual void execute(std::string &js);
+private:
+  Line* line_;
+};
+
+class JSDeleteLine : public JavaScript{
+public:
+  JSDeleteLine(unsigned long long id) : id_(id){}
+  virtual void execute(std::string &js);
+private:
+  unsigned long long id_;
+};
+
+class JSClearLine : public JavaScript{
+public:
+  virtual void execute(std::string &js);
+};
+
+struct Circle{
+  unsigned long long id;
+  double start_x;
+  double start_y;
+  double radius_x;
+  double radius_y;
+  double angle;
+};
+
+
+class JSCreateCircle:public JavaScript{
+public:
+  JSCreateCircle(Circle* circle) : circle_(circle){}
+  virtual void execute(std::string &js);
+private:
+  Circle* circle_;
+};
+
+class JSUpdateCircle:public JavaScript{
+public:
+  JSUpdateCircle(Circle* circle) : circle_(circle){}
+  virtual void execute(std::string &js);
+private:
+  Circle* circle_;
+};
+
+class JSDeleteCircle : public JavaScript{
+public:
+  JSDeleteCircle(unsigned long long id) : id_(id){}
+  virtual void execute(std::string &js);
+private:
+  unsigned long long id_;
+};
+
+class JSClearCircle : public JavaScript{
+public:
+  virtual void execute(std::string &js);
+};
+
+struct Eclipse{
+  unsigned long long id;
+  double start_x;
+  double start_y;
+  double radius_x;
+  double radius_y;
+  double end_x;
+  double end_y;
+  double angle;
+};
+
+class JSCreateEclipse:public JavaScript{
+public:
+  JSCreateEclipse(Eclipse* eclipse) : eclipse_(eclipse){}
+  virtual void execute(std::string &js);
+private:
+  Eclipse* eclipse_;
+};
+
+class JSUpdateEclipse:public JavaScript{
+public:
+  JSUpdateEclipse(Eclipse* eclipse) : eclipse_(eclipse){}
+  virtual void execute(std::string &js);
+private:
+  Eclipse* eclipse_;
+};
+
+class JSDeleteEclipse : public JavaScript{
+public:
+  JSDeleteEclipse(unsigned long long id) : id_(id){}
+  virtual void execute(std::string &js);
+private:
+  unsigned long long id_;
+};
+
+class JSClearEclipse : public JavaScript{
+public:
+  virtual void execute(std::string &js);
+};
+
+} //namespace tools
 
 #endif // WEBKIT_H
