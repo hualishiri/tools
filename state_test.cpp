@@ -49,12 +49,12 @@ public:
     states.push_back(StateRadarSelected::Instance());
     states.push_back(StateRadarSelected::Instance());
     states.push_back(StateRadarSelected::Instance());
-
+    
     //states_init.push_back(StateRadarCentered::Instance());
     states.push_back(StateRadarCentered::Instance());
     states.push_back(StateRadarCentered::Instance());
     states.push_back(StateRadarSelected::Instance());
-    states.push_back(StateRadarCentered::Instance());
+    states.push_back(StateRadarSelected::Instance());
     states.push_back(StateRadarCentered::Instance());
     states.push_back(StateRadarCentered::Instance());
     states.push_back(StateTrackLineSelected::Instance());
@@ -66,7 +66,7 @@ public:
     states.push_back(StateRadarCentered::Instance());
     states.push_back(StateRadarCentered::Instance());
     states.push_back(StateRadarCentered::Instance());
-
+    
     //states_init.push_back(StateTrackLineSelected::Instance());
     states.push_back(StateTrackLineSelected::Instance());
     states.push_back(StateTrackLineSelected::Instance());
@@ -83,15 +83,28 @@ public:
     states.push_back(StateTrackLineSelected::Instance());
     states.push_back(StateTrackLineSelected::Instance());
     states.push_back(StateTrackLineSelected::Instance());
-
+    
+    
     //states_init.push_back(Statetracklinestarted::Instance());
     states.push_back(StateTrackLineStarted::Instance());
     states.push_back(StateTrackLineStarted::Instance());
     states.push_back(StateTrackLineSelected::Instance());
+    states.push_back(StateTrackLineSelected::Instance());
+    states.push_back(StateTrackLineStarted::Instance());
+    states.push_back(StateTrackLineStarted::Instance());
+    states.push_back(StateTrackLineSelected::Instance());
+    states.push_back(StateTrackCircleSelected::Instance());
+    states.push_back(StateTrackEclipseSelected::Instance());
+    states.push_back(StateTrackLineStarted::Instance());
+    states.push_back(StateTrackLineStarted::Instance());
+    states.push_back(StateTrackLineStarted::Instance());
     states.push_back(StateTrackLineStarted::Instance());
     states.push_back(StateTrackLineStarted::Instance());
     states.push_back(StateTrackLineStarted::Instance());
     
+
+
+    /////////////////////////////////////////////////////
 
     events.push_back(EventPressLeft::Instance());
     events.push_back(EventPressRight::Instance());
@@ -102,7 +115,6 @@ public:
     events.push_back(EventButtonLine::Instance());
     events.push_back(EventButtonCircle::Instance());
     events.push_back(EventButtonEclipse::Instance());
-  
     events.push_back(EventWheel::Instance());
     events.push_back(EventButtonStart::Instance());
     events.push_back(EventButtonStep::Instance());
@@ -111,22 +123,26 @@ public:
     events.push_back(EventButtonAnalysis::Instance());
     
     int count = events.size();
-    for(int i=0; i!=16; ++i){
+    for(int i=0; i!=count; ++i){
     events.push_back(EventPressLeft::Instance());
     events.push_back(EventPressRight::Instance());
     events.push_back(EventReleaseLeft::Instance());
     events.push_back(EventReleaseRight::Instance());
+
     events.push_back(EventMouseDoubleClick::Instance());
     events.push_back(EventMouseMove::Instance());
+    
     events.push_back(EventButtonLine::Instance());
     events.push_back(EventButtonCircle::Instance());
     events.push_back(EventButtonEclipse::Instance());
   
     events.push_back(EventWheel::Instance());
+
     events.push_back(EventButtonStart::Instance());
     events.push_back(EventButtonStep::Instance());
     events.push_back(EventButtonPause::Instance());
     events.push_back(EventButtonStop::Instance());
+
     events.push_back(EventButtonAnalysis::Instance());
     }
     
@@ -140,6 +156,7 @@ public:
       int count){
       ToolsState tools(0);
       for(int i=0; i!=states->size(); ++i){
+        DataTrackUnitList::Instance()->clear();
         tools.set_state((*state_init)[i/count]);
         tools.Execute((*events)[i]);
         assert(tools.state() == (*states)[i]);

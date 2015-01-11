@@ -5,18 +5,6 @@
 namespace tools{
 
 void ToolsState::Execute(Event* event){ state_->execute(this, event); }
-bool ToolsState::IsFirstTrackUnit() const{
-    if(stack_[0] == StateTrackLineSelected::Instance()
-      && stack_.size() < 3)
-      return false;
-    if(stack_[0] == StateTrackCircleSelected::Instance()
-      && stack_.size() < 4)
-      return false;
-    if(stack_[0] == StateTrackEclipseSelected::Instance()
-      && stack_.size() < 5)
-      return false;
-    return true;
-  }
 
 State::~State(){}
 
@@ -127,45 +115,29 @@ void StateRadarSelected::execute(ToolsState* tools_state, Event* event){
     DataStateRadar::Instance()->set_center(EventReleaseLeft::Instance()->x(),
         EventReleaseLeft::Instance()->y());
     tools_state->set_state(StateRadarCentered::Instance()); 
+    return;
+  }
+  if(event == EventWheel::Instance()){
+    //TODO: something
+    return;
   }
   if(event == EventButtonLine::Instance()){
     tools_state->set_state(StateTrackLineSelected::Instance());
+    return;
   }
   if(event == EventButtonCircle::Instance()){
     tools_state->set_state(StateTrackCircleSelected::Instance());
+    return;
   }
   if(event == EventButtonEclipse::Instance()){
     tools_state->set_state(StateTrackEclipseSelected::Instance());
+    return;
   }
-  /*switch (event){
-    case EventReleaseLeft::Instance():
-      std::cout << "[OUT]put MOUSE_RELEASE_LEFT position to stack" << std::endl;
-      std::cout << "[IN]createRadar(id,x,y,type, radius);." << std::endl;
-      std::cout << "[IN]put current state to stack." << std::endl;
-      std::cout << "[IN][StateRadarSelected]->[StateRadarCentered]" << std::endl;
-      tools_state->push_back(this);
-      tools_state->set_state(StateRadarCentered::Instance()); 
-      break;
-    case BUTTON_LINE :
-      std::cout << "[IN][StateRadarSelected]->[StateTrackLineSelected]" << std::endl;
-      tools_state->set_state(StateTrackLineSelected::Instance());
-      break;
-    case BUTTON_CIRCLE :
-      std::cout << "[IN][StateRadarSelected]->[StateTrackCircleSelected]" << std::endl;
-      tools_state->set_state(StateTrackCircleSelected::Instance());
-      break;
-    case BUTTON_ECLIPSE:
-      std::cout << "[IN][StateRadarSelected]->[StateTrackEclipseSelected]" << std::endl;
-      tools_state->set_state(StateTrackEclipseSelected::Instance());
-      break;
-    default:
-      std::cout << "[IN]No Response Event" << std::endl;
-  }*/
 }
 
 
 void StateRadarCentered::execute(ToolsState* tools_state, Event* event){
-  if(event == EventPressLeft::Instance()){
+  if(event == EventReleaseLeft::Instance()){
       std::cout << "[IN]updateRadar(id, x, y,type, radius);." << std::endl;
       DataRadarList::Instance()->push_back_radar(
           DataStateRadar::Instance()->center_x(),
@@ -173,63 +145,37 @@ void StateRadarCentered::execute(ToolsState* tools_state, Event* event){
           EventPressLeft::Instance()->x(),
           EventPressLeft::Instance()->y()
         );
-      std::cout << "[IN]Create Radar Object" << std::endl;
-      tools_state->set_state(StateRadarSelected::Instance()); 
-  }
-  if(event == EventPressRight::Instance()){
+    std::cout << "[IN]Create Radar Object" << std::endl;
     tools_state->set_state(StateRadarSelected::Instance()); 
+    return;
+  }
+  if(event == EventReleaseRight::Instance()){
+    tools_state->set_state(StateRadarSelected::Instance()); 
+    return;
   }
   if(event == EventMouseMove::Instance()){
       DataStateRadar::Instance()->set_move(
         EventMouseMove::Instance()->x(),
         EventMouseMove::Instance()->y());
       std::cout << "[IN]updateRadar(id, x, y, type, radius);" << std::endl;
+    return;
+  }
+  if(event == EventWheel::Instance()){
+    //TODO: something
+    return;
   }
   if(event == EventButtonLine::Instance()){
     tools_state->set_state(StateTrackLineSelected::Instance());
+    return;
   }
   if(event == EventButtonCircle::Instance()){
     tools_state->set_state(StateTrackCircleSelected::Instance());
+      return;
   }
   if(event == EventButtonEclipse::Instance()){
     tools_state->set_state(StateTrackEclipseSelected::Instance());
+    return;
   }
-
-  /*switch (action){
-    case MOUSE_RELEASE_LEFT :
-      std::cout << "[OUT]put MOUSE_RELEASE_LEFT position to stack" << std::endl;
-      std::cout << "[IN]updateRadar(id, x, y,type, radius);." << std::endl;
-      std::cout << "[IN]put radar object to opera." << std::endl;
-      std::cout << "[IN]put current state to stack." << std::endl;
-      std::cout << "[IN][StateRadarCentered]->[StateRadarSelected]" << std::endl;
-      tools_state->push_back(this);
-      tools_state->set_state(StateRadarSelected::Instance()); 
-      break;
-    case MOUSE_RELEASE_RIGHT :
-      tools_state->set_state(StateRadarSelected::Instance()); 
-      break;
-    case MOUSE_MOVE :
-      std::cout << "[OUT]put MOUSE_MOVE position to another stack" << std::endl;
-      std::cout << "[IN]updateRadar(id, x, y, type, radius);" << std::endl;
-      break;
-    case BUTTON_LINE :
-      tools_state->clear();
-      std::cout << "[IN][StateRadarCentered]->[StateTrackLineSelected]" << std::endl;
-      tools_state->set_state(StateTrackLineSelected::Instance());
-      break;
-    case BUTTON_CIRCLE :
-      tools_state->clear();
-      std::cout << "[IN][StateRadarCentered]->[StateTrackCircleSelected]" << std::endl;
-      tools_state->set_state(StateTrackCircleSelected::Instance());
-      break;
-    case BUTTON_ECLIPSE:
-      tools_state->clear();
-      std::cout << "[IN][StateRadarCentered]->[StateTrackEclipseSelected]" << std::endl;
-      tools_state->set_state(StateTrackEclipseSelected::Instance());
-      break;
-    default:
-      std::cout << "[IN]No Response Event" << std::endl;
-  }*/
 }
 
 void StateTrackLineSelected::execute(ToolsState* tools_state, Event* event){
@@ -237,13 +183,13 @@ void StateTrackLineSelected::execute(ToolsState* tools_state, Event* event){
     DataTrackUnitList::Instance()->set_start(
       EventReleaseLeft::Instance()->x(),
       EventReleaseLeft::Instance()->y());
-    DataStateLine::Instance()->set_start(
+      DataStateLine::Instance()->set_start(
       EventReleaseLeft::Instance()->x(),
       EventReleaseLeft::Instance()->y());
     tools_state->set_state(StateTrackLineStarted::Instance()); 
   }
   if(event == EventWheel::Instance()){
-
+    //TODO: something
   }
   if(event == EventButtonLine::Instance()){
     tools_state->set_state(StateTrackLineSelected::Instance());
@@ -254,29 +200,8 @@ void StateTrackLineSelected::execute(ToolsState* tools_state, Event* event){
   if(event == EventButtonEclipse::Instance()){
     tools_state->set_state(StateTrackEclipseSelected::Instance());
   }
-  /*switch (action){
-    case MOUSE_RELEASE_LEFT :
-      std::cout << "[OUT]put MOUSE_RELEASE_LEFT position to stack" << std::endl;
-      std::cout << "[IN]createLine(id, x, y, x1, y1);." << std::endl;
-      std::cout << "[IN]put current state in stack." << std::endl;
-      std::cout << "[IN][StateTrackLineSelected]->[StateTrackLineStarted]" << std::endl;
-      tools_state->push_back(this);
-      tools_state->set_state(StateTrackLineStarted::Instance()); 
-      break;
-    case BUTTON_CIRCLE :
-      std::cout << "[IN][StateTrackLineSelected]->[StateTrackCircleSelected]" << std::endl;
-      tools_state->set_state(StateTrackCircleSelected::Instance());
-      break;
-    case BUTTON_ECLIPSE:
-      std::cout << "[IN][StateTrackLineSelected]->[StateTrackEclipseSelected]" << std::endl;
-      tools_state->set_state(StateTrackEclipseSelected::Instance());
-      break;
-    default:
-      std::cout << "[IN]No Response Event" << std::endl;
-  }*/
 }
 void StateTrackLineStarted::execute(ToolsState* tools_state, Event* event){
-  std::cout << "[IN]updateLine(id, x, y, x1, y1);" << std::endl;
   if(event == EventReleaseLeft::Instance()){
     DataStateLine::Instance()->set_start(
       EventReleaseLeft::Instance()->x(),
@@ -285,16 +210,84 @@ void StateTrackLineStarted::execute(ToolsState* tools_state, Event* event){
       EventReleaseLeft::Instance()->x(),
       EventReleaseLeft::Instance()->y());
     tools_state->set_state(StateTrackLineSelected::Instance()); 
+    return;
   }
   if(event == EventReleaseRight::Instance()){
     if(DataTrackUnitList::Instance()->empty())
       tools_state->set_state(StateTrackLineSelected::Instance());
+    return;
   }
   if(event == EventMouseMove::Instance()){
     DataStateLine::Instance()->set_move(
       EventMouseMove::Instance()->x(),
       EventMouseMove::Instance()->y());
     std::cout << "[IN]updateLine(id, x, y, x1, y1);" << std::endl;
+  }
+  if(event == EventWheel::Instance()){
+    //TODO: something
+  }
+  if(event == EventButtonLine::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackLineSelected::Instance());
+    else
+      tools_state->set_state(StateTrackLineStarted::Instance());
+    return;
+  }
+  if(event == EventButtonCircle::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackCircleSelected::Instance());
+    else
+      tools_state->set_state(StateTrackCircleStarted::Instance());
+    return;
+  }
+  if(event == EventButtonEclipse::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackEclipseSelected::Instance());
+    else
+      tools_state->set_state(StateTrackEclipseStarted::Instance());
+    return;
+  }
+}
+
+void StateTrackCircleSelected::execute(ToolsState* tools_state, Event* event){
+  if(event == EventReleaseLeft::Instance()){
+    DataStateCircle::Instance()->circle_.start_x = EventReleaseLeft::Instance()->x();
+    DataStateCircle::Instance()->circle_.start_y = EventReleaseLeft::Instance()->y();
+    DataTrackUnitList::Instance()->set_start(
+      EventReleaseLeft::Instance()->x(),
+      EventReleaseLeft::Instance()->y());
+    tools_state->set_state(StateTrackCircleStarted::Instance());
+  }
+  if(event == EventWheel::Instance()){
+    //TODO: something
+  }
+  if(event == EventButtonLine::Instance()){
+    tools_state->set_state(StateTrackLineSelected::Instance());
+  }
+  if(event == EventButtonCircle::Instance()){
+    tools_state->set_state(StateTrackCircleSelected::Instance());
+  }
+  if(event == EventButtonEclipse::Instance()){
+    tools_state->set_state(StateTrackEclipseSelected::Instance());
+  }
+}
+void StateTrackCircleStarted::execute(ToolsState* tools_state, Event* event){
+  if(event == EventReleaseLeft::Instance()){
+    DataStateCircle::Instance()->circle_.center_x = EventReleaseLeft::Instance()->x();
+    DataStateCircle::Instance()->circle_.center_y = EventReleaseLeft::Instance()->y();
+    std::cout << "Draw a Circle" << std::endl;
+    tools_state->set_state(StateTrackCircleSided::Instance());
+  }
+  if(event == EventReleaseRight::Instance()
+    && DataTrackUnitList::Instance()->empty())
+    tools_state->set_state(StateTrackCircleSelected::Instance());
+  if(event == EventMouseMove::Instance()){
+    DataStateCircle::Instance()->move_.x = EventReleaseLeft::Instance()->x();
+    DataStateCircle::Instance()->move_.y = EventReleaseLeft::Instance()->y();
+    std::cout << "Dynamic Draw a circle" << std::endl;
+  }
+  if(event == EventWheel::Instance()){
+    //TODO: something
   }
   if(event == EventButtonLine::Instance()){
     if(DataTrackUnitList::Instance()->empty())
@@ -309,62 +302,19 @@ void StateTrackLineStarted::execute(ToolsState* tools_state, Event* event){
       tools_state->set_state(StateTrackCircleStarted::Instance());
   }
   if(event == EventButtonEclipse::Instance()){
-    tools_state->set_state(StateTrackEclipseSelected::Instance());
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackEclipseSelected::Instance());
+    else
+      tools_state->set_state(StateTrackEclipseStarted::Instance());
   }
-  /*switch (action){
-    case MOUSE_RELEASE_LEFT :
-      std::cout << "[OUT]put MOUSE_RELEASE_LEFT position to stack" << std::endl;
-      std::cout << "[IN]updateLine(id, x, y, x1, y1);" << std::endl;
-      std::cout << "[IN]put track unit line object to opera." << std::endl;
-      std::cout << "[IN]put current state to stack." << std::endl;
-      std::cout << "[IN][StateTrackLineStarted]->[StateTrackLineSelected]" << std::endl;
-      tools_state->push_back(this);
-      tools_state->set_state(StateTrackLineSelected::Instance()); 
-      break;
-    case MOUSE_MOVE :
-      std::cout << "[OUT]put MOUSE MOVE POSITION to another stack" << std::endl;
-      std::cout << "[IN]updateLine(id, x, y, x1, y1);" << std::endl;
-      break;
-    case BUTTON_LINE :
-      if(tools_state->IsFirstTrackUnit()){
-        tools_state->clear();
-        std::cout << "[IN][StateTrackLineStarted]->[StateTrackLineSelected]" << std::endl;
-        tools_state->set_state(StateTrackLineSelected::Instance());
-      }else{
-        std::cout << "[IN][StateTrackLineStarted]->[StateTrackLineStarted]" << std::endl;
-        tools_state->set_state(StateTrackLineStarted::Instance());
-      }
-      break;
-    case BUTTON_CIRCLE :
-      if(tools_state->IsFirstTrackUnit()){
-        tools_state->clear();
-        std::cout << "[IN][StateTrackLineStarted]->[StateTrackCircleSelected]" << std::endl;
-        tools_state->set_state(StateTrackCircleSelected::Instance());
-      }else{
-        std::cout << "[IN][StateTrackLineStarted]->[StateTrackCircleStarted]" << std::endl;
-        tools_state->set_state(StateTrackCircleStarted::Instance());
-      }
-      break;
-    case BUTTON_ECLIPSE:
-      if(tools_state->IsFirstTrackUnit()){
-        tools_state->clear();
-        std::cout << "[StateTrackLineStarted]->[StateTrackEclipseSelected]" << std::endl;
-        tools_state->set_state(StateTrackEclipseSelected::Instance());
-      }else{
-        std::cout << "[IN][StateTrackLineStarted]->[StateTrackEclipseStarted]" << std::endl;
-        tools_state->set_state(StateTrackEclipseStarted::Instance());
-      }
-      break;
-    default:
-      std::cout << "No Response Event" << std::endl;
-  }*/
-}
-
-void StateTrackCircleSelected::execute(ToolsState* tools_state, Event* event){
-}
-void StateTrackCircleStarted::execute(ToolsState* tools_state, Event* event){
 }
 void StateTrackCircleCentered::execute(ToolsState* tools_state, Event* event){
+  if(event == EventReleaseLeft::Instance()){
+    DataStateCircle::Instance()->circle_.side_x = EventReleaseLeft::Instance()->x();
+    DataStateCircle::Instance()->circle_.side_y = EventReleaseLeft::Instance()->y();
+    std::cout << "upDateCircle();" << std::endl;
+    tools_state->set_state(StateTrackCircleSided::Instance());
+  }
 
 }
 void StateTrackCircleSided::execute(ToolsState* tools_state, Event* event){
