@@ -12,9 +12,9 @@ class EventMouse : public Event{
 public:
   virtual  ~EventMouse() = 0;
   EventMouse():x_(0), y_(0){}
-  int x() const { return x_; }
-  int y() const { return y_; }
-  int set(int x, int y){
+  inline int x() const { return x_; }
+  inline int y() const { return y_; }
+  inline int set(int x, int y){
     x_ = x;
     y_ = y;
   }
@@ -74,8 +74,8 @@ private:
 class EventWheel : public Event{
 public:
   static EventWheel* Instance();
-  int angle() const{ return angle_; }
-  void set_angle(int angle){ angle_ = angle; }
+  inline int angle() const{ return angle_; }
+  inline void set_angle(int angle){ angle_ = angle; }
 private:
   EventWheel(){}
   int angle_;
@@ -138,6 +138,14 @@ private:
   static EventButtonAnalysis* event_;
 };
 
+/*class EventButtonRadar : public Event{
+public:
+  static EventButtonRadar* Instance();
+
+private:
+  static EventButtonRadar* event_;
+};*/
+
 } //namespace tools
 
-#endif //TOOLS_EVENT_H_
+#endif 

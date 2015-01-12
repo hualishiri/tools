@@ -2,9 +2,25 @@
 
 #include <iostream>
 
-namespace tools{
+#include "event/event.h"
 
-void ToolsState::Execute(Event* event){ state_->execute(this, event); }
+namespace tools{
+namespace {
+
+void StateConvertSimple(State* state, Event* event){
+
+}
+
+void StateCovertComplex(State* state, Event* event){
+
+}
+
+}
+void ToolsState::Execute(Event* event){ 
+  state_->execute(this, event); 
+//  if(event == EventButtonRadar::Instance()
+ //   ){}
+}
 
 State::~State(){}
 
@@ -134,7 +150,6 @@ void StateRadarSelected::execute(ToolsState* tools_state, Event* event){
     return;
   }
 }
-
 
 void StateRadarCentered::execute(ToolsState* tools_state, Event* event){
   if(event == EventReleaseLeft::Instance()){
@@ -276,7 +291,8 @@ void StateTrackCircleStarted::execute(ToolsState* tools_state, Event* event){
     DataStateCircle::Instance()->circle_.center_x = EventReleaseLeft::Instance()->x();
     DataStateCircle::Instance()->circle_.center_y = EventReleaseLeft::Instance()->y();
     std::cout << "Draw a Circle" << std::endl;
-    tools_state->set_state(StateTrackCircleSided::Instance());
+    tools_state->set_state(StateTrackCircleCentered::Instance());
+    return;
   }
   if(event == EventReleaseRight::Instance()
     && DataTrackUnitList::Instance()->empty())
@@ -285,6 +301,7 @@ void StateTrackCircleStarted::execute(ToolsState* tools_state, Event* event){
     DataStateCircle::Instance()->move_.x = EventReleaseLeft::Instance()->x();
     DataStateCircle::Instance()->move_.y = EventReleaseLeft::Instance()->y();
     std::cout << "Dynamic Draw a circle" << std::endl;
+    return;
   }
   if(event == EventWheel::Instance()){
     //TODO: something
@@ -294,18 +311,21 @@ void StateTrackCircleStarted::execute(ToolsState* tools_state, Event* event){
       tools_state->set_state(StateTrackLineSelected::Instance());
     else
       tools_state->set_state(StateTrackLineStarted::Instance());
+    return;
   }
   if(event == EventButtonCircle::Instance()){
     if(DataTrackUnitList::Instance()->empty())
       tools_state->set_state(StateTrackCircleSelected::Instance());
     else
       tools_state->set_state(StateTrackCircleStarted::Instance());
+    return;
   }
   if(event == EventButtonEclipse::Instance()){
     if(DataTrackUnitList::Instance()->empty())
       tools_state->set_state(StateTrackEclipseSelected::Instance());
     else
       tools_state->set_state(StateTrackEclipseStarted::Instance());
+    return;
   }
 }
 void StateTrackCircleCentered::execute(ToolsState* tools_state, Event* event){
@@ -315,25 +335,265 @@ void StateTrackCircleCentered::execute(ToolsState* tools_state, Event* event){
     std::cout << "upDateCircle();" << std::endl;
     tools_state->set_state(StateTrackCircleSided::Instance());
   }
-
+  if(event == EventReleaseRight::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackCircleSelected::Instance());
+    else
+      tools_state->set_state(StateTrackCircleStarted::Instance());
+  }
+  if(event == EventWheel::Instance()){
+    //TODO: something
+  }
+  if(event == EventButtonLine::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackLineSelected::Instance());
+    else
+      tools_state->set_state(StateTrackLineStarted::Instance());
+    return;
+  }
+  if(event == EventButtonCircle::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackCircleSelected::Instance());
+    else
+      tools_state->set_state(StateTrackCircleStarted::Instance());
+    return;
+  }
+  if(event == EventButtonEclipse::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackEclipseSelected::Instance());
+    else
+      tools_state->set_state(StateTrackEclipseStarted::Instance());
+    return;
+  }
 }
 void StateTrackCircleSided::execute(ToolsState* tools_state, Event* event){
-  
+  if(event == EventReleaseLeft::Instance()){
+    DataTrackUnitList::Instance()->push_back_circle(
+      DataStateCircle::Instance()->circle_.center_x,
+      DataStateCircle::Instance()->circle_.center_y,
+      DataStateCircle::Instance()->circle_.side_x,
+      DataStateCircle::Instance()->circle_.side_y,
+      EventReleaseLeft::Instance()->x(),
+      EventReleaseLeft::Instance()->y()
+    );
+    DataStateCircle::Instance()->circle_.start_x = EventReleaseLeft::Instance()->x();
+    DataStateCircle::Instance()->circle_.start_y = EventReleaseLeft::Instance()->y();
+    tools_state->set_state(StateTrackCircleStarted::Instance());
+  }
+  if(event == EventReleaseRight::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackCircleSelected::Instance());
+    else
+      tools_state->set_state(StateTrackCircleStarted::Instance());
+  }
+  if(event == EventWheel::Instance()){
+    //TODO: something
+  }
+  if(event == EventButtonLine::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackLineSelected::Instance());
+    else
+      tools_state->set_state(StateTrackLineStarted::Instance());
+    return;
+  }
+  if(event == EventButtonCircle::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackCircleSelected::Instance());
+    else
+      tools_state->set_state(StateTrackCircleStarted::Instance());
+    return;
+  }
+  if(event == EventButtonEclipse::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackEclipseSelected::Instance());
+    else
+      tools_state->set_state(StateTrackEclipseStarted::Instance());
+    return;
+  }
 }
 
 void StateTrackEclipseSelected::execute(ToolsState* tools_state, Event* event){
-
+  if(event == EventReleaseLeft::Instance()){
+    DataStateEclipse::Instance()->eclipse_.start_x = EventReleaseLeft::Instance()->x();
+    DataStateEclipse::Instance()->eclipse_.start_y = EventReleaseLeft::Instance()->y();
+    DataTrackUnitList::Instance()->set_start(
+      EventReleaseLeft::Instance()->x(),
+      EventReleaseLeft::Instance()->y()
+    );
+    tools_state->set_state(StateTrackEclipseStarted::Instance());
+    return;
+  }
+  if(event == EventWheel::Instance()){
+    //TODO: something
+  }
+  if(event == EventButtonLine::Instance()){
+    tools_state->set_state(StateTrackLineSelected::Instance());
+  }
+  if(event == EventButtonCircle::Instance()){
+    tools_state->set_state(StateTrackCircleSelected::Instance());
+  }
+  if(event == EventButtonEclipse::Instance()){
+    tools_state->set_state(StateTrackEclipseSelected::Instance());
+  }
 }
+
 void StateTrackEclipseStarted::execute(ToolsState* tools_state, Event* event){
-  
+  if(event == EventReleaseLeft::Instance()){
+    DataStateEclipse::Instance()->eclipse_.center_x = EventReleaseLeft::Instance()->x();
+    DataStateEclipse::Instance()->eclipse_.center_y = EventReleaseLeft::Instance()->y();
+    tools_state->set_state(StateTrackEclipseCentered::Instance());
+  }
+  if(event == EventReleaseRight::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackEclipseSelected::Instance());
+    else
+      tools_state->set_state(StateTrackEclipseStarted::Instance());
+  }
+  if(event == EventWheel::Instance()){
+    //TODO: something
+  }
+  if(event == EventButtonLine::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackLineSelected::Instance());
+    else
+      tools_state->set_state(StateTrackLineStarted::Instance());
+    return;
+  }
+  if(event == EventButtonCircle::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackCircleSelected::Instance());
+    else
+      tools_state->set_state(StateTrackCircleStarted::Instance());
+    return;
+  }
+  if(event == EventButtonEclipse::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackEclipseSelected::Instance());
+    else
+      tools_state->set_state(StateTrackEclipseStarted::Instance());
+    return;
+  }
 }
 void StateTrackEclipseCentered::execute(ToolsState* tools_state, Event* event){
-
+  if(event == EventReleaseLeft::Instance()){
+    DataStateEclipse::Instance()->eclipse_.end_x = EventReleaseLeft::Instance()->x();
+    DataStateEclipse::Instance()->eclipse_.end_y = EventReleaseLeft::Instance()->y();
+    tools_state->set_state(StateTrackEclipseEnded::Instance());
+  }
+  if(event == EventReleaseRight::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackEclipseSelected::Instance());
+    else
+      tools_state->set_state(StateTrackEclipseStarted::Instance());
+  }
+  if(event == EventWheel::Instance()){
+    //TODO: something
+  }
+  if(event == EventButtonLine::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackLineSelected::Instance());
+    else
+      tools_state->set_state(StateTrackLineStarted::Instance());
+    return;
+  }
+  if(event == EventButtonCircle::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackCircleSelected::Instance());
+    else
+      tools_state->set_state(StateTrackCircleStarted::Instance());
+    return;
+  }
+  if(event == EventButtonEclipse::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackEclipseSelected::Instance());
+    else
+      tools_state->set_state(StateTrackEclipseStarted::Instance());
+    return;
+  }
 }
 void StateTrackEclipseEnded::execute(ToolsState* tools_state, Event* event){
-
+  if(event == EventReleaseLeft::Instance()){
+    DataStateEclipse::Instance()->eclipse_.side_x = EventReleaseLeft::Instance()->x();
+    DataStateEclipse::Instance()->eclipse_.side_y = EventReleaseLeft::Instance()->y();
+    tools_state->set_state(StateTrackEclipseSided::Instance());
+  }
+  if(event == EventReleaseRight::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackEclipseSelected::Instance());
+    else
+      tools_state->set_state(StateTrackEclipseStarted::Instance());
+  }
+  if(event == EventWheel::Instance()){
+    //TODO: something
+  }
+  if(event == EventButtonLine::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackLineSelected::Instance());
+    else
+      tools_state->set_state(StateTrackLineStarted::Instance());
+    return;
+  }
+  if(event == EventButtonCircle::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackCircleSelected::Instance());
+    else
+      tools_state->set_state(StateTrackCircleStarted::Instance());
+    return;
+  }
+  if(event == EventButtonEclipse::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackEclipseSelected::Instance());
+    else
+      tools_state->set_state(StateTrackEclipseStarted::Instance());
+    return;
+  }
 }
 void StateTrackEclipseSided::execute(ToolsState* tools_state, Event* event){
+  if(event == EventReleaseLeft::Instance()){
+    DataStateEclipse::Instance()->eclipse_.angle_x = EventReleaseLeft::Instance()->x();
+    DataStateEclipse::Instance()->eclipse_.angle_y = EventReleaseLeft::Instance()->y();
+    DataTrackUnitList::Instance()->push_back_eclipse(
+      DataStateEclipse::Instance()->eclipse_.center_x,    
+      DataStateEclipse::Instance()->eclipse_.center_y,    
+      DataStateEclipse::Instance()->eclipse_.end_x,    
+      DataStateEclipse::Instance()->eclipse_.end_y,    
+      DataStateEclipse::Instance()->eclipse_.side_x,    
+      DataStateEclipse::Instance()->eclipse_.side_y,    
+      EventReleaseLeft::Instance()->x(),
+      EventReleaseLeft::Instance()->y()
+    );
+    tools_state->set_state(StateTrackEclipseStarted::Instance());
+  }
+  if(event == EventReleaseRight::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackEclipseSelected::Instance());
+    else
+      tools_state->set_state(StateTrackEclipseStarted::Instance());
+  }
+  if(event == EventWheel::Instance()){
+    //TODO: something
+  }
+  if(event == EventButtonLine::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackLineSelected::Instance());
+    else
+      tools_state->set_state(StateTrackLineStarted::Instance());
+    return;
+  }
+  if(event == EventButtonCircle::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackCircleSelected::Instance());
+    else
+      tools_state->set_state(StateTrackCircleStarted::Instance());
+    return;
+  }
+  if(event == EventButtonEclipse::Instance()){
+    if(DataTrackUnitList::Instance()->empty())
+      tools_state->set_state(StateTrackEclipseSelected::Instance());
+    else
+      tools_state->set_state(StateTrackEclipseStarted::Instance());
+    return;
+  }
   
 }
 
@@ -385,14 +645,14 @@ DataTrackUnitList* DataTrackUnitList::Instance(){
 }
 
 void DataTrackUnitList::push_back_line(int end_x, int end_y){
-  units_.push_back(LINE);
+  units_flag_.push_back(LINE);
   units_.push_back(end_x);
   units_.push_back(end_y);
 }
 
 void DataTrackUnitList::push_back_circle(int center_x, int center_y,
     int side_x, int side_y, int angle_x, int angle_y){
-  units_.push_back(CIRCLE);
+  units_flag_.push_back(CIRCLE);
   units_.push_back(center_x);
   units_.push_back(center_y);
   units_.push_back(side_x);
@@ -405,7 +665,7 @@ void DataTrackUnitList::push_back_eclipse(int center_x, int center_y,
     int end_x, int end_y,
     int side_x, int side_y,
     int angle_x, int angle_y){
-  units_.push_back(ECLIPSE);
+  units_flag_.push_back(ECLIPSE);
   units_.push_back(center_x);
   units_.push_back(center_y);
   units_.push_back(end_x);
