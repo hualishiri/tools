@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "event/event.h"
+#include "util/tool.h"
 
 namespace tools{
 namespace {
@@ -127,9 +128,14 @@ StateContralPaused* StateContralPaused::Instance(){
 
 void StateRadarSelected::execute(ToolsState* tools_state, Event* event){
   if(event == EventReleaseLeft::Instance()){
-    std::cout << "[IN]createRadar(id,x,y,type, radius);." << std::endl;
+    DataStateRadar::Instance()->set_id(GenerateId());
     DataStateRadar::Instance()->set_center(EventReleaseLeft::Instance()->x(),
-        EventReleaseLeft::Instance()->y());
+      EventReleaseLeft::Instance()->y());
+    std::cout << "[IN]createRadar("
+      << DataStateRadar::Instance()->id() << ","
+      << DataStateRadar::Instance()->center_x() << ","
+      << DataStateRadar::Instance()->center_y() << ","
+      << 0 << ");" << std::endl;
     tools_state->set_state(StateRadarCentered::Instance()); 
     return;
   }
@@ -165,6 +171,7 @@ void StateRadarCentered::execute(ToolsState* tools_state, Event* event){
     return;
   }
   if(event == EventReleaseRight::Instance()){
+    std::cout << "deleteRadar(id);" << std::endl;
     tools_state->set_state(StateRadarSelected::Instance()); 
     return;
   }
@@ -172,7 +179,11 @@ void StateRadarCentered::execute(ToolsState* tools_state, Event* event){
       DataStateRadar::Instance()->set_move(
         EventMouseMove::Instance()->x(),
         EventMouseMove::Instance()->y());
-      std::cout << "[IN]updateRadar(id, x, y, type, radius);" << std::endl;
+    std::cout << "[IN]updateRadar("
+      << DataStateRadar::Instance()->id() << ","
+      << DataStateRadar::Instance()->center_x() << ","
+      << DataStateRadar::Instance()->center_y() << ","
+      << 0 << ");" << std::endl;
     return;
   }
   if(event == EventWheel::Instance()){

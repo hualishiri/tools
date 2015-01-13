@@ -175,21 +175,24 @@ class DataStateRadar{
 private:
   DataStateRadar():center_x_(0), center_y_(0),
     move_x_(0), move_y_(0){}
+  long long id_;
   int center_x_;
   int center_y_;
   int move_x_;
   int move_y_;
-  void set_center(int x, int y){
+  inline void set_center(int x, int y){
     center_x_ = x;
   }
-  void set_move(int x, int y){
+  inline void set_move(int x, int y){
     move_x_ = x;
     move_y_ = y;
   }
-  int center_x() const { return center_x_; }
-  int center_y() const { return center_y_; }
-  int move_x() const { return move_x_; }
-  int move_y() const { return move_y_; }
+  inline void set_id(int id){ id_ = id; }
+  inline long long id() const { return id_; }
+  inline int center_x() const { return center_x_; }
+  inline int center_y() const { return center_y_; }
+  inline int move_x() const { return move_x_; }
+  inline int move_y() const { return move_y_; }
 
   static DataStateRadar* data_;
   static DataStateRadar* Instance();
