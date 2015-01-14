@@ -3,7 +3,7 @@
 namespace tools{
 
 namespace{
-long long id = 0xdeedbeef;
+long long id = 0x0beef;
 }
 
 long long GenerateId(){

@@ -176,23 +176,24 @@ private:
   DataStateRadar():center_x_(0), center_y_(0),
     move_x_(0), move_y_(0){}
   long long id_;
-  int center_x_;
-  int center_y_;
-  int move_x_;
-  int move_y_;
-  inline void set_center(int x, int y){
+  double center_x_;
+  double center_y_;
+  double move_x_;
+  double move_y_;
+  inline void set_center(double x, double y){
     center_x_ = x;
+    center_y_ = y;
   }
-  inline void set_move(int x, int y){
+  inline void set_move(double x, double y){
     move_x_ = x;
     move_y_ = y;
   }
-  inline void set_id(int id){ id_ = id; }
+  inline void set_id(long long id){ id_ = id; }
   inline long long id() const { return id_; }
-  inline int center_x() const { return center_x_; }
-  inline int center_y() const { return center_y_; }
-  inline int move_x() const { return move_x_; }
-  inline int move_y() const { return move_y_; }
+  inline double center_x() const { return center_x_; }
+  inline double center_y() const { return center_y_; }
+  inline double move_x() const { return move_x_; }
+  inline double move_y() const { return move_y_; }
 
   static DataStateRadar* data_;
   static DataStateRadar* Instance();
@@ -201,8 +202,8 @@ private:
 class DataRadarList{
 public:
   inline void clear(){ radars_.clear(); }
-  inline void push_back_radar(int center_x, int center_y,
-      int radius_x, int radius_y){ 
+  inline void push_back_radar(double center_x, double center_y,
+      double radius_x, double radius_y){ 
     radars_.push_back(center_x);
     radars_.push_back(center_y);
     radars_.push_back(radius_x);
@@ -217,11 +218,11 @@ public:
     }
   }
   inline std::size_t size() const { return radars_.size(); }
-  inline std::vector<int> radars() const { return radars_; }
+  inline std::vector<double> radars() const { return radars_; }
   
   static DataRadarList* Instance();
 private:
-  std::vector<int> radars_;
+  std::vector<double> radars_;
   static DataRadarList* radar_list_;
 };
 
@@ -232,26 +233,25 @@ public:
 
   static DataStateLine* Instance();
 private:
-  int start_x_;
-  int start_y_;
-  int move_x_;
-  int move_y_;
-  inline int start_x() const { return start_x_; }
-  inline int start_y() const { return start_y_; }
-  inline int move_x() const { return move_x_; }
-  inline int move_y() const { return move_y_; }
-  inline void set_start(int x, int y){
+  double start_x_;
+  double start_y_;
+  double move_x_;
+  double move_y_;
+  inline double start_x() const { return start_x_; }
+  inline double start_y() const { return start_y_; }
+  inline double move_x() const { return move_x_; }
+  inline double move_y() const { return move_y_; }
+  inline void set_start(double x, double y){
     start_x_ = x;
     start_y_ = y;
   }
-  inline void set_move(int x, int y){
+  inline void set_move(double x, double y){
     move_x_ = x;
     move_y_ = y;
   }
   DataStateLine(){}
   static DataStateLine* data_;
 };
-
 
 class DataStateCircle{
 public:
@@ -262,18 +262,18 @@ public:
   static DataStateCircle* Instance();
 private:
   struct Circle{
-    int start_x;
-    int start_y;
-    int center_x;
-    int center_y;
-    int side_x;
-    int side_y;
-    int angle_x;
-    int angle_y;
+    double start_x;
+    double start_y;
+    double center_x;
+    double center_y;
+    double side_x;
+    double side_y;
+    double angle_x;
+    double angle_y;
   };
   struct Move{
-    int x;
-    int y;
+    double x;
+    double y;
   };
   Circle circle_;
   Move move_;
@@ -290,20 +290,20 @@ public:
   static DataStateEclipse* Instance();
 private:
   struct Eclipse{
-    int start_x;
-    int start_y;
-    int center_x;
-    int center_y;
-    int end_x;
-    int end_y;
-    int side_x;
-    int side_y;
-    int angle_x;
-    int angle_y;
+    double start_x;
+    double start_y;
+    double center_x;
+    double center_y;
+    double end_x;
+    double end_y;
+    double side_x;
+    double side_y;
+    double angle_x;
+    double angle_y;
   };
   struct Move{
-    int x;
-    int y;
+    double x;
+    double y;
   };
   Eclipse eclipse_;
   Move move_;
@@ -314,36 +314,32 @@ private:
 class DataTrackUnitList{
 public:
   static DataTrackUnitList* Instance();
-  enum TrackUnitType{
-    LINE,
-    CIRCLE,
-    ECLIPSE
-  };
-  inline void set_start(int x, int y){
+  enum TrackUnitType{ LINE, CIRCLE, ECLIPSE };
+  inline void set_start(double x, double y){
     start_x_ = x;
     start_y_ = y;
   }
-  inline void push_back_line(int end_x, int end_y);
+  inline void push_back_line(double end_x, double end_y);
   inline void push_back_circle(
-      int center_x, int center_y,
-      int side_x, int size_y,
-      int angle_x, int angle_y
+      double center_x, double center_y,
+      double side_x, double size_y,
+      double angle_x, double angle_y
       );
   void push_back_eclipse(
-      int center_x, int center_y,
-      int end_x, int end_y,
-      int side_x, int side_y,
-      int angle_x, int angle_y
+      double center_x, double center_y,
+      double end_x, double end_y,
+      double side_x, double side_y,
+      double angle_x, double angle_y
       );
   inline std::size_t size() const { return units_.size(); }
   inline void clear(){ units_.clear(); }
   inline bool empty() const { return units_.empty(); }
-  inline std::vector<int> track_units() const { return units_; }
+  inline std::vector<double> track_units() const { return units_; }
 private:
   std::vector<int> units_flag_;
-  std::vector<int> units_;
-  int start_x_;
-  int start_y_;
+  std::vector<double> units_;
+  double start_x_;
+  double start_y_;
   
   static DataTrackUnitList* data_;
 };

@@ -1,189 +1,245 @@
 #include "webkit.h"
 
 #include <sstream>
+#include <cassert>
 
 namespace tools{
 
-void JSCreateObject::execute(std::string& js){
+Webkit* Webkit::webkit_ = NULL;
+void Webkit::execute(JavaScript& js){
+  assert(page_ != NULL);
+  page_(js.execute().c_str());
+}
+
+Webkit* Webkit::Instance(){
+  if(!webkit_) webkit_ = new Webkit();
+  return webkit_;
+}
+
+std::string JSCreateObject::execute(){
  sstream_ << state_->id << ","
           << state_->x << ","
           << state_->y << ","
           << state_->acc << ","
           << state_->speed << ","
           << state_->angle;
+ std::string js;
  js.append("createObject(");
  js.append(sstream_.str());
  js.append(");");
  sstream_.clear();
+ return js;
 }
 
-void JSUpdateObject::execute(std::string& js){
+std::string JSUpdateObject::execute(){
  sstream_ << state_->id << ","
           << state_->x << ","
           << state_->y << ","
           << state_->acc << ","
           << state_->speed << ","
           << state_->angle;
+ std::string js;
  js.append("updateObject(");
  js.append(sstream_.str());
  js.append(");");
  sstream_.clear();
+  return js;
 }
 
-void JSDeleteObject::execute(std::string& js){
+std::string JSDeleteObject::execute(){
  sstream_ << id_;
+ std::string js;
  js.append("deleteObject(");
  js.append(sstream_.str());
  js.append(");");
  sstream_.clear();
+  return js;
 }
 
-void JSClearObject::execute(std::string& js){
+std::string JSClearObject::execute(){
+ std::string js;
     js = "clearObject();";
+  return js;
 }
 
-void JSCreateRadar::execute(std::string &js){
+std::string JSCreateRadar::execute(){
   sstream_ << radar_->id << ","
-           << radar_->x << ","
-           << radar_->y;
+           << radar_->type << ","
+           << radar_->center_x << ","
+           << radar_->center_y << ","
+           << radar_->radius;
+ std::string js;
   js.append("createRadar(");
   js.append(sstream_.str());
   js.append(");");
   sstream_.clear();
+  return js;
 }
 
-void JSUpdateRadar::execute(std::string &js){
+std::string JSUpdateRadar::execute(){
   sstream_ << radar_->id << ","
-           << radar_->x << ","
-           << radar_->y;
+           << radar_->type << ","
+           << radar_->center_x << ","
+           << radar_->center_y << ","
+           << radar_->radius;
+ std::string js;
   js.append("updateRadar(");
   js.append(sstream_.str());
   js.append(");");
   sstream_.clear();
+  return js;
 }
 
-void JSDeleteRadar::execute(std::string &js){
+std::string JSDeleteRadar::execute(){
  sstream_ << id_;
+ std::string js;
  js.append("deleteRadar(");
  js.append(sstream_.str());
  js.append(");");
  sstream_.clear();
+  return js;
 }
 
-void JSClearRadar::execute(std::string &js){
+std::string JSClearRadar::execute(){
+ std::string js;
   js = "clearRadar();";
+  return js;
 }
 
-void JSCreateRadarState::execute(std::string &js){
+std::string JSCreateRadarState::execute(){
   sstream_ << radar_id_ << ","
            << object_id_;
+ std::string js;
   js.append("createRadarState(");
   js.append(sstream_.str());
   js.append(");");
   sstream_.clear();
+  return js;
 }
 
-void JSUpdateRadarState::execute(std::string &js){
+std::string JSUpdateRadarState::execute(){
   sstream_ << radar_id_ << ","
            << object_id_;
+ std::string js;
   js.append("updateRadarState(");
   js.append(sstream_.str());
   js.append(");");
   sstream_.clear();
+  return js;
 }
 
-void JSDeleteRadarState::execute(std::string &js){
+std::string JSDeleteRadarState::execute(){
   sstream_ << radar_id_ << ","
            << object_id_;
+ std::string js;
   js.append("deleteRadarState(");
   js.append(sstream_.str());
   js.append(");");
   sstream_.clear();
+  return js;
 }
 
-void JSClearRadarState::execute(std::string &js){
+std::string JSClearRadarState::execute(){
   sstream_ << radar_id_;
+ std::string js;
   js.append("clearRadarState(");
   js.append(sstream_.str());
   js.append(");");
   sstream_.clear();
+  return js;
 }
 
-void JSCreateLine::execute(std::string &js){
+std::string JSCreateLine::execute(){
   sstream_ << line_->id << ","
     << line_->start_x << ","
     << line_->start_y << ","
     << line_->end_x << ","
     << line_->end_y;
+ std::string js;
   js.append("createLine(");
   js.append(sstream_.str());
   js.append(");");
   sstream_.clear();
+  return js;
 }
 
-void JSUpdateLine::execute(std::string &js){
+std::string JSUpdateLine::execute(){
   sstream_ << line_->id << ","
     << line_->start_x << ","
     << line_->start_y << ","
     << line_->end_x << ","
     << line_->end_y;
+ std::string js;
   js.append("updateLine(");
   js.append(sstream_.str());
   js.append(");");
   sstream_.clear();
+  return js;
 }
 
-void JSDeleteLine::execute(std::string &js){
+std::string JSDeleteLine::execute(){
  sstream_ << id_;
+ std::string js;
  js.append("deleteLine(");
  js.append(sstream_.str());
  js.append(");");
  sstream_.clear();
+  return js;
 }
 
-void JSClearLine::execute(std::string &js){
+std::string JSClearLine::execute(){
+ std::string js;
   js = "clearLine();";
+  return js;
 }
 
-void JSCreateCircle::execute(std::string &js){
+std::string JSCreateCircle::execute(){
   sstream_ << circle_->id << ","
     << circle_->start_x << ","
     << circle_->start_y << ","
     << circle_->radius_x<< ","
     << circle_->radius_y<< ","
     << circle_->angle;
+ std::string js;
   js.append("createCircle(");
   js.append(sstream_.str());
   js.append(");");
   sstream_.clear();
+  return js;
 }
 
-void JSUpdateCircle::execute(std::string &js){
+std::string JSUpdateCircle::execute(){
   sstream_ << circle_->id << ","
     << circle_->start_x << ","
     << circle_->start_y << ","
     << circle_->radius_x<< ","
     << circle_->radius_y<< ","
     << circle_->angle;
+ std::string js;
   js.append("updateCircle(");
   js.append(sstream_.str());
   js.append(");");
   sstream_.clear();
+  return js;
 }
 
-void JSDeleteCircle::execute(std::string &js){
+std::string JSDeleteCircle::execute(){
  sstream_ << id_;
+ std::string js;
  js.append("deleteCircle(");
  js.append(sstream_.str());
  js.append(");");
  sstream_.clear();
+  return js;
 }
 
-void JSClearCircle::execute(std::string &js){
+std::string JSClearCircle::execute(){
+ std::string js;
   js = "clearCircle();";
+  return js;
 }
 
-void JSCreateEclipse::execute(std::string &js){
+std::string JSCreateEclipse::execute(){
   sstream_ << eclipse_->id << ","
     << eclipse_->start_x << ","
     << eclipse_->start_y << ","
@@ -192,13 +248,15 @@ void JSCreateEclipse::execute(std::string &js){
     << eclipse_->end_x<< ","
     << eclipse_->end_y<< ","
     << eclipse_->angle;
+ std::string js;
   js.append("createEclipse(");
   js.append(sstream_.str());
   js.append(");");
   sstream_.clear();
+  return js;
 }
 
-void JSUpdateEclipse::execute(std::string &js){
+std::string JSUpdateEclipse::execute(){
   sstream_ << eclipse_->id << ","
     << eclipse_->start_x << ","
     << eclipse_->start_y << ","
@@ -207,22 +265,28 @@ void JSUpdateEclipse::execute(std::string &js){
     << eclipse_->end_x<< ","
     << eclipse_->end_y<< ","
     << eclipse_->angle;
+ std::string js;
   js.append("updateEclipse(");
   js.append(sstream_.str());
   js.append(");");
   sstream_.clear();
+  return js;
 }
 
-void JSDeleteEclipse::execute(std::string &js){
+std::string JSDeleteEclipse::execute(){
  sstream_ << id_;
+ std::string js;
  js.append("deleteEclipse(");
  js.append(sstream_.str());
  js.append(");");
  sstream_.clear();
+  return js;
 }
 
-void JSClearEclipse::execute(std::string &js){
+std::string JSClearEclipse::execute(){
+ std::string js;
   js = "clearEclipse();";
+  return js;
 }
 
 } //namespace tools

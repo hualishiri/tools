@@ -76,9 +76,15 @@ public:
   static EventWheel* Instance();
   inline int angle() const{ return angle_; }
   inline void set_angle(int angle){ angle_ = angle; }
+  inline int x() const { return x_; }
+  inline int y() const { return y_; }
+  inline int set_x(int x) { x_ = x; }
+  inline int set_y(int y) { y_ = y; }
 private:
   EventWheel(){}
   int angle_;
+  int x_;
+  int y_;
   static EventWheel* event_;
 };
 

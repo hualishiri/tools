@@ -1,12 +1,21 @@
 #include "state.h"
 
+#include <math.h>
+
 #include <iostream>
+#include <iomanip>
 
 #include "event/event.h"
+#include "webkit/webkit.h"
+#include "map/map.h"
+#include "map/map_projection.h"
+#include "state/opera_option.h"
 #include "util/tool.h"
 
 namespace tools{
 namespace {
+MapProjection::WgsPoint wgs_point;
+MapProjection::PixelPoint pixel_point;
 
 void StateConvertSimple(State* state, Event* event){
 
@@ -16,11 +25,56 @@ void StateCovertComplex(State* state, Event* event){
 
 }
 
+/*void FromPixelToWgs( int x, int y ){
+    pixel_point.x = Map::Instance()->origin_x() + x;
+    pixel_point.y = Map::Instance()->origin_y() + y;
+    MapProjection::Instance(Map::Instance()->zoom())
+      ->FromPixelToWgs(pixel_point, wgs_point);
+}*/
+
+/*void FromWgsToPixel(){
+  MapProjection::Instance(Map::Instance()->zoom())
+    ->FromWgsToPixel(wgs_point, pixel_point);
 }
+
+void FromPixelToWgs(){
+  MapProjection::Instance(Map::Instance()->zoom())
+    ->FromPixelToWgs(pixel_point, wgs_point);
+}*/
+
+void EventWheelHandle(int angle, int x, int y){
+    int delta = angle / 120;
+    int new_zoom = Map::Instance()->zoom() + delta;
+    if( new_zoom <4 || new_zoom > 16)
+      return;
+    pixel_point.x = Map::Instance()->origin_x() + x;
+    pixel_point.y = Map::Instance()->origin_y() + y;
+    MapProjection::Instance(Map::Instance()->zoom())
+      ->FromPixelToWgs(pixel_point, wgs_point);
+
+    Map::Instance()->set_zoom(new_zoom);
+
+    MapProjection::Instance(Map::Instance()->zoom())
+      ->FromWgsToPixel(wgs_point, pixel_point);
+
+    Map::Instance()->set_origin_x(pixel_point.x - x);
+    Map::Instance()->set_origin_y(pixel_point.y - y);
+
+    pixel_point.x = Map::Instance()->center_x();
+    pixel_point.y = Map::Instance()->center_y();
+
+    MapProjection::Instance(Map::Instance()->zoom())
+      ->FromPixelToWgs(pixel_point, wgs_point);
+
+    std::cout << "setZoom(" << new_zoom << ")" << std::endl;
+    std::cout << "setCenter(" << wgs_point.longitude << ","
+      << wgs_point.latitude << ");";
+}
+
+} //namespace
+
 void ToolsState::Execute(Event* event){ 
   state_->execute(this, event); 
-//  if(event == EventButtonRadar::Instance()
- //   ){}
 }
 
 State::~State(){}
@@ -128,57 +182,112 @@ StateContralPaused* StateContralPaused::Instance(){
 
 void StateRadarSelected::execute(ToolsState* tools_state, Event* event){
   if(event == EventReleaseLeft::Instance()){
+    pixel_point.x = Map::Instance()->origin_x() 
+      + EventReleaseLeft::Instance()->x();
+    pixel_point.y = Map::Instance()->origin_y()
+      + EventReleaseLeft::Instance()->y();
+    MapProjection::Instance(Map::Instance()->zoom())
+      ->FromPixelToWgs(pixel_point, wgs_point);
+    std::cout << wgs_point.longitude << " "
+      << wgs_point.latitude << std::endl;
+
     DataStateRadar::Instance()->set_id(GenerateId());
-    DataStateRadar::Instance()->set_center(EventReleaseLeft::Instance()->x(),
-      EventReleaseLeft::Instance()->y());
-    std::cout << "[IN]createRadar("
-      << DataStateRadar::Instance()->id() << ","
-      << DataStateRadar::Instance()->center_x() << ","
-      << DataStateRadar::Instance()->center_y() << ","
-      << 0 << ");" << std::endl;
+    DataStateRadar::Instance()->set_center(wgs_point.longitude, 
+      wgs_point.latitude);
+    
+    JSRadar radar = {
+      DataStateRadar::Instance()->id(),
+      0,
+      DataStateRadar::Instance()->center_x(),
+      DataStateRadar::Instance()->center_y(),
+      0
+    };
+
+    JSCreateRadar js_create_radar(&radar);
+    Webkit::Instance()->execute(js_create_radar);
+
     tools_state->set_state(StateRadarCentered::Instance()); 
     return;
   }
   if(event == EventWheel::Instance()){
-    //TODO: something
+    EventWheelHandle(EventWheel::Instance()->angle(),
+      EventWheel::Instance()->x(), EventWheel::Instance()->y());
     return;
   }
   if(event == EventButtonLine::Instance()){
     tools_state->set_state(StateTrackLineSelected::Instance());
-    return;
   }
   if(event == EventButtonCircle::Instance()){
     tools_state->set_state(StateTrackCircleSelected::Instance());
-    return;
   }
   if(event == EventButtonEclipse::Instance()){
     tools_state->set_state(StateTrackEclipseSelected::Instance());
-    return;
   }
 }
 
 void StateRadarCentered::execute(ToolsState* tools_state, Event* event){
   if(event == EventReleaseLeft::Instance()){
-      std::cout << "[IN]updateRadar(id, x, y,type, radius);." << std::endl;
-      DataRadarList::Instance()->push_back_radar(
-          DataStateRadar::Instance()->center_x(),
-          DataStateRadar::Instance()->center_y(),
-          EventPressLeft::Instance()->x(),
-          EventPressLeft::Instance()->y()
-        );
-    std::cout << "[IN]Create Radar Object" << std::endl;
+    pixel_point.x = Map::Instance()->origin_x() 
+      + EventReleaseLeft::Instance()->x();
+    pixel_point.y = Map::Instance()->origin_y()
+      + EventReleaseLeft::Instance()->y();
+    MapProjection::Instance(Map::Instance()->zoom())
+      ->FromPixelToWgs(pixel_point, wgs_point);
+    
+    double radius = sqrt(pow(wgs_point.longitude - 
+      DataStateRadar::Instance()->center_x(), 2) 
+      + pow(wgs_point.latitude - 
+      DataStateRadar::Instance()->center_y(), 2));   
+
+    JSRadar jsradar = {
+      DataStateRadar::Instance()->id(),
+      0,
+      DataStateRadar::Instance()->center_x(),
+      DataStateRadar::Instance()->center_y(),
+      radius
+    };
+    
+    JSUpdateRadar js_update_radar(&jsradar);
+    Webkit::Instance()->execute(js_update_radar);
+    
+    OperaOption::Radar radar = {
+      DataStateRadar::Instance()->id(),
+      0,
+      DataStateRadar::Instance()->center_x(),
+      DataStateRadar::Instance()->center_y(),
+      wgs_point.longitude,
+      wgs_point.latitude
+    };
+
+    //OperaOption::Instance()->push_back_radar(radar);
+
     tools_state->set_state(StateRadarSelected::Instance()); 
     return;
   }
   if(event == EventReleaseRight::Instance()){
-    std::cout << "deleteRadar(id);" << std::endl;
+    std::cout << "deleteRadar("
+      << DataStateRadar::Instance()->id()
+      << ");" << std::endl;
     tools_state->set_state(StateRadarSelected::Instance()); 
     return;
   }
   if(event == EventMouseMove::Instance()){
+    pixel_point.x = Map::Instance()->origin_x() 
+      + EventReleaseLeft::Instance()->x();
+    pixel_point.y = Map::Instance()->origin_y()
+      + EventReleaseLeft::Instance()->y();
+    MapProjection::Instance(Map::Instance()->zoom())
+      ->FromPixelToWgs(pixel_point, wgs_point);
+    
+    double radius = sqrt(pow(wgs_point.longitude - 
+      DataStateRadar::Instance()->center_x(), 2) 
+      + pow(wgs_point.latitude - 
+      DataStateRadar::Instance()->center_y(), 2));   
+
       DataStateRadar::Instance()->set_move(
         EventMouseMove::Instance()->x(),
         EventMouseMove::Instance()->y());
+
     std::cout << "[IN]updateRadar("
       << DataStateRadar::Instance()->id() << ","
       << DataStateRadar::Instance()->center_x() << ","
@@ -187,21 +296,20 @@ void StateRadarCentered::execute(ToolsState* tools_state, Event* event){
     return;
   }
   if(event == EventWheel::Instance()){
-    //TODO: something
+    EventWheelHandle(EventWheel::Instance()->angle(),
+      EventWheel::Instance()->x(), EventWheel::Instance()->y());
     return;
   }
   if(event == EventButtonLine::Instance()){
     tools_state->set_state(StateTrackLineSelected::Instance());
-    return;
   }
   if(event == EventButtonCircle::Instance()){
     tools_state->set_state(StateTrackCircleSelected::Instance());
-      return;
   }
   if(event == EventButtonEclipse::Instance()){
     tools_state->set_state(StateTrackEclipseSelected::Instance());
-    return;
   }
+  std::cout << "deleteRadar(" << DataStateRadar::Instance()->id() << ");";
 }
 
 void StateTrackLineSelected::execute(ToolsState* tools_state, Event* event){
@@ -215,6 +323,8 @@ void StateTrackLineSelected::execute(ToolsState* tools_state, Event* event){
     tools_state->set_state(StateTrackLineStarted::Instance()); 
   }
   if(event == EventWheel::Instance()){
+    EventWheelHandle(EventWheel::Instance()->angle(),
+      EventWheel::Instance()->x(), EventWheel::Instance()->y());
     //TODO: something
   }
   if(event == EventButtonLine::Instance()){
@@ -250,6 +360,8 @@ void StateTrackLineStarted::execute(ToolsState* tools_state, Event* event){
     std::cout << "[IN]updateLine(id, x, y, x1, y1);" << std::endl;
   }
   if(event == EventWheel::Instance()){
+    EventWheelHandle(EventWheel::Instance()->angle(),
+      EventWheel::Instance()->x(), EventWheel::Instance()->y());
     //TODO: something
   }
   if(event == EventButtonLine::Instance()){
@@ -285,6 +397,8 @@ void StateTrackCircleSelected::execute(ToolsState* tools_state, Event* event){
     tools_state->set_state(StateTrackCircleStarted::Instance());
   }
   if(event == EventWheel::Instance()){
+    EventWheelHandle(EventWheel::Instance()->angle(),
+      EventWheel::Instance()->x(), EventWheel::Instance()->y());
     //TODO: something
   }
   if(event == EventButtonLine::Instance()){
@@ -315,6 +429,8 @@ void StateTrackCircleStarted::execute(ToolsState* tools_state, Event* event){
     return;
   }
   if(event == EventWheel::Instance()){
+    EventWheelHandle(EventWheel::Instance()->angle(),
+      EventWheel::Instance()->x(), EventWheel::Instance()->y());
     //TODO: something
   }
   if(event == EventButtonLine::Instance()){
@@ -353,6 +469,8 @@ void StateTrackCircleCentered::execute(ToolsState* tools_state, Event* event){
       tools_state->set_state(StateTrackCircleStarted::Instance());
   }
   if(event == EventWheel::Instance()){
+    EventWheelHandle(EventWheel::Instance()->angle(),
+      EventWheel::Instance()->x(), EventWheel::Instance()->y());
     //TODO: something
   }
   if(event == EventButtonLine::Instance()){
@@ -398,6 +516,8 @@ void StateTrackCircleSided::execute(ToolsState* tools_state, Event* event){
       tools_state->set_state(StateTrackCircleStarted::Instance());
   }
   if(event == EventWheel::Instance()){
+    EventWheelHandle(EventWheel::Instance()->angle(),
+      EventWheel::Instance()->x(), EventWheel::Instance()->y());
     //TODO: something
   }
   if(event == EventButtonLine::Instance()){
@@ -435,6 +555,8 @@ void StateTrackEclipseSelected::execute(ToolsState* tools_state, Event* event){
     return;
   }
   if(event == EventWheel::Instance()){
+    EventWheelHandle(EventWheel::Instance()->angle(),
+      EventWheel::Instance()->x(), EventWheel::Instance()->y());
     //TODO: something
   }
   if(event == EventButtonLine::Instance()){
@@ -461,6 +583,8 @@ void StateTrackEclipseStarted::execute(ToolsState* tools_state, Event* event){
       tools_state->set_state(StateTrackEclipseStarted::Instance());
   }
   if(event == EventWheel::Instance()){
+    EventWheelHandle(EventWheel::Instance()->angle(),
+      EventWheel::Instance()->x(), EventWheel::Instance()->y());
     //TODO: something
   }
   if(event == EventButtonLine::Instance()){
@@ -498,6 +622,8 @@ void StateTrackEclipseCentered::execute(ToolsState* tools_state, Event* event){
       tools_state->set_state(StateTrackEclipseStarted::Instance());
   }
   if(event == EventWheel::Instance()){
+    EventWheelHandle(EventWheel::Instance()->angle(),
+      EventWheel::Instance()->x(), EventWheel::Instance()->y());
     //TODO: something
   }
   if(event == EventButtonLine::Instance()){
@@ -535,6 +661,8 @@ void StateTrackEclipseEnded::execute(ToolsState* tools_state, Event* event){
       tools_state->set_state(StateTrackEclipseStarted::Instance());
   }
   if(event == EventWheel::Instance()){
+    EventWheelHandle(EventWheel::Instance()->angle(),
+      EventWheel::Instance()->x(), EventWheel::Instance()->y());
     //TODO: something
   }
   if(event == EventButtonLine::Instance()){
@@ -582,6 +710,8 @@ void StateTrackEclipseSided::execute(ToolsState* tools_state, Event* event){
       tools_state->set_state(StateTrackEclipseStarted::Instance());
   }
   if(event == EventWheel::Instance()){
+    EventWheelHandle(EventWheel::Instance()->angle(),
+      EventWheel::Instance()->x(), EventWheel::Instance()->y());
     //TODO: something
   }
   if(event == EventButtonLine::Instance()){
@@ -655,14 +785,14 @@ DataTrackUnitList* DataTrackUnitList::Instance(){
   return data_;
 }
 
-void DataTrackUnitList::push_back_line(int end_x, int end_y){
+void DataTrackUnitList::push_back_line(double end_x, double end_y){
   units_flag_.push_back(LINE);
   units_.push_back(end_x);
   units_.push_back(end_y);
 }
 
-void DataTrackUnitList::push_back_circle(int center_x, int center_y,
-    int side_x, int side_y, int angle_x, int angle_y){
+void DataTrackUnitList::push_back_circle(double center_x, double center_y,
+    double side_x, double side_y, double angle_x, double angle_y){
   units_flag_.push_back(CIRCLE);
   units_.push_back(center_x);
   units_.push_back(center_y);
@@ -672,10 +802,10 @@ void DataTrackUnitList::push_back_circle(int center_x, int center_y,
   units_.push_back(angle_y);
 }
 
-void DataTrackUnitList::push_back_eclipse(int center_x, int center_y,
-    int end_x, int end_y,
-    int side_x, int side_y,
-    int angle_x, int angle_y){
+void DataTrackUnitList::push_back_eclipse(double center_x, double center_y,
+    double end_x, double end_y,
+    double side_x, double side_y,
+    double angle_x, double angle_y){
   units_flag_.push_back(ECLIPSE);
   units_.push_back(center_x);
   units_.push_back(center_y);

@@ -40,7 +40,7 @@ private:
     std::string temp;
     std::stringstream strstream;
     ObjectState object_state = {12, 12.34, 15,56, 134.56, 23.12};
-    JSCreateObject(&object_state).execute(temp);
+    temp = JSCreateObject(&object_state).execute();
     strstream << "createObject("
       << object_state.id << ","
       << object_state.x << ","
@@ -58,7 +58,7 @@ private:
     std::string temp;
     std::stringstream strstream;
     ObjectState object_state = {12, 12.34, 15,56};
-    JSUpdateObject(&object_state).execute(temp);
+    temp = JSUpdateObject(&object_state).execute();
     strstream << "updateObject("
       << object_state.id << ","
       << object_state.x << ","
@@ -76,7 +76,7 @@ private:
     std::string temp;
     std::stringstream strstream;
     unsigned long long id = 101010;
-    JSDeleteObject(id).execute(temp);
+    temp = JSDeleteObject(id).execute();
     strstream << "deleteObject("
       << id;
     strstream << ");";
@@ -88,19 +88,21 @@ private:
   void TestClearObject(){
     std::string temp = "clearObject();";
     std::string mytemp;
-    JSClearObject().execute(mytemp);
+    mytemp = JSClearObject().execute();
     assert(strcmp(temp.c_str(), mytemp.c_str())== 0);
   }
 
   void TestCreateRadar(){
     std::string temp;
     std::stringstream strstream;
-    Radar radar_state = { 1111, 134.3241, 98.134 };
-    JSCreateRadar(&radar_state).execute(temp);
+    JSRadar radar_state = { 1111, 0, 134.3241, 98.134, 431.12 };
+    temp = JSCreateRadar(&radar_state).execute();
     strstream << "createRadar("
       << radar_state.id << ","
-      << radar_state.x << ","
-      << radar_state.y;
+      << radar_state.type << ","
+      << radar_state.center_x << ","
+      << radar_state.center_y << ","
+      << radar_state.radius;
     strstream << ");";
     strstream.flush();
     std::string mytemp = strstream.str();
@@ -110,12 +112,14 @@ private:
   void TestUpdateRadar(){
     std::string temp;
     std::stringstream strstream;
-    Radar radar_state = { 1111, 134.3241, 98.134 };
-    JSUpdateRadar(&radar_state).execute(temp);
+    JSRadar radar_state = { 1111, 134.3241, 98.134, 211.41 };
+    temp = JSUpdateRadar(&radar_state).execute();
     strstream << "updateRadar("
       << radar_state.id << ","
-      << radar_state.x << ","
-      << radar_state.y;
+      << radar_state.type << ","
+      << radar_state.center_x << ","
+      << radar_state.center_y << ","
+      << radar_state.radius;
     strstream << ");";
     strstream.flush();
     std::string mytemp = strstream.str();
@@ -125,7 +129,7 @@ private:
     std::string temp;
     std::stringstream strstream;
     unsigned long long id = 342189;
-    JSDeleteRadar(id).execute(temp);
+    temp = JSDeleteRadar(id).execute();
     strstream << "deleteRadar("
       << id;
     strstream << ");";
@@ -136,7 +140,7 @@ private:
   void TestClearRadar(){
     std::string temp = "clearRadar();";
     std::string mytemp;
-    JSClearRadar().execute(mytemp);
+    mytemp = JSClearRadar().execute();
     assert(strcmp(temp.c_str(), mytemp.c_str()) == 0);
   }
 
@@ -149,7 +153,7 @@ private:
       << radar_id << ","
       << object_id;
     strstream << ");";
-    JSCreateRadarState(radar_id, object_id).execute(temp);
+    temp = JSCreateRadarState(radar_id, object_id).execute();
     std::string mytemp = strstream.str();
     assert(strcmp(temp.c_str(), strstream.str().c_str()) == 0);
   }
@@ -163,7 +167,7 @@ private:
       << radar_id << ","
       << object_id;
     strstream << ");";
-    JSUpdateRadarState(radar_id, object_id).execute(temp);
+    temp = JSUpdateRadarState(radar_id, object_id).execute();
     assert(strcmp(temp.c_str(), strstream.str().c_str()) == 0);
   }
 
@@ -176,7 +180,7 @@ private:
       << radar_id << ","
       << object_id;
     strstream << ");";
-    JSDeleteRadarState(radar_id, object_id).execute(temp);
+    temp = JSDeleteRadarState(radar_id, object_id).execute();
     assert(strcmp(temp.c_str(), strstream.str().c_str()) == 0);
   }
 
@@ -187,14 +191,14 @@ private:
     strstream << "clearRadarState("
       << radar_id;
     strstream << ");";
-    JSClearRadarState(radar_id).execute(temp);
+    temp = JSClearRadarState(radar_id).execute();
     assert(strcmp(temp.c_str(), strstream.str().c_str()) == 0);
   }
 
   void TestCreateLine(){
     std::string temp;
     std::stringstream strstream;
-    Line line = {342412, 123.4134, 73.132, 19.1411, 32.1341};
+    JSLine line = {342412, 123.4134, 73.132, 19.1411, 32.1341};
     strstream << "createLine("
       << line.id << ","
       << line.start_x << ","
@@ -202,13 +206,13 @@ private:
       << line.end_x << ","
       << line.end_y
       << ");";
-    JSCreateLine(&line).execute(temp);
+    temp = JSCreateLine(&line).execute();
     assert(0 == strcmp(temp.c_str(), strstream.str().c_str()));
   }
   void TestUpdateLine(){
     std::string temp;
     std::stringstream strstream;
-    Line line = {342412, 123.4134, 73.132, 19.1411, 32.1341};
+    JSLine line = {342412, 123.4134, 73.132, 19.1411, 32.1341};
     strstream << "updateLine("
       << line.id << ","
       << line.start_x << ","
@@ -216,7 +220,7 @@ private:
       << line.end_x << ","
       << line.end_y
       << ");";
-    JSUpdateLine(&line).execute(temp);
+    temp = JSUpdateLine(&line).execute();
     assert(0 == strcmp(temp.c_str(), strstream.str().c_str()));
   }
   void TestDeleteLine(){
@@ -226,13 +230,13 @@ private:
     strstream << "deleteLine("
       << id
       << ");";
-    JSDeleteLine(id).execute(temp);
+    temp = JSDeleteLine(id).execute();
     assert(0 == strcmp(temp.c_str(), strstream.str().c_str()));
   }
   void TestClearLine(){
     std::string temp;
     std::string temp_std = "clearLine();";
-    JSClearLine().execute(temp);
+    temp = JSClearLine().execute();
     assert(0 == strcmp(temp.c_str(), temp_std.c_str()));
   }
 
@@ -240,7 +244,7 @@ private:
     std::string temp;
     std::stringstream strstream;
     Circle circle = {431289, 23.1341, 18.12431, 98.12421, 32.1341, 3.14};
-    JSCreateCircle(&circle).execute(temp);
+    temp = JSCreateCircle(&circle).execute();
     strstream << "createCircle(" 
       << circle.id << ","
       << circle.start_x << ","
@@ -255,7 +259,7 @@ private:
     std::string temp;
     std::stringstream strstream;
     Circle circle = {431289, 23.1341, 18.12431, 98.12421, 32.1341, 3.14};
-    JSUpdateCircle(&circle).execute(temp);
+    temp = JSUpdateCircle(&circle).execute();
     strstream << "updateCircle(" 
       << circle.id << ","
       << circle.start_x << ","
@@ -273,13 +277,13 @@ private:
     strstream << "deleteCircle("
       << id
       << ");";
-    JSDeleteCircle(id).execute(temp);
+    temp = JSDeleteCircle(id).execute();
     assert(0 == strcmp(temp.c_str(), strstream.str().c_str()));
   }
   void TestClearCircle(){
     std::string temp;
     std::string temp_std = "clearCircle();";
-    JSClearCircle().execute(temp);
+    temp = JSClearCircle().execute();
     assert(0 == strcmp(temp.c_str(), temp_std.c_str()));
   }
 
@@ -290,7 +294,7 @@ private:
       98.12421, 32.1341, 
       41.12432, 12.4321,
       3.14};
-    JSCreateEclipse(&eclipse).execute(temp);
+    temp = JSCreateEclipse(&eclipse).execute();
     strstream << "createEclipse(" 
       << eclipse.id << ","
       << eclipse.start_x << ","
@@ -311,7 +315,7 @@ private:
       98.12421, 32.1341, 
       41.12432, 12.4321,
       3.14};
-    JSUpdateEclipse(&eclipse).execute(temp);
+    temp =JSUpdateEclipse(&eclipse).execute();
     strstream << "updateEclipse(" 
       << eclipse.id << ","
       << eclipse.start_x << ","
@@ -332,14 +336,14 @@ private:
     strstream << "deleteEclipse("
       << id
       << ");";
-    JSDeleteEclipse(id).execute(temp);
+    temp = JSDeleteEclipse(id).execute();
     assert(0 == strcmp(temp.c_str(), strstream.str().c_str()));
   }
 
   void TestClearEclipse(){
     std::string temp;
     std::string temp_std = "clearEclipse();";
-    JSClearEclipse().execute(temp);
+    temp = JSClearEclipse().execute();
     assert(0 == strcmp(temp.c_str(), temp_std.c_str()));
   }
 };
