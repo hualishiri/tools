@@ -347,6 +347,11 @@ public:
     EventReleaseLeft::Instance()->set(150, 150);
     tools_state.Execute(EventReleaseLeft::Instance());
 
+    EventWheel::Instance()->set_angle(120);
+    EventWheel::Instance()->set_x(10);
+    EventWheel::Instance()->set_y(10);
+    tools_state.Execute(EventWheel::Instance());
+
 
     /*
     typedef Event* EVENT;

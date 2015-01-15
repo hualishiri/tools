@@ -254,15 +254,33 @@ private:
 
 class JSDeleteEclipse : public JavaScript{
 public:
-  JSDeleteEclipse(unsigned long long id) : id_(id){}
+  JSDeleteEclipse(long long id) : id_(id){}
   virtual std::string execute();
 private:
-  unsigned long long id_;
+  long long id_;
 };
 
 class JSClearEclipse : public JavaScript{
 public:
   virtual std::string execute();
+};
+
+class JSSetZoom : public JavaScript{
+public:
+  JSSetZoom(int zoom):zoom_(zoom){}
+  virtual std::string execute();
+private:
+  int zoom_;
+};
+
+class JSSetCenter : public JavaScript{
+public:
+  JSSetCenter(double longitude, double latitude)
+    :longitude_(longitude), latitude_(latitude){}
+  virtual std::string execute();
+private:
+  double longitude_;
+  double latitude_;
 };
 
 } //namespace tools

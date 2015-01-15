@@ -289,4 +289,28 @@ std::string JSClearEclipse::execute(){
   return js;
 }
 
+std::string JSSetZoom::execute(){
+  assert(zoom_ > 0 && zoom_ < 24);
+  sstream_ << zoom_;
+  std::string js;
+  js.append("setZoom(");
+  js.append(sstream_.str());
+  js.append(");");
+  sstream_.clear();
+  return js;
+}
+
+std::string JSSetCenter::execute(){
+  assert(longitude_ > -180.0 && longitude_ < 180.0);
+  assert(latitude_ > -90.0 && latitude_ < 90.0);
+  sstream_ << longitude_ << ","
+    << latitude_;
+  std::string js;
+  js.append("setCenter(");
+  js.append(sstream_.str());
+  js.append(");");
+  sstream_.clear();
+  return js;
+}
+
 } //namespace tools

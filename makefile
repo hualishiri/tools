@@ -19,9 +19,9 @@ cmap_projection : map_projection.o map_projection_test.o
 	$(GCC) $(OUTPUT)/map_projection.o $(OUTPUT)/map_projection_test.o \
 		-o $(OUTPUT)/map_projection
 ewebkit : cwebkit
-	./webkit_test
-cwebkit : webkit.o
-	$(GCC) $(OUTPUT)/webkit.o -o $(OUTPUT)/webkit_test
+	./$(OUTPUT)/webkit_test
+cwebkit : webkit.o webkit_test.o
+	$(GCC) $(OUTPUT)/webkit.o $(OUTPUT)/webkit_test.o -o $(OUTPUT)/webkit_test
 
 
 event.o : src/event/event.h src/event/event.cpp

@@ -66,9 +66,10 @@ void EventWheelHandle(int angle, int x, int y){
     MapProjection::Instance(Map::Instance()->zoom())
       ->FromPixelToWgs(pixel_point, wgs_point);
 
-    std::cout << "setZoom(" << new_zoom << ")" << std::endl;
-    std::cout << "setCenter(" << wgs_point.longitude << ","
-      << wgs_point.latitude << ");";
+    JSSetZoom js_set_zoom(new_zoom);
+    JSSetCenter js_set_center(wgs_point.longitude, wgs_point.latitude);
+    Webkit::Instance()->execute(js_set_zoom);
+    Webkit::Instance()->execute(js_set_center);
 }
 
 } //namespace
@@ -188,8 +189,6 @@ void StateRadarSelected::execute(ToolsState* tools_state, Event* event){
       + EventReleaseLeft::Instance()->y();
     MapProjection::Instance(Map::Instance()->zoom())
       ->FromPixelToWgs(pixel_point, wgs_point);
-    std::cout << wgs_point.longitude << " "
-      << wgs_point.latitude << std::endl;
 
     DataStateRadar::Instance()->set_id(GenerateId());
     DataStateRadar::Instance()->set_center(wgs_point.longitude, 
@@ -265,17 +264,15 @@ void StateRadarCentered::execute(ToolsState* tools_state, Event* event){
     return;
   }
   if(event == EventReleaseRight::Instance()){
-    std::cout << "deleteRadar("
-      << DataStateRadar::Instance()->id()
-      << ");" << std::endl;
+    JSDeleteRadar js_delete_radar(DataStateRadar::Instance()->id());
     tools_state->set_state(StateRadarSelected::Instance()); 
     return;
   }
   if(event == EventMouseMove::Instance()){
     pixel_point.x = Map::Instance()->origin_x() 
-      + EventReleaseLeft::Instance()->x();
+      + EventMouseMove::Instance()->x();
     pixel_point.y = Map::Instance()->origin_y()
-      + EventReleaseLeft::Instance()->y();
+      + EventMouseMove::Instance()->y();
     MapProjection::Instance(Map::Instance()->zoom())
       ->FromPixelToWgs(pixel_point, wgs_point);
     
@@ -288,11 +285,15 @@ void StateRadarCentered::execute(ToolsState* tools_state, Event* event){
         EventMouseMove::Instance()->x(),
         EventMouseMove::Instance()->y());
 
-    std::cout << "[IN]updateRadar("
-      << DataStateRadar::Instance()->id() << ","
-      << DataStateRadar::Instance()->center_x() << ","
-      << DataStateRadar::Instance()->center_y() << ","
-      << 0 << ");" << std::endl;
+      JSRadar radar = {
+        DataStateRadar::Instance()->id(),
+        0,
+        DataStateRadar::Instance()->center_x(),
+        DataStateRadar::Instance()->center_y(),
+        radius
+      };
+    JSUpdateRadar js_update_radar(&radar);
+    Webkit::Instance()->execute(js_update_radar);
     return;
   }
   if(event == EventWheel::Instance()){

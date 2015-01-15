@@ -34,6 +34,9 @@ public:
     TestUpdateEclipse();
     TestDeleteEclipse();
     TestClearEclipse();
+
+    TestSetZoom();
+    TestSetCenter();
   }
 private:
   void TestCreateObject(){
@@ -112,7 +115,7 @@ private:
   void TestUpdateRadar(){
     std::string temp;
     std::stringstream strstream;
-    JSRadar radar_state = { 1111, 134.3241, 98.134, 211.41 };
+    JSRadar radar_state = { 1111, 0,  134.3241, 30.0, 211.41 };
     temp = JSUpdateRadar(&radar_state).execute();
     strstream << "updateRadar("
       << radar_state.id << ","
@@ -345,6 +348,29 @@ private:
     std::string temp_std = "clearEclipse();";
     temp = JSClearEclipse().execute();
     assert(0 == strcmp(temp.c_str(), temp_std.c_str()));
+  }
+
+  void TestSetZoom(){
+    std::string temp;
+    std::stringstream strstream;
+    unsigned long long id = 10;
+    strstream << "setZoom("
+      << id
+      << ");";
+    temp = JSSetZoom(id).execute();
+    assert(0 == strcmp(temp.c_str(), strstream.str().c_str()));
+  }
+
+  void TestSetCenter(){
+    std::string temp;
+    std::stringstream strstream;
+    double longitude = 170.4312;
+    double latitude = 73.34121;
+    strstream << "setCenter("
+      << longitude << ","
+      << latitude << ");";
+    temp = JSSetCenter(longitude, latitude).execute();
+    assert(0 == strcmp(temp.c_str(), strstream.str().c_str()));
   }
 };
 
