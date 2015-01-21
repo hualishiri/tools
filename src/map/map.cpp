@@ -1,12 +1,12 @@
 #include "map.h"
 
-namespace tools{
+namespace tools {
 
-Map* Map::map_ = 0;
-
-Map* Map::Instance(){
-  if(!map_) map_ = new Map();
+Map* Map::Instance() {
+  if (!map_) map_ = new Map();
   return map_;
 }
+
+Map* Map::map_ = 0;
 
 } //namespace tools

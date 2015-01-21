@@ -1,17 +1,17 @@
 #ifndef TOOLS_EVENT_H_
 #define TOOLS_EVENT_H_
 
-namespace tools{
+namespace tools {
 
-class Event{
-public:
-  virtual  ~Event() = 0;
+class Event {
+ public:
+  virtual ~Event() = 0;
 };
 
-class EventMouse : public Event{
-public:
+class EventMouse : public Event {
+ public:
   virtual  ~EventMouse() = 0;
-  EventMouse():x_(0), y_(0){}
+  EventMouse() : x_(0), y_(0){}
   inline int x() const { return x_; }
   inline int y() const { return y_; }
   inline int set(int x, int y){

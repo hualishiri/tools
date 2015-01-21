@@ -15,7 +15,7 @@ protected:
 
 class Webkit{
 public:
-  void execute(JavaScript& js);
+  Webkit& execute(JavaScript& js);
   inline void set_page(void(*page)(const char*)) { page_ = page; }
   static Webkit* Instance();
   
@@ -186,7 +186,7 @@ public:
   virtual std::string execute();
 };
 
-struct Circle{
+struct JSCircle{
   unsigned long long id;
   double start_x;
   double start_y;
@@ -198,18 +198,18 @@ struct Circle{
 
 class JSCreateCircle:public JavaScript{
 public:
-  JSCreateCircle(Circle* circle) : circle_(circle){}
+  JSCreateCircle(JSCircle* circle) : circle_(circle){}
   virtual std::string execute();
 private:
-  Circle* circle_;
+  JSCircle* circle_;
 };
 
 class JSUpdateCircle:public JavaScript{
 public:
-  JSUpdateCircle(Circle* circle) : circle_(circle){}
+  JSUpdateCircle(JSCircle* circle) : circle_(circle){}
   virtual std::string execute();
 private:
-  Circle* circle_;
+  JSCircle* circle_;
 };
 
 class JSDeleteCircle : public JavaScript{

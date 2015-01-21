@@ -6,7 +6,7 @@
 namespace tools{
 
 Webkit* Webkit::webkit_ = NULL;
-void Webkit::execute(JavaScript& js){
+Webkit& Webkit::execute(JavaScript& js){
   assert(page_ != NULL);
   page_(js.execute().c_str());
 }

@@ -15,13 +15,14 @@ void WebView(const char* str){
 }
 
 namespace test{
+
 class Test{
-public:
-  void RunAllTest(){
+ public:
+  void RunAllTest() {
     //TestRadarFunction();
     TestRadar();
   }
-  void TestRadarFunction(){
+  void TestRadarFunction() {
     std::vector<State*> states;
     std::vector<State*> states_init;
     std::vector<Event*> events;

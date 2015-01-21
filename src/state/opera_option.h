@@ -3,12 +3,13 @@
 
 #include <vector>
 
-namespace tools{
+namespace tools {
 
-class OperaOption{
-public:
-  enum TrackUnitType{ LINE, CIRCLE, ECLIPSE };
-  struct Radar{
+class OperaOption {
+ public:
+  enum TrackUnitType { LINE, CIRCLE, ECLIPSE };
+
+  struct Radar {
     long long id;
     unsigned char type;
     double start_x;
@@ -17,14 +18,14 @@ public:
     double radius_y;
   };
   
-  struct Object{
+  struct Object {
     long long id;
     unsigned char type;
     double x;
     double y;
   };
   
-  struct Line{
+  struct Line {
     long long id;
     double start_x;
     double start_y;
@@ -32,7 +33,7 @@ public:
     double end_y;
   };
   
-  struct Circle{
+  struct Circle {
     long long id;
     double start_x;
     double start_y;
@@ -44,7 +45,7 @@ public:
     double angle_y;
   };
   
-  struct Eclipse{
+  struct Eclipse {
     long long id;
     double start_x;
     double start_y;
@@ -58,7 +59,7 @@ public:
     double angle_y;
   };
   
-  struct Track{
+  struct Track {
     long long id;
     std::vector<Line> lines;
     std::vector<Circle> circles;
@@ -66,25 +67,30 @@ public:
     std::vector<TrackUnitType> types;
   };
 
+  static OperaOption* Instance();
+
   inline void push_back_radar(const Radar& radar){ radars_.push_back(radar); }
   void pop_radar(long long id);
-  inline void push_back_object(const Object& object){ objects_.push_back(object); }
+  inline std::size_t size_radar() const { return radars_.size(); }
+  inline void push_back_object(const Object& object) {
+    objects_.push_back(object);
+  }
   void pop_object(long long id);
-  inline void push_back_track(const Track& track){ tracks_.push_back(track); }
+  inline std::size_t size_object() const { return objects_.size(); }
+  inline void push_back_track(const Track& track) { tracks_.push_back(track); }
   void pop_track(long long id);
+  inline std::size_t size_track() const { return tracks_.size(); }
 
-  static OperaOption* Instance();
-  
-private:
-  OperaOption(){}
+ private:
+  OperaOption() {}
   OperaOption(const OperaOption&);
   OperaOption& operator=(const OperaOption&);
+
+  static OperaOption* option_;
 
   std::vector<Radar> radars_;
   std::vector<Object> objects_;
   std::vector<Track> tracks_;
-
-  static OperaOption* option_;
 };
 
 } //namespace tools

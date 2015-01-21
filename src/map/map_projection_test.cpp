@@ -2,14 +2,16 @@
 
 #include <iostream>
 
-namespace tools{
-namespace test{
-class Test{
-public:
-  void RunAllTest(){
+namespace tools {
+namespace test {
+
+class Test {
+ public:
+  void RunAllTest() {
     TestMapProjection();
   }
-  void TestMapProjection(){
+
+  void TestMapProjection() {
     MapProjection::PixelPoint pixel_point;
     MapProjection::WgsPoint wgs_point;
     wgs_point.longitude = -88.233735;
@@ -18,7 +20,8 @@ public:
     std::cout << pixel_point.x << " " << pixel_point.y << std::endl;
   }
 };
-};
+
+} //namespace test
 } //namespace tools
 
 int main(){

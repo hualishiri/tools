@@ -246,7 +246,7 @@ private:
   void TestCreateCircle(){
     std::string temp;
     std::stringstream strstream;
-    Circle circle = {431289, 23.1341, 18.12431, 98.12421, 32.1341, 3.14};
+    JSCircle circle = {431289, 23.1341, 18.12431, 98.12421, 32.1341, 3.14};
     temp = JSCreateCircle(&circle).execute();
     strstream << "createCircle(" 
       << circle.id << ","
@@ -261,7 +261,7 @@ private:
   void TestUpdateiCircle(){
     std::string temp;
     std::stringstream strstream;
-    Circle circle = {431289, 23.1341, 18.12431, 98.12421, 32.1341, 3.14};
+    JSCircle circle = {431289, 23.1341, 18.12431, 98.12421, 32.1341, 3.14};
     temp = JSUpdateCircle(&circle).execute();
     strstream << "updateCircle(" 
       << circle.id << ","
