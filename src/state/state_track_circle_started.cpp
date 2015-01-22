@@ -10,6 +10,7 @@
 #include "state/opera_context.h"
 #include "state/state_track_circle_selected.h"
 #include "state/state_track_circle_started.h"
+#include "state/state_track_circle_centered.h"
 #include "state/state_internal_handle.h"
 
 namespace tools {
@@ -50,7 +51,7 @@ void StateTrackCircleStarted::execute(OperaContext* opera_context,
       };
       JSUpdateCircle js_update_circle(&js_circle);
       Webkit::Instance()->execute(js_update_circle);
-      opera_context->set_state(StateTrackCircleStarted::Instance());
+      opera_context->set_state(StateTrackCircleCentered::Instance());
     } else if (event == EventReleaseRight::Instance()) {
       StateCircleEventReleaseRightHandle(
           DataStateCircle::Instance()->circle_.id,

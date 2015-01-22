@@ -4,12 +4,12 @@
 #include "event/event.h"
 #include "map/map.h"
 #include "map/map_projection.h"
-#include "webkit/webkit.h"
 #include "state/data_track_unit_list.h"
 #include "state/opera_context.h"
 #include "state/state_internal_handle.h"
 #include "state/state_track_line_started.h"
 #include "util/tool.h"
+#include "webkit/webkit.h"
 
 namespace tools{
 namespace{

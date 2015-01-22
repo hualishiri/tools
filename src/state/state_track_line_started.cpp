@@ -27,8 +27,8 @@ void StateTrackLineStarted::execute(OperaContext* opera_context, Event* event) {
       EventReleaseLeftHandle();
     else if (event == EventReleaseRight::Instance())  
       EventReleaseRightHandle();
-    else if (event == EventMouseMove::Instance())
-      EventMouseMoveHandle();
+    else if (IsEventInButtonLineCircleEclipse(event))
+      StateAfterSelectedEventHandle(opera_context, event);
   } else {
     EventReleaseRightHandle();
   }
@@ -62,6 +62,15 @@ void StateTrackLineStarted::EventReleaseLeftHandle() {
     };
     JSUpdateLine js_update_line(&js_line);
     Webkit::Instance()->execute(js_update_line);
+    JSLine js_line_new = {
+      GenerateId(),
+      wgs_point.longitude,
+      wgs_point.latitude,
+      wgs_point.longitude,
+      wgs_point.latitude
+    };
+    JSCreateLine js_create_line(&js_line_new);
+    Webkit::Instance()->execute(js_create_line);
 
     SetDataLineCircleEclipse(GenerateId(),
                              wgs_point.longitude,
@@ -72,6 +81,7 @@ void StateTrackLineStarted::EventReleaseRightHandle() {
     JSDeleteLine js_delete_line(DataStateLine::Instance()->id());
     Webkit::Instance()->execute(js_delete_line);
     if (!DataTrackUnitList::Instance()->empty()) {
+      DataTrackUnitList::Instance()->set_id(GenerateId());
       OperaOption::Instance()
           ->push_back_track(DataTrackUnitList::Instance()->track());
       DataTrackUnitList::Instance()->clear();

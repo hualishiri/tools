@@ -3,6 +3,16 @@ CCFLAG = -g -I /home/wnlo/tools/src/
 
 GCC = $(CC) $(CCFLAG)
 OUTPUT = bin
+OBJECTS = map.o map_projection.o event.o webkit.o tool.o data_state_circle.o\
+					data_state_line.o data_state_radar.o data_track_unit_list.o \
+					opera_context.o opera_option.o state.o state_internal_handle.o \
+					state_radar_centered.o state_radar_selected.o \
+					state_track_circle_centered.o state_track_circle_selected.o \
+					state_track_circle_sided.o state_track_circle_started.o \
+					state_track_line_selected.o state_track_line_started.o \
+					wheel_handle.o
+OUTPUTOJBECTS = $(patsubst %, $(OUTPUT)/%, $(OBJECTS))
+	#$(OUTPUTOJBECTS);
 
 estate : cstate
 	./$(OUTPUT)/state_test
@@ -57,6 +67,16 @@ cstate_radar_selected : map.o map_projection.o state_radar_selected.o \
 	$(OUTPUT)/map.o $(OUTPUT)/map_projection.o $(OUTPUT)/tool.o $(OUTPUT)/webkit.o \
 	$(OUTPUT)/event.o $(OUTPUT)/state.o $(OUTPUT)/data_state_radar.o \
 	$(OUTPUT)/state_radar_centered.o -o $(OUTPUT)/state_radar_selected_test
+estate_track_line_selected : cstate_track_line_selected
+	./$(OUTPUT)/state_track_line_selected_test
+cstate_track_line_selected : $(OBJECTS) state_track_line_selected_test.o
+	$(GCC) -o $(OUTPUT)/state_track_line_selected_test $(OUTPUTOJBECTS) \
+	$(OUTPUT)/state_track_line_selected_test.o 
+estate_track_line_started : cstate_track_line_started
+	./$(OUTPUT)/state_track_line_started_test
+cstate_track_line_started : $(OBJECTS) state_track_line_started_test.o
+	$(GCC) -o $(OUTPUT)/state_track_line_started_test $(OUTPUTOJBECTS) \
+	$(OUTPUT)/state_track_line_started_test.o 
 
 
 event.o : src/event/event.h src/event/event.cpp
@@ -75,16 +95,50 @@ data_state_radar.o : src/state/data_state_radar.cpp src/state/data_state_radar.h
 	$(GCC) -c src/state/data_state_radar.cpp -o $(OUTPUT)/data_state_radar.o
 data_state_line.o : src/state/data_state_line.cpp src/state/data_state_line.h
 	$(GCC) -c src/state/data_state_line.cpp -o $(OUTPUT)/data_state_line.o
-data_track_unit_list.o : src/state/data_track_unit_list.cpp src/state/data_track_unit_list.h
+data_state_circle.o : src/state/data_state_circle.cpp src/state/data_state_circle.h
+	$(GCC) -c src/state/data_state_circle.cpp -o $(OUTPUT)/data_state_circle.o
+data_track_unit_list.o : src/state/data_track_unit_list.cpp \
+	src/state/data_track_unit_list.h
 	$(GCC) -c src/state/data_track_unit_list.cpp -o $(OUTPUT)/data_track_unit_list.o
 opera_option.o : src/state/opera_option.cpp src/state/opera_option.h
 	$(GCC) -c src/state/opera_option.cpp -o $(OUTPUT)/opera_option.o
+opera_context.o : src/state/opera_context.cpp src/state/opera_context.h
+	$(GCC) -c src/state/opera_context.cpp -o $(OUTPUT)/opera_context.o
 wheel_handle.o : src/state/wheel_handle.cpp src/state/wheel_handle.h
 	$(GCC) -c src/state/wheel_handle.cpp -o $(OUTPUT)/wheel_handle.o
-state_radar_selected.o : src/state/state_radar_selected.cpp src/state/state_radar_selected.h
+state_radar_selected.o : src/state/state_radar_selected.cpp \
+	src/state/state_radar_selected.h
 	$(GCC) -c src/state/state_radar_selected.cpp -o $(OUTPUT)/state_radar_selected.o
-state_radar_centered.o : src/state/state_radar_centered.cpp src/state/state_radar_centered.h
+state_radar_centered.o : src/state/state_radar_centered.cpp \
+	src/state/state_radar_centered.h
 	$(GCC) -c src/state/state_radar_centered.cpp -o $(OUTPUT)/state_radar_centered.o
+state_internal_handle.o : src/state/state_internal_handle.h \
+	 src/state/state_internal_handle.cpp
+	$(GCC) -o $(OUTPUT)/state_internal_handle.o -c src/state/state_internal_handle.cpp
+state_track_line_selected.o : src/state/state_track_line_selected.h \
+	src/state/state_track_line_selected.cpp
+	$(GCC) -o $(OUTPUT)/state_track_line_selected.o \
+		-c src/state/state_track_line_selected.cpp
+state_track_line_started.o : src/state/state_track_line_started.h \
+	src/state/state_track_line_started.cpp
+	$(GCC) -o $(OUTPUT)/state_track_line_started.o \
+		-c src/state/state_track_line_started.cpp
+state_track_circle_selected.o : src/state/state_track_circle_selected.h \
+	src/state/state_track_circle_selected.cpp
+	$(GCC) -o $(OUTPUT)/state_track_circle_selected.o \
+		-c src/state/state_track_circle_selected.cpp
+state_track_circle_started.o : src/state/state_track_circle_started.h \
+	src/state/state_track_circle_started.cpp
+	$(GCC) -o $(OUTPUT)/state_track_circle_started.o \
+		-c src/state/state_track_circle_started.cpp
+state_track_circle_centered.o : src/state/state_track_circle_centered.h \
+	src/state/state_track_circle_centered.cpp
+	$(GCC) -o $(OUTPUT)/state_track_circle_centered.o \
+		-c src/state/state_track_circle_centered.cpp
+state_track_circle_sided.o : src/state/state_track_circle_sided.h \
+	src/state/state_track_circle_sided.cpp
+	$(GCC) -o $(OUTPUT)/state_track_circle_sided.o \
+		-c src/state/state_track_circle_sided.cpp
 
 event_test.o : src/event/event_test.cpp
 	$(GCC) -c src/event/event_test.cpp -o $(OUTPUT)/event_test.o
@@ -117,6 +171,12 @@ state_radar_selected_test.o : src/state/state_radar_selected_test.cpp
 state_radar_centered_test.o : src/state/state_radar_centered_test.cpp 
 	$(GCC) -c src/state/state_radar_centered_test.cpp \
 		-o $(OUTPUT)/state_radar_centered_test.o
+state_track_line_selected_test.o : src/state/state_track_line_selected_test.cpp
+	$(GCC) -o $(OUTPUT)/state_track_line_selected_test.o \
+	-c src/state/state_track_line_selected_test.cpp
+state_track_line_started_test.o : src/state/state_track_line_started_test.cpp
+	$(GCC) -o $(OUTPUT)/state_track_line_started_test.o \
+	-c src/state/state_track_line_started_test.cpp
 
 test : estate eevent emap_projection ewebkit
 

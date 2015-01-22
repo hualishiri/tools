@@ -9,13 +9,17 @@ namespace{
 long long id = 0x0beef;
 }
 
-long long GenerateId(){
+long long GenerateId() {
   ++id;
   return id;
 }
 
-bool DoubleEqual(double lhs, double rhs){
-  if(lhs - rhs > -0.00000000001 && lhs-rhs < 0.0000000001)
+void SetId(long long id_in) {
+  id = id_in;
+}
+
+bool DoubleEqual(double lhs, double rhs) {
+  if (lhs - rhs > -0.00000000001 && lhs - rhs < 0.0000000001)
     return true;
   return false;
 }
@@ -42,14 +46,14 @@ double AngleInCircle(double x, double y) {
 }
 
 double AngleFromStartByClockInCircle(double start_x,
-                    double start_y,
-                    double center_x,
-                    double center_y,
-                    double angle_x,
-                    double angle_y) {
+                                     double start_y,
+                                     double center_x,
+                                     double center_y,
+                                     double angle_x,
+                                     double angle_y) {
   double a = center_x;
   double b = center_y;
-  double r_square = pow(center_y-start_y, 2) + pow(center_x-start_x, 2); 
+  double r_square = pow(center_y - start_y, 2) + pow(center_x - start_x, 2); 
   double select_angle = 0;
   if (DoubleEqual(angle_x, center_x)) {
     double y1 = b + sqrt(a * a + r_square);
@@ -78,6 +82,7 @@ double AngleFromStartByClockInCircle(double start_x,
   double start_angle = AngleInCircle(start_x - center_x, start_y - center_y);
   double delta_angle = start_angle - select_angle;
   if (delta_angle < 0) delta_angle += 2 * M_PI;
+  assert(delta_angle >= 0.0 && delta_angle <= 2 * M_PI);
   return delta_angle;
 }
 

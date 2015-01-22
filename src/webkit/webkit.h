@@ -29,7 +29,7 @@ private:
 };
 
 struct ObjectState{
-  unsigned long long id;
+  long long id;
   double x;
   double y;
   double acc;
@@ -57,11 +57,11 @@ private:
 
 class JSDeleteObject: JavaScript{
 public:
-    JSDeleteObject(unsigned long long id)
+    JSDeleteObject(long long id)
         :id_(id){}
     virtual std::string execute();
 private:
-    unsigned long long id_;
+    long long id_;
 };
 
 class JSClearObject: JavaScript{
@@ -96,10 +96,10 @@ private:
 
 class JSDeleteRadar:public JavaScript{
 public:
-    JSDeleteRadar(unsigned long long id):id_(id){}
+    JSDeleteRadar(long long id):id_(id){}
     virtual std::string execute();
 private:
-    unsigned long long id_;
+    long long id_;
 };
 
 class JSClearRadar:public JavaScript{
@@ -110,47 +110,47 @@ private:
 
 class JSCreateRadarState : public JavaScript{
 public:
-  JSCreateRadarState(unsigned long long radar_id,
-    unsigned long long object_id)
+  JSCreateRadarState(long long radar_id,
+    long long object_id)
     :radar_id_(radar_id), object_id_(object_id){}
   virtual std::string execute();
 private:
-    unsigned long long radar_id_;
-    unsigned long long object_id_;
+    long long radar_id_;
+    long long object_id_;
 };
 
 class JSUpdateRadarState:public JavaScript{
 public:
-    JSUpdateRadarState(unsigned long long radar_id,
-                       unsigned long long object_id)
+    JSUpdateRadarState(long long radar_id,
+                       long long object_id)
         :radar_id_(radar_id), object_id_(object_id){}
     virtual std::string execute();
 private:
-    unsigned long long radar_id_;
-    unsigned long long object_id_;
+    long long radar_id_;
+    long long object_id_;
 };
 
 class JSDeleteRadarState:public JavaScript{
 public:
-    JSDeleteRadarState(unsigned long long radar_id,
-                       unsigned long long object_id)
+    JSDeleteRadarState(long long radar_id,
+                       long long object_id)
         :radar_id_(radar_id), object_id_(object_id){}
     virtual std::string execute();
 private:
-    unsigned long long radar_id_;
-    unsigned long long object_id_;
+    long long radar_id_;
+    long long object_id_;
 };
 
 class JSClearRadarState:public JavaScript{
 public:
-    JSClearRadarState(unsigned long long radar_id):radar_id_(radar_id){}
+    JSClearRadarState(long long radar_id):radar_id_(radar_id){}
     virtual std::string execute();
 private:
-    unsigned long long radar_id_;
+    long long radar_id_;
 };
 
 struct JSLine{
-  unsigned long long id;
+  long long id;
   double start_x;
   double start_y;
   double end_x;
@@ -175,10 +175,10 @@ private:
 
 class JSDeleteLine : public JavaScript{
 public:
-  JSDeleteLine(unsigned long long id) : id_(id){}
+  JSDeleteLine(long long id) : id_(id){}
   virtual std::string execute();
 private:
-  unsigned long long id_;
+  long long id_;
 };
 
 class JSClearLine : public JavaScript{
@@ -187,7 +187,7 @@ public:
 };
 
 struct JSCircle{
-  unsigned long long id;
+  long long id;
   double start_x;
   double start_y;
   double radius_x;
@@ -214,10 +214,10 @@ private:
 
 class JSDeleteCircle : public JavaScript{
 public:
-  JSDeleteCircle(unsigned long long id) : id_(id){}
+  JSDeleteCircle(long long id) : id_(id){}
   virtual std::string execute();
 private:
-  unsigned long long id_;
+  long long id_;
 };
 
 class JSClearCircle : public JavaScript{
@@ -226,7 +226,7 @@ public:
 };
 
 struct Eclipse{
-  unsigned long long id;
+  long long id;
   double start_x;
   double start_y;
   double radius_x;

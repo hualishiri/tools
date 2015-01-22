@@ -35,6 +35,8 @@ class DataTrackUnitList {
     start_x_ = x;
     start_y_ = y;
   }
+  inline double start_x() const { return start_x_; }
+  inline double start_y() const { return start_y_; }
   inline void clear() {
     units_.clear();
     units_id_.clear();

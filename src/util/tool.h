@@ -4,6 +4,7 @@
 namespace tools{
 
 long long GenerateId();
+void SetId(long long id_in);
 bool DoubleEqual(double lhs, double rhs);
 double AngleInCircle(double x, double y);
 double AngleFromStartByClockInCircle(double start_x,
