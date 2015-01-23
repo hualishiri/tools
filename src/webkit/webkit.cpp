@@ -9,6 +9,7 @@ Webkit* Webkit::webkit_ = NULL;
 Webkit& Webkit::execute(JavaScript& js){
   assert(page_ != NULL);
   page_(js.execute().c_str());
+  return *this;
 }
 
 Webkit* Webkit::Instance(){

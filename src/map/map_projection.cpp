@@ -22,6 +22,7 @@ double min(double x, double y) {
 
 MapProjection* MapProjection::Instance(double zoom) {
   if (!map_) map_ = new MapProjection(zoom);
+  map_->set_zoom(zoom);
   return map_;
 }
 

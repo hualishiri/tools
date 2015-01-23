@@ -72,7 +72,7 @@ void StateTrackLineStarted::EventReleaseLeftHandle() {
     JSCreateLine js_create_line(&js_line_new);
     Webkit::Instance()->execute(js_create_line);
 
-    SetDataLineCircleEclipse(GenerateId(),
+    SetDataLineCircleEclipse(js_line_new.id,
                              wgs_point.longitude,
                              wgs_point.latitude);
 }

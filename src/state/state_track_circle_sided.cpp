@@ -1,5 +1,7 @@
 #include "state_track_circle_sided.h"
 
+#include <math.h>
+
 #include "event/event.h"
 #include "webkit/webkit.h"
 #include "map/map.h"
@@ -34,9 +36,6 @@ void StateTrackCircleSided::execute(OperaContext* opera_context, Event* event) {
           + EventReleaseLeft::Instance()->y();
       MapProjection::Instance(Map::Instance()->zoom())->FromPixelToWgs(
           pixel_point, wgs_point);
-      SetDataLineCircleEclipse(GenerateId(),
-                               wgs_point.longitude,
-                               wgs_point.latitude);
       DataTrackUnitList::Instance()->push_back_circle(
           DataStateCircle::Instance()->circle_.id,
           DataStateCircle::Instance()->circle_.center_x,
@@ -62,6 +61,30 @@ void StateTrackCircleSided::execute(OperaContext* opera_context, Event* event) {
       };
       JSUpdateCircle js_update_circle(&js_circle);
       Webkit::Instance()->execute(js_update_circle);
+      double angle_std = AngleInCircle(
+          DataStateCircle::Instance()->circle_.side_x
+          - DataStateCircle::Instance()->circle_.center_x,
+          DataStateCircle::Instance()->circle_.side_y
+          - DataStateCircle::Instance()->circle_.center_y);
+      double radius = sqrt(pow(DataStateCircle::Instance()->circle_.start_x 
+          - DataStateCircle::Instance()->circle_.center_x ,2) 
+          + pow(DataStateCircle::Instance()->circle_.start_y 
+          - DataStateCircle::Instance()->circle_.center_y, 2));
+      double x0 = DataStateCircle::Instance()->circle_.center_x 
+          + radius * cos(angle_std);
+      double y0 = DataStateCircle::Instance()->circle_.center_y 
+          + radius * sin(angle_std);
+      SetDataLineCircleEclipse(GenerateId(), x0, y0);
+      JSCircle js_circle_new = {
+        DataStateCircle::Instance()->circle_. id,
+        x0,
+        y0,
+        x0,
+        y0,
+        2 * M_PI
+      };
+      JSCreateCircle js_create_circle(&js_circle_new);
+      Webkit::Instance()->execute(js_create_circle);
       opera_context->set_state(StateTrackCircleStarted::Instance());
     } else if (event == EventReleaseRight::Instance()) {
       StateCircleEventReleaseRightHandle(

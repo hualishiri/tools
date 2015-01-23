@@ -8,10 +8,16 @@
 #include "state/data_track_unit_list.h"
 #include "state/opera_context.h"
 #include "state/opera_option.h"
+#include "state/state.h"
+#include "state/state_radar_selected.h"
+#include "state/state_radar_centered.h"
 #include "state/state_track_line_selected.h"
 #include "state/state_track_line_started.h"
 #include "state/state_track_circle_selected.h"
 #include "state/state_track_circle_started.h"
+#include "state/state_track_circle_centered.h"
+#include "state/state_track_circle_sided.h"
+
 //#include "state/state_track_eclipse_selected.h"
 //#include "state/state_track_eclipse_started.h"
 
@@ -40,6 +46,25 @@ bool IsEventInButtonLineCircleEclipse(Event* event) {
   return false;
 }
 
+bool IsStateInRadar(State* state) {
+  if (state == StateRadarSelected::Instance() ||
+      state == StateRadarCentered::Instance())
+    return true;
+  return false;
+}
+
+bool IsStateInEditing(State* state) {
+  if (state == StateTrackLineSelected::Instance() ||
+      state == StateTrackLineStarted::Instance() ||
+      state == StateTrackCircleSelected::Instance() ||
+      state == StateTrackCircleStarted::Instance() ||
+      state == StateTrackCircleCentered::Instance() ||
+      state == StateTrackCircleSided::Instance() /**/)
+    //TODO: something to do
+    return true;
+  return false;
+}
+
 void StateSelectedEventHandle(OperaContext* opera_context, Event* event) {
   if (event == EventButtonLine::Instance())
     opera_context->set_state(StateTrackLineSelected::Instance());
@@ -63,7 +88,7 @@ void StateAfterSelectedEventHandle(OperaContext* opera_context, Event* event) {
     if (event == EventButtonLine::Instance())
       opera_context->set_state(StateTrackLineStarted::Instance());
     else if (event == EventButtonCircle::Instance())
-      opera_context->set_state(0/*StateTrackCircleStarted::Instance()*/);
+      opera_context->set_state(StateTrackCircleStarted::Instance());
     //TODO: something
     else if (event == EventButtonEclipse::Instance())
       opera_context->set_state(0/*StateTrackEclipseStarted::Instance()*/);
