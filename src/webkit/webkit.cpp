@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include <cassert>
+#include <iomanip>
 
 namespace tools{
 
