@@ -20,6 +20,7 @@ EventButtonStep* EventButtonStep::event_ = 0;
 EventButtonPause* EventButtonPause::event_ = 0;
 EventButtonStop* EventButtonStop::event_ = 0;
 EventButtonAnalysis* EventButtonAnalysis::event_ = 0;
+EventButtonRadar* EventButtonRadar::event_ = 0;
 
 EventPressLeft* EventPressLeft::Instance(){
   if(!event_) event_ = new EventPressLeft();
@@ -93,6 +94,11 @@ EventButtonStop* EventButtonStop::Instance(){
 
 EventButtonAnalysis* EventButtonAnalysis::Instance(){
   if(!event_) event_ = new EventButtonAnalysis();
+  return event_;
+}
+
+EventButtonRadar* EventButtonRadar::Instance() {
+  if (!event_) event_ = new EventButtonRadar();
   return event_;
 }
 

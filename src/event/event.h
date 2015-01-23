@@ -144,13 +144,13 @@ private:
   static EventButtonAnalysis* event_;
 };
 
-/*class EventButtonRadar : public Event{
+class EventButtonRadar : public Event{
 public:
   static EventButtonRadar* Instance();
 
 private:
   static EventButtonRadar* event_;
-};*/
+};
 
 } //namespace tools
 

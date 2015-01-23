@@ -9,6 +9,8 @@ class State;
   
 bool IsEventInEditing(Event* event);
 bool IsEventInButtonLineCircleEclipse(Event* event);
+bool IsStateInRadar(State* state);
+bool IsStateInEditing(State* state);
 void StateSelectedEventHandle(OperaContext* opera_context, Event* event);
 void StateAfterSelectedEventHandle(OperaContext* opera_context, Event* event);
 void StateCircleEventReleaseRightHandle(long long id,
