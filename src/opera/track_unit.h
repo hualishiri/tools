@@ -3,56 +3,60 @@
 
 #include "shape.h"
 
-#include <cassert>
+#include <assert.h>
 
-namespace tools{
+namespace tools {
 
 class Shape2D;
 class Acceleration;
 class PointState2D;
 
-class Acceleration{
-public:
+class Acceleration {
+ public:
   virtual float GetAcceleration(unsigned long time) const = 0;
 };
 
-class UniformAcceleration : public Acceleration{
-public:
-  float GetAcceleration(unsigned long time) const{ return 0.0; }
+class UniformAcceleration : public Acceleration {
+ public:
+  float GetAcceleration(unsigned long time) const { return 0.0; }
 };
 
-class ConstantAcceleration : public Acceleration{
-public:
-  explicit ConstantAcceleration(float acc) : acc_(acc){}
-  float GetAcceleration(unsigned long time) const{ return acc_; }
-private:
-  const float acc_; };
+class ConstantAcceleration : public Acceleration {
+ public:
+  explicit ConstantAcceleration(float acc) : acc_(acc) {}
+  float GetAcceleration(unsigned long time) const { return acc_; }
 
-class VariableAcceleration : public Acceleration{
-public:
-  explicit VariableAcceleration(float (*func)(unsigned long)) : acc_(func){}
-  float GetAcceleration(unsigned long time) const{ return acc_(time); }
-private:
+ private:
+  const float acc_; 
+};
+
+class VariableAcceleration : public Acceleration {
+ public:
+  explicit VariableAcceleration(float (*func)(unsigned long)) : acc_(func) {}
+  float GetAcceleration(unsigned long time) const { return acc_(time); }
+
+ private:
   float (*acc_)(unsigned long);
 };
 
-class TrackUnit{
-public:
-  struct TrackUnitState{
+class TrackUnit {
+ public:
+  struct TrackUnitState {
     Point2D point;
     unsigned long long tick;
     float acc;
     float speed;
     double distance;
   };
-  class Iterator{
-  public:
+
+  class Iterator {
+   public:
     explicit Iterator(TrackUnit* track_unit);
     bool Valid() const;
     void Next();
     void Reset();
     void Value(TrackUnitState& track_unit_state) const;
-  private:
+   private:
     float interval_;
     float speed_current_;
     long long tick_current_;
@@ -61,29 +65,36 @@ public:
     double distance_dot_;
     TrackUnit* track_unit_;
   };
+
   TrackUnit(Shape2D* shape, Acceleration* acc, float interval, float init_speed)
-    :init_speed_(init_speed), interval_(interval), shape_(shape), acc_(acc), 
-    speed_end_(0.0), tick_sum_(0){
-      assert(shape && acc);
-      assert(interval > 0);
-      assert(init_speed >= 0);
-    }
+      : init_speed_(init_speed),
+        interval_(interval),
+        shape_(shape),
+        acc_(acc), 
+        speed_end_(0.0),
+        tick_sum_(0) {
+    assert(shape && acc);
+    assert(interval > 0);
+    assert(init_speed >= 0);
+  }
   long long GetSumTick();
   float GetEndSpeed();
   void GetEndPoint(Point2D& point);
   double GetSumLength() const;
-private:
+
+ private:
+  void Execute();
+
   float init_speed_;
   float interval_;
+  float speed_end_;
+  long long tick_sum_;
   Shape2D* shape_;
   Acceleration* acc_;
 
-  float speed_end_;
-  long long tick_sum_;
-
-  void Execute();
   friend class Iterator;
 };
+
 } //namespace tools
 
 #endif //TOOLS_TRACK_UNIT_H_
