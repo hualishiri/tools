@@ -4,17 +4,19 @@
 #include "track_set.h"
 #include "sensor.h"
 
-namespace tools{
+namespace tools {
 
-class RadarSet2D{
+class RadarSet2D {
 public:
-  struct RadarSetState{
+  struct RadarSetState {
     std::vector<Radar2D::RadarState> radar_set_state;
   };
   typedef std::vector<Radar2D*> RadarSet;
+
+  RadarSet2D(RadarSet* radar_set) : radar_set_(radar_set) {}
   void GetState(const TrackSet2D::TrackSetState& track_set_state,
-      RadarSetState& radar_set_state);
-  RadarSet2D(RadarSet* radar_set):radar_set_(radar_set){}
+                RadarSetState& radar_set_state);
+
 private:
   RadarSet* radar_set_;
 };

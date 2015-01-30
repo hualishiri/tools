@@ -1,16 +1,17 @@
 #include "sensor_set.h"
 
-#include <cassert>
+#include <assert.h>
+
 #include <iostream>
 
-namespace tools{
-namespace test{
+namespace tools {
+namespace test {
 
 bool Equal(double, double);
 
-class Test{
+class Test {
 public:
-  void RunAllTest(){
+  void RunAllTest() {
     Function();
   }
   void Function(){

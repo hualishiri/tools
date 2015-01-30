@@ -1,7 +1,7 @@
 #ifndef TOOLS_OPERA_SHAPE_H_
 #define TOOLS_OPERA_SHAPE_H_
 
-#include <cmath>
+#include <math.h>
 
 namespace tools {
 

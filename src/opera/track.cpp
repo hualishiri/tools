@@ -1,6 +1,8 @@
 #include "track.h"
 
-#include <cassert>
+#include <assert.h>
+
+#include <iostream>
 
 #include "track_unit.h"
 
@@ -51,7 +53,8 @@ void Track2D::Iterator::Next(){
     if(!iter_track_unit_->Valid()
         && ++iter_track_ != track_->track_unit_set_->end()){
       distance_current_+= (*(iter_track_-1))->GetSumLength();
-      (*iter_track_)->GetEndPoint(temp_);
+      (*(iter_track_-1))->GetEndPoint(temp_);
+      std::cout << temp_.x << " " << temp_.y << std::endl;
       origin_current_.x += temp_.x;
       origin_current_.y += temp_.y;
       delete iter_track_unit_;
