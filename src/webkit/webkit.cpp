@@ -8,7 +8,7 @@ namespace tools{
 
 Webkit* Webkit::webkit_ = NULL;
 Webkit& Webkit::execute(JavaScript& js){
-  assert(page_ != NULL);
+  //assert(page_ != NULL);
   page_(js.execute().c_str());
   return *this;
 }
@@ -67,9 +67,9 @@ std::string JSClearObject::execute(){
 std::string JSCreateRadar::execute(){
   sstream_ << radar_->id << ","
            << radar_->type << ","
-           << radar_->center_x << ","
-           << radar_->center_y << ","
-           << radar_->radius;
+           << std::setprecision(10) << radar_->center_x << ","
+           << std::setprecision(10) << radar_->center_y << ","
+           << std::setprecision(10) << radar_->radius;
  std::string js;
   js.append("createRadar(");
   js.append(sstream_.str());
@@ -81,9 +81,9 @@ std::string JSCreateRadar::execute(){
 std::string JSUpdateRadar::execute(){
   sstream_ << radar_->id << ","
            << radar_->type << ","
-           << radar_->center_x << ","
-           << radar_->center_y << ","
-           << radar_->radius;
+           << std::setprecision(10) << radar_->center_x << ","
+           << std::setprecision(10) << radar_->center_y << ","
+           << std::setprecision(10) << radar_->radius;
  std::string js;
   js.append("updateRadar(");
   js.append(sstream_.str());
@@ -153,10 +153,10 @@ std::string JSClearRadarState::execute(){
 
 std::string JSCreateLine::execute(){
   sstream_ << line_->id << ","
-    << line_->start_x << ","
-    << line_->start_y << ","
-    << line_->end_x << ","
-    << line_->end_y;
+    <<  std::setprecision(10) << line_->start_x << ","
+    <<  std::setprecision(10) << line_->start_y << ","
+    <<  std::setprecision(10) << line_->end_x << ","
+    <<  std::setprecision(10) << line_->end_y;
  std::string js;
   js.append("createLine(");
   js.append(sstream_.str());
@@ -167,10 +167,10 @@ std::string JSCreateLine::execute(){
 
 std::string JSUpdateLine::execute(){
   sstream_ << line_->id << ","
-    << line_->start_x << ","
-    << line_->start_y << ","
-    << line_->end_x << ","
-    << line_->end_y;
+    << std::setprecision(10) << line_->start_x << ","
+    << std::setprecision(10) << line_->start_y << ","
+    << std::setprecision(10) << line_->end_x << ","
+    << std::setprecision(10) << line_->end_y;
  std::string js;
   js.append("updateLine(");
   js.append(sstream_.str());
@@ -292,7 +292,7 @@ std::string JSClearEclipse::execute(){
 }
 
 std::string JSSetZoom::execute(){
-  assert(zoom_ > 0 && zoom_ < 24);
+  //assert(zoom_ > 0 && zoom_ < 24);
   sstream_ << zoom_;
   std::string js;
   js.append("setZoom(");
@@ -303,8 +303,8 @@ std::string JSSetZoom::execute(){
 }
 
 std::string JSSetCenter::execute(){
-  assert(longitude_ > -180.0 && longitude_ < 180.0);
-  assert(latitude_ > -90.0 && latitude_ < 90.0);
+  //assert(longitude_ > -180.0 && longitude_ < 180.0);
+  //assert(latitude_ > -90.0 && latitude_ < 90.0);
   sstream_ << longitude_ << ","
     << latitude_;
   std::string js;
