@@ -25,7 +25,7 @@ bool DoubleEqual(double lhs, double rhs) {
 }
 
 double AngleInCircle(double x, double y) {
-  //assert(!(DoubleEqual(x, 0.0) && DoubleEqual(y, 0.0)));
+  assert(!(DoubleEqual(x, 0.0) && DoubleEqual(y, 0.0)));
   if (DoubleEqual(x, 0.0) && y > 0.0)
     return M_PI / 2;
   if (DoubleEqual(x, 0.0) && y < 0.0)
@@ -82,7 +82,7 @@ double AngleFromStartByClockInCircle(double start_x,
   double start_angle = AngleInCircle(start_x - center_x, start_y - center_y);
   double delta_angle = start_angle - select_angle;
   if (delta_angle < 0) delta_angle += 2 * M_PI;
-  //assert(delta_angle >= 0.0 && delta_angle <= 2 * M_PI);
+  assert(delta_angle >= 0.0 && delta_angle <= 2 * M_PI);
   return delta_angle;
 }
 

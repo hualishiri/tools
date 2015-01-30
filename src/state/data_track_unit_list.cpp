@@ -60,7 +60,7 @@ void DataTrackUnitList::push_back_eclipse(long long id,
 }
 
 OperaOption::Track DataTrackUnitList::track() const {
-  //assert(id_ != 0);
+  assert(id_ != 0);
   OperaOption::Track track;
   track.id = id_;
   track.id = GenerateId();
