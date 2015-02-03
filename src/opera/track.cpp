@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "track_unit.h"
+#include "util/tool.h"
 
 namespace tools{
 
@@ -34,13 +35,14 @@ Track2D::Iterator::Iterator(Track2D* track){
   kTickSum_ = track_->GetSumTick();
   iter_track_ = track_->track_unit_set_->begin();
   iter_track_unit_ = new TrackUnit::Iterator(*iter_track_);
-  
   TrackUnit::TrackUnitState track_unit_state;
   tick_current_ = 1;
   iter_track_unit_->Value(track_unit_state_);
   distance_current_ = 0.0;
   origin_current_.x = 0.0;
   origin_current_.y = 0.0;
+  last_x_ = 0.0;
+  last_y_ = 0.0;
 }
 
 bool Track2D::Iterator::Valid() const{
@@ -66,17 +68,20 @@ void Track2D::Iterator::Next(){
     }
   }
   ++tick_current_;
-  
 }
 
-void Track2D::Iterator::Value(TrackState& track_state) const{
+void Track2D::Iterator::Value(TrackState& track_state){
   track_state.id = track_->id_;
   track_state.point.x = origin_current_.x + track_unit_state_.point.x;
-  track_state.point.y = origin_current_.y + track_unit_state_.point.y;
+  track_state.point.y = origin_current_.y + track_unit_state_.point.y; 
   track_state.tick = tick_current_;
   track_state.acc = track_unit_state_.acc;
   track_state.speed =track_unit_state_.speed;
   track_state.distance = distance_current_ + track_unit_state_.distance;
+  track_state.azimuth = Azimuth(track_state.point.x - last_x_,
+                                track_state.point.y - last_y_);
+  last_x_ = track_state.point.x;
+  last_y_ = track_state.point.y;
 }
 
 void Track2D::Iterator::Reset(){
@@ -92,6 +97,16 @@ void Track2D::Iterator::Reset(){
   track_unit_state_.acc = track_unit_state.acc;
   track_unit_state_.speed = track_unit_state.speed;
   track_unit_state_.distance = track_unit_state.distance;
+}
+
+float Track2D::Iterator::Azimuth(float x, float y) const {
+  float angle = AngleInCircle(x, y);
+  angle += M_PI / 2.0;
+  if (angle <= M_PI / 2.0)
+    angle = M_PI / 2.0 - angle;
+  else
+    angle = 5.0 * M_PI / 2.0 - angle;
+  return angle;
 }
 
 } //namespace tools
