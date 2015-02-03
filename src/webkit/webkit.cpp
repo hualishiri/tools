@@ -1,7 +1,8 @@
 #include "webkit.h"
 
+#include <assert.h>
+
 #include <sstream>
-#include <cassert>
 #include <iomanip>
 
 namespace tools{
@@ -67,9 +68,9 @@ std::string JSClearObject::execute(){
 std::string JSCreateRadar::execute(){
   sstream_ << radar_->id << ","
            << radar_->type << ","
-           << radar_->center_x << ","
-           << radar_->center_y << ","
-           << radar_->radius;
+           << std::setprecision(10) << radar_->center_x << ","
+           << std::setprecision(10) << radar_->center_y << ","
+           << std::setprecision(10) << radar_->radius;
  std::string js;
   js.append("createRadar(");
   js.append(sstream_.str());
@@ -81,9 +82,9 @@ std::string JSCreateRadar::execute(){
 std::string JSUpdateRadar::execute(){
   sstream_ << radar_->id << ","
            << radar_->type << ","
-           << radar_->center_x << ","
-           << radar_->center_y << ","
-           << radar_->radius;
+           << std::setprecision(10) << radar_->center_x << ","
+           << std::setprecision(10) << radar_->center_y << ","
+           << std::setprecision(10) << radar_->radius;
  std::string js;
   js.append("updateRadar(");
   js.append(sstream_.str());
@@ -153,10 +154,10 @@ std::string JSClearRadarState::execute(){
 
 std::string JSCreateLine::execute(){
   sstream_ << line_->id << ","
-    << line_->start_x << ","
-    << line_->start_y << ","
-    << line_->end_x << ","
-    << line_->end_y;
+    <<  std::setprecision(10) << line_->start_x << ","
+    <<  std::setprecision(10) << line_->start_y << ","
+    <<  std::setprecision(10) << line_->end_x << ","
+    <<  std::setprecision(10) << line_->end_y;
  std::string js;
   js.append("createLine(");
   js.append(sstream_.str());
@@ -167,10 +168,10 @@ std::string JSCreateLine::execute(){
 
 std::string JSUpdateLine::execute(){
   sstream_ << line_->id << ","
-    << line_->start_x << ","
-    << line_->start_y << ","
-    << line_->end_x << ","
-    << line_->end_y;
+    << std::setprecision(10) << line_->start_x << ","
+    << std::setprecision(10) << line_->start_y << ","
+    << std::setprecision(10) << line_->end_x << ","
+    << std::setprecision(10) << line_->end_y;
  std::string js;
   js.append("updateLine(");
   js.append(sstream_.str());

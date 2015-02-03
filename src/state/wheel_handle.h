@@ -1,7 +1,7 @@
 #ifndef TOOLS_STATE_WHEEL_HANDLE_H_
 #define TOOLS_STATE_WHEEL_HANDLE_H_
 
-#include <cassert>
+#include <assert.h>
 
 namespace tools {
 

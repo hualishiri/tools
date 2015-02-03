@@ -20,7 +20,7 @@ double Line2D::GetLength() const {
 }
 
 void Line2D::GetPoint(double length, Point2D& point) const {
-  assert((length < GetLength() &&  length > 0) || 
+  assert((length < GetLength() &&  length > 0) ||
       (Equal(length, GetLength()) || Equal(length, 0)));
   double radix = length / GetLength();
   point.x = radix * line_.x;

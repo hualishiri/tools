@@ -81,6 +81,10 @@ class OperaOption {
   void pop_track(long long id);
   inline std::size_t size_track() const { return tracks_.size(); }
 
+  inline std::vector<Radar> radars() const { return radars_; }
+  inline std::vector<Object> objects() const { return objects_; }
+  inline std::vector<Track> tracks() const { return tracks_; }
+  
  private:
   OperaOption() {}
   OperaOption(const OperaOption&);

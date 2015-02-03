@@ -52,7 +52,7 @@ void StateRadarCentered::execute(OperaContext* opera_context, Event* event) {
       wgs_point.longitude,
       wgs_point.latitude
     };
-   // OperaOption::Instance()->push_back_radar(radar);
+    OperaOption::Instance()->push_back_radar(radar);
     opera_context->set_state(StateRadarSelected::Instance()); 
   } else if (event == EventReleaseRight::Instance()) {
     JSDeleteRadar js_delete_radar(DataStateRadar::Instance()->id());
