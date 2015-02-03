@@ -37,7 +37,7 @@ struct ObjectState{
   double angle;
 };
 
-class JSCreateObject : JavaScript{
+class JSCreateObject :public  JavaScript{
 public:
     JSCreateObject(ObjectState * state)
         :state_(state){}
@@ -46,7 +46,7 @@ private:
     ObjectState* state_;
 };
 
-class JSUpdateObject: JavaScript{
+class JSUpdateObject:public  JavaScript{
 public:
     JSUpdateObject(ObjectState * state)
         :state_(state){}
@@ -55,7 +55,7 @@ private:
     ObjectState* state_;
 };
 
-class JSDeleteObject: JavaScript{
+class JSDeleteObject:public  JavaScript{
 public:
     JSDeleteObject(long long id)
         :id_(id){}
@@ -64,7 +64,7 @@ private:
     long long id_;
 };
 
-class JSClearObject: JavaScript{
+class JSClearObject:public  JavaScript{
 public:
     virtual std::string execute();
 private:

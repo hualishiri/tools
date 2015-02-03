@@ -84,6 +84,15 @@ class OperaOption {
   inline std::vector<Radar> radars() const { return radars_; }
   inline std::vector<Object> objects() const { return objects_; }
   inline std::vector<Track> tracks() const { return tracks_; }
+
+  inline void clear_radars() { radars_.clear(); }
+  inline void clear_objects() { objects_.clear(); }
+  inline void clear_tracks() { tracks_.clear(); }
+  inline void clear() {
+    clear_radars();
+    clear_objects();
+    clear_tracks();
+  }
   
  private:
   OperaOption() {}

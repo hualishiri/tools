@@ -6,6 +6,9 @@
 #include <iomanip>
 
 namespace tools{
+namespace {
+const int precision = 10;
+} //namespace
 
 Webkit* Webkit::webkit_ = NULL;
 Webkit& Webkit::execute(JavaScript& js){
@@ -21,8 +24,8 @@ Webkit* Webkit::Instance(){
 
 std::string JSCreateObject::execute(){
  sstream_ << state_->id << ","
-          << state_->x << ","
-          << state_->y << ","
+          << std::setprecision(precision) << state_->x << ","
+          << std::setprecision(precision) << state_->y << ","
           << state_->acc << ","
           << state_->speed << ","
           << state_->angle;
@@ -36,8 +39,8 @@ std::string JSCreateObject::execute(){
 
 std::string JSUpdateObject::execute(){
  sstream_ << state_->id << ","
-          << state_->x << ","
-          << state_->y << ","
+          << std::setprecision(precision) << state_->x << ","
+          << std::setprecision(precision) << state_->y << ","
           << state_->acc << ","
           << state_->speed << ","
           << state_->angle;
@@ -68,9 +71,9 @@ std::string JSClearObject::execute(){
 std::string JSCreateRadar::execute(){
   sstream_ << radar_->id << ","
            << radar_->type << ","
-           << std::setprecision(10) << radar_->center_x << ","
-           << std::setprecision(10) << radar_->center_y << ","
-           << std::setprecision(10) << radar_->radius;
+           << std::setprecision(precision) << radar_->center_x << ","
+           << std::setprecision(precision) << radar_->center_y << ","
+           << std::setprecision(precision) << radar_->radius;
  std::string js;
   js.append("createRadar(");
   js.append(sstream_.str());
@@ -82,9 +85,9 @@ std::string JSCreateRadar::execute(){
 std::string JSUpdateRadar::execute(){
   sstream_ << radar_->id << ","
            << radar_->type << ","
-           << std::setprecision(10) << radar_->center_x << ","
-           << std::setprecision(10) << radar_->center_y << ","
-           << std::setprecision(10) << radar_->radius;
+           << std::setprecision(precision) << radar_->center_x << ","
+           << std::setprecision(precision) << radar_->center_y << ","
+           << std::setprecision(precision) << radar_->radius;
  std::string js;
   js.append("updateRadar(");
   js.append(sstream_.str());
@@ -154,10 +157,10 @@ std::string JSClearRadarState::execute(){
 
 std::string JSCreateLine::execute(){
   sstream_ << line_->id << ","
-    <<  std::setprecision(10) << line_->start_x << ","
-    <<  std::setprecision(10) << line_->start_y << ","
-    <<  std::setprecision(10) << line_->end_x << ","
-    <<  std::setprecision(10) << line_->end_y;
+    <<  std::setprecision(precision) << line_->start_x << ","
+    <<  std::setprecision(precision) << line_->start_y << ","
+    <<  std::setprecision(precision) << line_->end_x << ","
+    <<  std::setprecision(precision) << line_->end_y;
  std::string js;
   js.append("createLine(");
   js.append(sstream_.str());
@@ -168,10 +171,10 @@ std::string JSCreateLine::execute(){
 
 std::string JSUpdateLine::execute(){
   sstream_ << line_->id << ","
-    << std::setprecision(10) << line_->start_x << ","
-    << std::setprecision(10) << line_->start_y << ","
-    << std::setprecision(10) << line_->end_x << ","
-    << std::setprecision(10) << line_->end_y;
+    << std::setprecision(precision) << line_->start_x << ","
+    << std::setprecision(precision) << line_->start_y << ","
+    << std::setprecision(precision) << line_->end_x << ","
+    << std::setprecision(precision) << line_->end_y;
  std::string js;
   js.append("updateLine(");
   js.append(sstream_.str());
@@ -198,10 +201,10 @@ std::string JSClearLine::execute(){
 
 std::string JSCreateCircle::execute(){
   sstream_ << circle_->id << ","
-    << circle_->start_x << ","
-    << circle_->start_y << ","
-    << circle_->radius_x<< ","
-    << circle_->radius_y<< ","
+    << std::setprecision(precision) << circle_->start_x << ","
+    << std::setprecision(precision) << circle_->start_y << ","
+    << std::setprecision(precision) << circle_->radius_x<< ","
+    << std::setprecision(precision) << circle_->radius_y<< ","
     << circle_->angle;
  std::string js;
   js.append("createCircle(");
@@ -213,10 +216,10 @@ std::string JSCreateCircle::execute(){
 
 std::string JSUpdateCircle::execute(){
   sstream_ << circle_->id << ","
-    << circle_->start_x << ","
-    << circle_->start_y << ","
-    << circle_->radius_x<< ","
-    << circle_->radius_y<< ","
+    << std::setprecision(precision) << circle_->start_x << ","
+    << std::setprecision(precision) << circle_->start_y << ","
+    << std::setprecision(precision) << circle_->radius_x<< ","
+    << std::setprecision(precision) << circle_->radius_y<< ","
     << circle_->angle;
  std::string js;
   js.append("updateCircle(");
@@ -244,12 +247,12 @@ std::string JSClearCircle::execute(){
 
 std::string JSCreateEclipse::execute(){
   sstream_ << eclipse_->id << ","
-    << eclipse_->start_x << ","
-    << eclipse_->start_y << ","
-    << eclipse_->radius_x<< ","
-    << eclipse_->radius_y<< ","
-    << eclipse_->end_x<< ","
-    << eclipse_->end_y<< ","
+    << std::setprecision(precision) << eclipse_->start_x << ","
+    << std::setprecision(precision) << eclipse_->start_y << ","
+    << std::setprecision(precision) << eclipse_->radius_x<< ","
+    << std::setprecision(precision) << eclipse_->radius_y<< ","
+    << std::setprecision(precision) << eclipse_->end_x<< ","
+    << std::setprecision(precision) << eclipse_->end_y<< ","
     << eclipse_->angle;
  std::string js;
   js.append("createEclipse(");
@@ -261,12 +264,12 @@ std::string JSCreateEclipse::execute(){
 
 std::string JSUpdateEclipse::execute(){
   sstream_ << eclipse_->id << ","
-    << eclipse_->start_x << ","
-    << eclipse_->start_y << ","
-    << eclipse_->radius_x<< ","
-    << eclipse_->radius_y<< ","
-    << eclipse_->end_x<< ","
-    << eclipse_->end_y<< ","
+    << std::setprecision(precision) << eclipse_->start_x << ","
+    << std::setprecision(precision) << eclipse_->start_y << ","
+    << std::setprecision(precision) << eclipse_->radius_x<< ","
+    << std::setprecision(precision) << eclipse_->radius_y<< ","
+    << std::setprecision(precision) << eclipse_->end_x<< ","
+    << std::setprecision(precision) << eclipse_->end_y<< ","
     << eclipse_->angle;
  std::string js;
   js.append("updateEclipse(");
@@ -306,8 +309,8 @@ std::string JSSetZoom::execute(){
 std::string JSSetCenter::execute(){
   assert(longitude_ > -180.0 && longitude_ < 180.0);
   assert(latitude_ > -90.0 && latitude_ < 90.0);
-  sstream_ << longitude_ << ","
-    << latitude_;
+  sstream_ << std::setprecision(precision) << longitude_ << ","
+    << std::setprecision(precision) << latitude_;
   std::string js;
   js.append("setCenter(");
   js.append(sstream_.str());
