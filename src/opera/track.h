@@ -26,6 +26,7 @@ public:
     float acc;
     float speed;
     double distance;
+    float azimuth;
   };
   class Iterator{
   public:
@@ -33,8 +34,11 @@ public:
     bool Valid() const;
     void Next();
     void Reset();
-    void Value(TrackState& track_state) const;
+    void Value(TrackState& track_state);
+
   private:
+    float Azimuth(float x, float y) const;
+
     float interval_;
     //float speed_current_;
     long long tick_current_;
@@ -47,6 +51,8 @@ public:
     Track2D* track_;
     Track2D::TrackUnitSet::iterator iter_track_;
     TrackUnit::Iterator *iter_track_unit_;
+    double last_x_;
+    double last_y_;
   };
   //return the length of the track
   double GetLength() const;
