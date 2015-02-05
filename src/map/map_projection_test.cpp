@@ -5,6 +5,7 @@
 #include "util/testharness.h"
 
 namespace tools {
+
 void FromWgsToPixel(int zoom,
                     const MapProjection::WgsPoint& wgs_point,
                     MapProjection::PixelPoint& pixel_point);
@@ -20,7 +21,13 @@ TEST(MAPPROJECTION, FromWgsToPixel) {
   MapProjection::WgsPoint std_wgs_point;
   MapProjection::PixelPoint std_pixel_point;
   double data[][3] = {
-    4, 3.4, 5.4
+    4, -87.6500522999, 41.850033920000003,
+    5, -87.6500522999, 41.850033920000003,
+    6, -87.6500522999, 41.850033920000003,
+    7, -87.6500522999, 41.850033920000003,
+    8, -87.6500522999, 41.850033920000003,
+    9, -87.6500522999, 41.850033920000003,
+    10, -95.231432143, 52.431243124312412
   };
   int array_size = sizeof(data) / sizeof(double) / 3;
   for(int i = 0; i != array_size; ++i) {
@@ -39,7 +46,13 @@ TEST(MAPPROJECTION, FromPixelToWgs) {
   MapProjection::WgsPoint std_wgs_point;
   MapProjection::PixelPoint std_pixel_point;
   double data[][3] = {
-    4, 3.5, 5.4
+    1, 131, 190,
+    4, 1050, 1522,
+    5, 2101, 3045,
+    6, 4202, 6091,
+    7, 8405, 12182,
+    8, 16811, 24364,
+    9, 33623, 48729
   };
   int array_size = sizeof(data) / sizeof(data[0][0]) / 3;
   for(int i = 0; i != array_size; ++i) {
