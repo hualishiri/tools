@@ -1,6 +1,5 @@
 CC = g++ -std=c++11 
-#CCFLAG = -g -I /home/wnlo/tools/src/
-CCFLAG = -g -I F:/WORKSTATON/SVN/tools/cbz/src
+CCFLAG = -g -I ./src
 
 GCC = $(CC) $(CCFLAG)
 OUTPUT = bin
