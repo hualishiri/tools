@@ -51,7 +51,7 @@ TEST(MAPPROJECTION, FromPixelToWgs) {
     5, 2101, 3045,
     6, 4202, 6091,
     7, 8405, 12182,
-  //  8, 16811, 24364,
+    8, 16811, 24364,
     9, 33623, 48729
   };
   int array_size = sizeof(data) / sizeof(data[0][0]) / 3;
