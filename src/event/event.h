@@ -64,6 +64,8 @@ EVENT(ButtonStop,Event)
 EVENT(ButtonRadar,Event)
 
 #undef EVENT
+#undef CONCAT
+#undef CONCAT1
 
 } //namespace tools
 

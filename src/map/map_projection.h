@@ -35,7 +35,6 @@ private:
   PixelPoint pixel_center_;
   double ratio_xpixel_to_degree_;
   double ratio_ypixel_to_radian_;
-
 };
 
 } //namespace tools

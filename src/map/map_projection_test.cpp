@@ -9,6 +9,7 @@ namespace tools {
 void FromWgsToPixel(int zoom,
                     const MapProjection::WgsPoint& wgs_point,
                     MapProjection::PixelPoint& pixel_point);
+
 void FromPixelToWgs(int zoom,
                     const MapProjection::PixelPoint& pixel_point,
                     MapProjection::WgsPoint& wgs_point);
