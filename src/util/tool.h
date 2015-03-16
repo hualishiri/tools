@@ -1,7 +1,9 @@
 #ifndef TOOLS_UTIL_TOOL_H_
 #define TOOLS_UTIL_TOOL_H_
 
-namespace tools{
+namespace tools {
+
+//extern const double PI;
 
 long long GenerateId();
 void SetId(long long id_in);

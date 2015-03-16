@@ -1,9 +1,15 @@
 #include "map/map_projection.h"
 
-#include <cmath>
+#include <math.h>
+
 #include <algorithm>
 
+#include "util/tool.h"
+
 namespace tools {
+  
+extern const double T_PI;
+
 namespace {
 
 double max(double x, double y) {
@@ -31,7 +37,7 @@ MapProjection& MapProjection::set_zoom(double zoom) {
   zoom_ = zoom;
   double pixel_global_size = kSizePixelTile* pow(2, zoom_);
   ratio_xpixel_to_degree_ = pixel_global_size / 360;
-  ratio_ypixel_to_radian_ = pixel_global_size / (2 * M_PI);
+  ratio_ypixel_to_radian_ = pixel_global_size / (2 * T_PI);
   pixel_center_.x = pixel_global_size / 2;
   pixel_center_.y = pixel_global_size / 2;
   return *this;
@@ -53,17 +59,17 @@ void MapProjection::FromPixelToWgs(const PixelPoint& pixel_point,
   wgs_point.longitude = (pixel_point.x - pixel_center_.x) 
       / ratio_xpixel_to_degree_;
   wgs_point.latitude = ( 2 * atan(exp((pixel_point.y - pixel_center_.y) 
-      / - ratio_ypixel_to_radian_)) - M_PI / 2) *kRatioDegreeToRadian;
+      / - ratio_ypixel_to_radian_)) - T_PI / 2) *kRatioDegreeToRadian;
 }
 
 MapProjection::MapProjection(double zoom)
     : zoom_(zoom),
       kSizePixelTile(256),
-      kRatioDegreeToRadian(180 / M_PI),
-      kRatioRadianToDegree(M_PI / 180) {
+      kRatioDegreeToRadian(180 / T_PI),
+      kRatioRadianToDegree(T_PI / 180) {
   double pixel_global_size = kSizePixelTile* pow(2, zoom_);
   ratio_xpixel_to_degree_ = pixel_global_size / 360;
-  ratio_ypixel_to_radian_ = pixel_global_size / (2 * M_PI);
+  ratio_ypixel_to_radian_ = pixel_global_size / (2 * T_PI);
   pixel_center_.x = pixel_global_size / 2;
   pixel_center_.y = pixel_global_size / 2;
 }

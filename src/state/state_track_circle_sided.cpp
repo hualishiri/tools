@@ -15,6 +15,9 @@
 #include "util/tool.h"
 
 namespace tools {
+
+extern const double T_PI;
+
 namespace {
 
 MapProjection::PixelPoint pixel_point;
@@ -81,7 +84,7 @@ void StateTrackCircleSided::execute(OperaContext* opera_context, Event* event) {
         y0,
         x0,
         y0,
-        2 * M_PI
+        2 * T_PI
       };
       JSCreateCircle js_create_circle(&js_circle_new);
       Webkit::Instance()->execute(js_create_circle);

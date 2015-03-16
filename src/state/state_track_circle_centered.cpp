@@ -16,6 +16,9 @@
 #include "util/tool.h"
 
 namespace tools {
+
+extern const double T_PI;
+
 namespace {
 
 MapProjection::PixelPoint pixel_point;
@@ -29,7 +32,7 @@ int Side(double start_x,
          double side_y) {
   double delta = AngleInCircle(side_x - start_x, side_y - start_y) 
       - AngleInCircle(center_x - start_x, center_y - start_y);
-  if (delta > 0 && delta < M_PI)
+  if (delta > 0 && delta < T_PI)
     return 1;
   return -1;
 }
@@ -67,7 +70,7 @@ void StateTrackCircleCentered::execute(OperaContext* opera_context,
         DataStateCircle::Instance()->circle_.start_y,
         DataStateCircle::Instance()->circle_.center_x,
         DataStateCircle::Instance()->circle_.center_y,
-        direction * M_PI
+        direction * T_PI
       };
       JSUpdateCircle js_update_circle(&js_circle);
       Webkit::Instance()->execute(js_update_circle);

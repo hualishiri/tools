@@ -2,12 +2,12 @@
 
 #include <assert.h>
 
-#include <iostream>
-
 #include "track_unit.h"
 #include "util/tool.h"
 
 namespace tools{
+
+extern const double T_PI;
 
 bool Equal(long double lhs, long double rhs);
 
@@ -56,7 +56,6 @@ void Track2D::Iterator::Next(){
         && ++iter_track_ != track_->track_unit_set_->end()){
       distance_current_+= (*(iter_track_-1))->GetSumLength();
       (*(iter_track_-1))->GetEndPoint(temp_);
-      std::cout << temp_.x << " " << temp_.y << std::endl;
       origin_current_.x += temp_.x;
       origin_current_.y += temp_.y;
       delete iter_track_unit_;
@@ -101,10 +100,10 @@ void Track2D::Iterator::Reset(){
 
 float Track2D::Iterator::Azimuth(float x, float y) const {
   float angle = AngleInCircle(x, y);
-  if (angle <= M_PI / 2.0)
-    angle = M_PI / 2.0 - angle;
+  if (angle <= T_PI / 2.0)
+    angle = T_PI / 2.0 - angle;
   else
-    angle = 5.0 * M_PI / 2.0 - angle;
+    angle = 5.0 * T_PI / 2.0 - angle;
   return angle;
 }
 

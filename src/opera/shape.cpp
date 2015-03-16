@@ -4,7 +4,11 @@
 #include <stddef.h>
 #include <assert.h>
 
+#include "util/tool.h"
+
 namespace tools {
+
+extern const double T_PI;
 
 //本算法基于二维平面实现的
 
@@ -30,21 +34,21 @@ void Line2D::GetPoint(double length, Point2D& point) const {
 double Circle2D::Angle(double x, double y) const {
   assert(!(Equal(x, 0.0) && Equal(y, 0.0)));
   if (Equal(x, 0.0) && y > 0.0)
-    return M_PI / 2;
+    return T_PI / 2;
   if (Equal(x, 0.0) && y < 0.0)
-    return 3*M_PI / 2;
+    return 3*T_PI / 2;
   if (Equal(y, 0.0) && x > 0.0)
     return 0.0;
   if (Equal(y, 0.0) && x < 0.0)
-    return M_PI;
+    return T_PI;
   if (x > 0.0 && y > 0.0)
     return atan(y / x);
   if (x < 0.0 && y > 0.0)
-    return M_PI + atan(y / x);
+    return T_PI + atan(y / x);
   if (x < 0.0 && y < 0.0 )
-    return M_PI + atan(y / x);
+    return T_PI + atan(y / x);
   if (x > 0.0 && y < 0.0 )
-    return 2 * M_PI + atan(y / x);
+    return 2 * T_PI + atan(y / x);
   return 0.0;
 }
 
@@ -53,7 +57,7 @@ double Circle2D::Length(const Point2D& p) const {
 }
 
 double Circle2D::GetLength() const {
-  assert(angle_ < 2 * M_PI && angle_ > -2 * M_PI);
+  assert(angle_ < 2 * T_PI && angle_ > -2 * T_PI);
   return fabs(angle_) * radius_;
 }
 
@@ -115,21 +119,21 @@ void Eclipse2D::GetPoint(double length, Point2D& point) const {
 double Eclipse2D::Angle(double x, double y) const {
   assert(!(Equal(x, 0.0) && Equal(y, 0.0)));
   if (Equal(x, 0.0) && y > 0.0)
-    return M_PI / 2;
+    return T_PI / 2;
   if (Equal(x, 0.0) && y < 0.0)
-    return 3 * M_PI / 2;
+    return 3 * T_PI / 2;
   if (Equal(y, 0.0) && x > 0.0)
     return 0.0;
   if (Equal(y, 0.0) && x < 0.0)
-    return M_PI;
+    return T_PI;
   if (x > 0.0 && y > 0.0)
     return atan(y / x);
   if (x < 0.0 && y > 0.0)
-    return M_PI + atan(y / x);
+    return T_PI + atan(y / x);
   if (x < 0.0 && y < 0.0)
-    return M_PI + atan(y / x);
+    return T_PI + atan(y / x);
   if (x > 0.0 && y < 0.0)
-    return 2 * M_PI + atan(y / x);
+    return 2 * T_PI + atan(y / x);
   return 0.0;
 }
 

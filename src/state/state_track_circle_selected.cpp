@@ -15,6 +15,8 @@
 
 namespace tools {
 
+extern const double T_PI;
+
 namespace {
 
 MapProjection::PixelPoint pixel_point;
@@ -49,7 +51,7 @@ void StateTrackCircleSelected::execute(OperaContext* opera_context,
         wgs_point.latitude,
         wgs_point.longitude,
         wgs_point.latitude,
-        2*M_PI 
+        2*T_PI
       };
       JSCreateCircle js_create_circle(&js_circle);
       Webkit::Instance()->execute(js_create_circle);

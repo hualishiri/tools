@@ -12,8 +12,11 @@
 #include "state/state_track_circle_started.h"
 #include "state/state_track_circle_centered.h"
 #include "state/state_internal_handle.h"
+#include "util/tool.h"
 
 namespace tools {
+
+extern const double T_PI;
 
 namespace {
 
@@ -47,7 +50,7 @@ void StateTrackCircleStarted::execute(OperaContext* opera_context,
         DataStateCircle::Instance()->circle_.start_y,
         DataStateCircle::Instance()->circle_.center_x,
         DataStateCircle::Instance()->circle_.center_y,
-        2*M_PI 
+        2 * T_PI
       };
       JSUpdateCircle js_update_circle(&js_circle);
       Webkit::Instance()->execute(js_update_circle);
