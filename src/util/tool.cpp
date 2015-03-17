@@ -3,11 +3,11 @@
 #include <assert.h>
 #include <math.h>
 
-namespace tools{
+namespace tools {
 
 extern const double T_PI = 3.1415926535898;
 
-namespace{
+namespace {
 
 long long id = 0x0beef;
 

@@ -3,7 +3,7 @@
 
 namespace tools {
 
-//extern const double PI;
+extern const double T_PI;
 
 long long GenerateId();
 void SetId(long long id_in);
