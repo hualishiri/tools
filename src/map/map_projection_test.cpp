@@ -1,4 +1,4 @@
-#include "map_projection.h"
+#include "map/map_projection.h"
 
 #include <math.h>
 
@@ -19,7 +19,6 @@ class MAPPROJECTION {};
 TEST(MAPPROJECTION, FromWgsToPixel) {
   MapProjection::WgsPoint wgs_point;
   MapProjection::PixelPoint pixel_point;
-  MapProjection::WgsPoint std_wgs_point;
   MapProjection::PixelPoint std_pixel_point;
   double data[][3] = {
     4, -87.6500522999, 41.850033920000003,
@@ -45,7 +44,6 @@ TEST(MAPPROJECTION, FromPixelToWgs) {
   MapProjection::WgsPoint wgs_point;
   MapProjection::PixelPoint pixel_point;
   MapProjection::WgsPoint std_wgs_point;
-  MapProjection::PixelPoint std_pixel_point;
   double data[][3] = {
     1, 131, 190,
     4, 1050, 1522,

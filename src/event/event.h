@@ -15,7 +15,7 @@ class EventMouse : public Event {
 
   inline int x() const { return x_; }
   inline int y() const { return y_; }
-  inline int set(int x, int y) {
+  inline void set(int x, int y) {
     x_ = x;
     y_ = y;
   }

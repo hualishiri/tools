@@ -1,4 +1,4 @@
-#include "tool.h"
+#include "util/tool.h"
 
 #include <assert.h>
 #include <math.h>

@@ -57,10 +57,10 @@ void MapProjection::FromPixelToWgs(const PixelPoint& pixel_point,
 }
 
 MapProjection::MapProjection(double zoom)
-    : zoom_(zoom),
-      kSizePixelTile(256),
+    : kSizePixelTile(256),
       kRatioDegreeToRadian(180 / PI),
-      kRatioRadianToDegree(PI / 180) {
+      kRatioRadianToDegree(PI / 180),
+      zoom_(zoom) {
   double pixel_global_size = kSizePixelTile* pow(2, zoom_);
   ratio_xpixel_to_degree_ = pixel_global_size / 360;
   ratio_ypixel_to_radian_ = pixel_global_size / (2 * PI);
