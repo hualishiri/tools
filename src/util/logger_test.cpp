@@ -1,5 +1,3 @@
-#define LOGDEBUG
-
 #include "util/logger.h"
 
 #include "util/testharness.h"

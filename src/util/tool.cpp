@@ -4,9 +4,11 @@
 #include <math.h>
 
 namespace tools {
+
+extern const double T_PI = 3.14159265359;
+
 namespace {
   
-const double PI = 3.14159265359;
 long long id = 0x0beef;
 
 } //namespace
@@ -29,21 +31,21 @@ bool DoubleEqual(double lhs, double rhs) {
 double AngleInCircle(double x, double y) {
   assert(!(DoubleEqual(x, 0.0) && DoubleEqual(y, 0.0)));
   if (DoubleEqual(x, 0.0) && y > 0.0)
-    return PI / 2;
+    return T_PI / 2;
   if (DoubleEqual(x, 0.0) && y < 0.0)
-    return 3 * PI / 2;
+    return 3 * T_PI / 2;
   if (DoubleEqual(y, 0.0) && x > 0.0)
     return 0.0;
   if (DoubleEqual(y, 0.0 ) && x < 0.0)
-    return PI;
+    return T_PI;
   if ( x > 0.0 && y > 0.0 )
     return atan(y / x);
   if (x < 0.0 && y > 0.0)
-    return PI + atan(y / x);
+    return T_PI + atan(y / x);
   if (x < 0.0 && y < 0.0 )
-    return PI + atan(y / x);
+    return T_PI + atan(y / x);
   if(x > 0.0 && y < 0.0 )
-    return 2 * PI + atan(y / x);
+    return 2 * T_PI + atan(y / x);
   return 0.0;
 }
 
@@ -62,9 +64,9 @@ double AngleFromStartByClockInCircle(double start_x,
     double y2 = b - sqrt(a * a + r_square);
     if (fabs(y1 - angle_y) > fabs(y2 - angle_y)) y1 = y2;
     if (y1 - center_y > 0)
-      select_angle = PI / 2.0;
+      select_angle = T_PI / 2.0;
     else
-      select_angle = 3.0 * PI / 2.0;
+      select_angle = 3.0 * T_PI / 2.0;
   } else {
     double c = angle_y - ((angle_y - center_y) 
         / (angle_x - center_x)) * angle_x;
@@ -84,8 +86,8 @@ double AngleFromStartByClockInCircle(double start_x,
   }
   double start_angle = AngleInCircle(start_x - center_x, start_y - center_y);
   double delta_angle = start_angle - select_angle;
-  if (delta_angle < 0) delta_angle += 2 * PI;
-  assert(delta_angle >= 0.0 && delta_angle <= 2 * PI);
+  if (delta_angle < 0) delta_angle += 2 * T_PI;
+  assert(delta_angle >= 0.0 && delta_angle <= 2 * T_PI);
   return delta_angle;
 }
 
