@@ -2,6 +2,14 @@
 
 namespace tools {
 
+OperaOption* OperaOption::opera_option_ = 0;
+
+OperaOption* OperaOption::Instance() {
+  if (opera_option_ == 0)
+    opera_option_ = new OperaOption();
+  return opera_option_;
+}
+
 void OperaOption::pop_radar(long long id) {
   std::vector<Radar>::iterator iter = radars_.begin();
   for (; iter != radars_.end(); ++iter) {

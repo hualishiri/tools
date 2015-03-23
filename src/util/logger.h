@@ -14,35 +14,35 @@ enum LogLevel {
 };
 
 #define LogInfo(s...) do {                          \
-  LogInternal(kInfo, s);                            \
-  LogPrint(kInfo, "\n");                            \
+  LogInternal(tools::kInfo, s);                            \
+  LogPrint(tools::kInfo, "\n");                            \
 } while(0)
 
 #define LogWarning(s...) do {                       \
-  LogInternal(kWarning, s);                         \
-  LogPrint(kWarning, "\n");                         \
+  LogInternal(tools::kWarning, s);                         \
+  LogPrint(tools::kWarning, "\n");                         \
 } while(0)
 
 #define LogError(s...) do {                        \
-  LogInternal(kError, s);                          \
-  LogPrint(kError, "\n");                          \
+  LogInternal(tools::kError, s);                          \
+  LogPrint(tools::kError, "\n");                          \
 } while(0)
 
 #define LogCritical(s...) do {                     \
-  LogInternal(kCritical, s);                       \
-  LogPrint(kCritical, "\n");                       \
+  LogInternal(tools::kCritical, s);                       \
+  LogPrint(tools::kCritical, "\n");                       \
 } while(0)
 
 #define LogFatal(s...) do {                        \
-  LogInternal(kFatal, s);                          \
-  LogPrint(kFatal, "\n");                          \
+  LogInternal(tools::kFatal, s);                          \
+  LogPrint(tools::kFatal, "\n");                          \
 } while(0)
 
 #ifdef LOGDEBUG
 #define LogDebug(s...) do {                        \
-  LogInternal(kDebug, s);                          \
-  LogPrint(kDebug, " [%s]", __PRETTY_FUNCTION__);  \
-  LogPrint(kDebug, "\n");                          \
+  tools::LogInternal(tools::kDebug, s);                          \
+  tools::LogPrint(tools::kDebug, " [%s]", __PRETTY_FUNCTION__);  \
+  tools::LogPrint(tools::kDebug, "\n");                          \
 } while(0)
 
 #else

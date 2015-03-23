@@ -68,7 +68,8 @@ class OperaOption {
     std::vector<TrackUnitType> types;
   };
 
-  OperaOption() : interval_(0.1) {}
+
+  static OperaOption* Instance();
 
   inline void push_back_radar(const Radar& radar){ radars_.push_back(radar); }
   void pop_radar(long long id);
@@ -99,6 +100,10 @@ class OperaOption {
   inline double interval() const { return interval_; } 
   
  private:
+  static OperaOption* opera_option_;
+
+  OperaOption() : interval_(0.1) {}
+
   double interval_;
   std::vector<Radar> radars_;
   std::vector<Object> objects_;

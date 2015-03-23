@@ -9,13 +9,13 @@ struct JSRadar;
 
 class JSUpdateRadar : public  JavaScript {
  public:
-  JSUpdateRadar(const JSRadarState& state)
+  JSUpdateRadar(const JSRadar& state)
     : state_(state) {
   }
   virtual std::string execute();
 
 private:
-    const JSRadarState& state_;
+    const JSRadar& state_;
 };
 
 } //namespace tools
