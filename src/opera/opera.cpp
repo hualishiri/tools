@@ -73,14 +73,7 @@ void Opera2D::BuildTrack(const OperaOption& opera_option) {
               tracks[i].circles[index_circle].angle_x,
               tracks[i].circles[index_circle].angle_y));
           ++index_circle;
-      } else if (tracks[i].types[j] == OperaOption::ECLIPSE) { }
-          Acceleration* acc_uniform = new UniformAcceleration();
-          TrackUnit* track_unit = new TrackUnit(shape,
-              acc_uniform,
-              opera_option.interval(),
-              tracks[i].start_speed);
-          track_unit_set->push_back(track_unit);
-    }
+     }
     Track2D* track = new Track2D(tracks[i].id,
         track_unit_set,
         opera_option.interval(),

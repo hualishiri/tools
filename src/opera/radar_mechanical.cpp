@@ -1,10 +1,13 @@
 #include "opera/radar_mechanical.h"
 
 namespace tools {
+namespace {
 
 double Distance2D(const Point2D& lhs, const Point2D& rhs) {
   return sqrt(pow(lhs.x - rhs.x, 2) + pow(lhs.y - rhs.y, 2));
 }
+
+} //namespace
 
 void MechanicalRadar2D::GetState(
     const TrackSet2D::TrackSetState& track_set_state,
