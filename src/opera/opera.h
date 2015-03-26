@@ -35,6 +35,7 @@ class Opera2D {
 
   long long GetSumTick() const;
   void Initialize(const OperaOption& opera_option);
+  void Release();
 
  private:
   void BuildRadar(const OperaOption& opera_option);

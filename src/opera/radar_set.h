@@ -17,6 +17,7 @@ class RadarSet2D {
   RadarSet2D(RadarSet* radar_set) : radar_set_(radar_set) {}
   void GetState(const TrackSet2D::TrackSetState& track_set_state,
                 RadarSetState& radar_set_state);
+  RadarSet* radar_set() const { return radar_set_; }
 
  private:
   RadarSet* radar_set_;

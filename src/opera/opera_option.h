@@ -1,6 +1,8 @@
 #ifndef TOOLS_OPERA_OPERA_OPTION_H_
 #define TOOLS_OPERA_OPERA_OPTION_H_
 
+#include <assert.h>
+
 #include <vector>
 
 namespace tools {
@@ -71,6 +73,8 @@ class OperaOption {
 
   static OperaOption* Instance();
 
+  OperaOption() : interval_(0.1) {}
+
   inline void push_back_radar(const Radar& radar){ radars_.push_back(radar); }
   void pop_radar(long long id);
   inline std::size_t size_radar() const { return radars_.size(); }
@@ -79,7 +83,14 @@ class OperaOption {
   }
   void pop_object(long long id);
   inline std::size_t size_object() const { return objects_.size(); }
-  inline void push_back_track(const Track& track) { tracks_.push_back(track); }
+  inline void push_back_track(const Track& track) {
+    assert(track.id >= 0);
+    assert(track.start_speed >= 0.0);
+    assert(track.acceleration >= 0.0);
+    assert(track.types.size()
+        == track.lines.size() + track.circles.size() + track.eclipses.size());
+    tracks_.push_back(track);
+  }
   void pop_track(long long id);
   inline std::size_t size_track() const { return tracks_.size(); }
 
@@ -101,8 +112,6 @@ class OperaOption {
   
  private:
   static OperaOption* opera_option_;
-
-  OperaOption() : interval_(0.1) {}
 
   double interval_;
   std::vector<Radar> radars_;

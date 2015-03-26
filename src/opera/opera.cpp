@@ -7,6 +7,7 @@
 #include "opera/line.h"
 #include "opera/opera_option.h"
 #include "opera/radar_mechanical.h"
+#include "util/logger.h"
 #include "util/tool.h"
 
 namespace tools {
@@ -38,12 +39,13 @@ void Opera2D::BuildTrack(const OperaOption& opera_option) {
   std::vector<OperaOption::TrackUnitType> tracks_type;
   TrackSet2D::TrackSetPosition* track_set_position
        = new TrackSet2D::TrackSetPosition();;
-  for(int i=0; i != tracks.size(); ++i) {
+  double old_speed = 0.0;
+  double current_speed = 0.0;
+  for(std::size_t i=0; i != tracks.size(); ++i) {
     Track2D::TrackUnitSet* track_unit_set = new Track2D::TrackUnitSet();
     int index_line = 0;
     int index_circle = 0;
-    int index_eclipse = 0;
-    for (int j = 0; j != tracks[i].types.size(); ++j) {
+    for (std::size_t j = 0; j != tracks[i].types.size(); ++j) {
       Shape2D* shape = 0;
       if (tracks[i].types[j] == OperaOption::LINE) {
         if (j == 0)
@@ -74,12 +76,21 @@ void Opera2D::BuildTrack(const OperaOption& opera_option) {
               tracks[i].circles[index_circle].angle_y));
           ++index_circle;
       } else if (tracks[i].types[j] == OperaOption::ECLIPSE) { }
-          Acceleration* acc_uniform = new UniformAcceleration();
-          TrackUnit* track_unit = new TrackUnit(shape,
-              acc_uniform,
-              opera_option.interval(),
-              tracks[i].start_speed);
-          track_unit_set->push_back(track_unit);
+      Acceleration* acc_uniform = new ConstantAcceleration(
+          tracks[i].acceleration);
+      if (0 == j)
+       current_speed = tracks[i].start_speed;
+     else
+       current_speed = old_speed; 
+     assert(0 != shape);
+     TrackUnit* track_unit = new TrackUnit(shape,
+                                           acc_uniform,
+                                           opera_option.interval(),
+                                           current_speed);
+      if (0 == track_unit)
+        LogInfo("TrackUnit Initial Fail");
+      old_speed = track_unit->GetEndSpeed();
+      track_unit_set->push_back(track_unit);
     }
     Track2D* track = new Track2D(tracks[i].id,
         track_unit_set,
@@ -88,8 +99,42 @@ void Opera2D::BuildTrack(const OperaOption& opera_option) {
     track_set_rep->push_back(track);
   }
   track_set_ = new TrackSet2D(track_set_rep,
-      track_set_position,
-      opera_option.interval());
+                              track_set_position,
+                              opera_option.interval());
+}
+
+void Opera2D::Release() {
+  if (0 != radar_set_) {
+    std::size_t length = radar_set_->radar_set()->size();
+    RadarSet2D::RadarSet* radar_set = radar_set_->radar_set();
+    for (std::size_t i=0; i!=length; ++i)
+      delete (*radar_set)[i];
+    delete radar_set;
+    delete radar_set_;
+    radar_set_ = 0;
+  }
+  if (0 != track_set_) {
+    std::size_t length = track_set_->track_set()->size(); 
+    TrackSet2D::TrackSet* track_set = track_set_->track_set();
+    for (std::size_t i=0; i!=length; ++i) {
+      std::size_t len_track_unit = (*track_set)[i]->track_unit_set()->size();
+      Track2D::TrackUnitSet* track_unit_set = (*track_set)[i]->track_unit_set();
+      for (std::size_t j=0; j!=len_track_unit; ++j) {
+        delete (*track_unit_set)[j]->shape();
+        delete (*track_unit_set)[j]->acceleration();
+        delete (*track_unit_set)[j];
+      } 
+      delete track_unit_set;
+      delete (*track_set)[i];
+    }
+    delete track_set;
+    delete track_set_;
+    TrackSet2D::TrackSetPosition* track_set_pos = track_set_->track_set_position();
+    length = track_set_->track_set_position()->size();
+    for (std::size_t i=0; i!=length; ++i)
+      delete (*track_set_pos)[i];
+    track_set_ = 0;
+  }
 }
 
 long long Opera2D::GetSumTick() const {

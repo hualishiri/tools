@@ -48,6 +48,11 @@ class TrackSet2D {
   }
   long long GetSumTick() const;
   double GetSumLength() const;
+  TrackSet* track_set() const { return rep_track_set_; }
+  TrackSetPosition* track_set_position() const {
+    return track_set_init_pos_;
+  }
+
 
  private:
   const Point2D& GetInitPosition(long long id) const;

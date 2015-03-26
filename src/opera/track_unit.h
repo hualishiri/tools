@@ -51,6 +51,8 @@ class TrackUnit {
   float GetEndSpeed();
   void GetEndPoint(Point2D& point);
   double GetSumLength() const;
+  Shape2D* shape() const { return shape_; }
+  Acceleration* acceleration() const { return acc_; }
 
  private:
   void Execute();

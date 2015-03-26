@@ -1,7 +1,7 @@
 CC = g++ -std=c++11 
-CCFLAG = -g -I ./src -Wall -Werror $(VERSION)
+CCFLAG = -pg -I ./src -Wall -Werror $(VERSION)
 
-VERSION = $(RELEASE)
+VERSION = $(DEBUG)
 
 DEBUG = -D LOGDEBUG
 RELEASE = -D NDEBUG
@@ -11,7 +11,7 @@ OUTPUT = bin
 OBJECTS = testharness.o map.o map_projection.o tool.o logger.o \
 					js_create_object.o line.o circle.o eclipse.o track_unit.o \
 					track.o track_set.o radar_mechanical.o radar_set.o \
-					opera_option.o
+					opera_option.o opera.o
 
 OUTPUTOJBECTS = $(patsubst %, $(OUTPUT)/%, $(OBJECTS))
 
@@ -30,7 +30,8 @@ TESTS = \
 	track_set_test \
 	radar_mechanical_test \
 	radar_set_test \
-	opera_option_test
+	opera_option_test \
+	opera_test
 
 default : all
 	
@@ -70,6 +71,8 @@ radar_set.o : src/opera/radar_set.h src/opera/radar_set.cpp
 	$(GCC) -c src/opera/radar_set.cpp -o $(OUTPUT)/radar_set.o
 opera_option.o : src/opera/opera_option.h src/opera/opera_option.cpp
 	$(GCC) -c src/opera/opera_option.cpp -o $(OUTPUT)/opera_option.o
+opera.o : src/opera/opera.h src/opera/opera.cpp
+	$(GCC) -c src/opera/opera.cpp -o $(OUTPUT)/opera.o
 
 
 event_test.o : src/event/event.h src/event/event_test.cpp
@@ -106,6 +109,8 @@ radar_set_test.o : src/opera/radar_set.h src/opera/radar_set_test.cpp
 	$(GCC) -c src/opera/radar_set_test.cpp -o $(OUTPUT)/radar_set_test.o
 opera_option_test.o : src/opera/opera_option.h src/opera/opera_option_test.cpp
 	$(GCC) -c src/opera/opera_option_test.cpp -o $(OUTPUT)/opera_option_test.o
+opera_test.o : src/opera/opera.h src/opera/opera_test.cpp
+	$(GCC) -c src/opera/opera_test.cpp -o $(OUTPUT)/opera_test.o
 	
 event_test : testharness.o event_test.o
 	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/event_test.o -o $(OUTPUT)/event_test
@@ -143,6 +148,8 @@ radar_set_test : radar_set_test.o
 	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/radar_set_test.o -o $(OUTPUT)/radar_set_test
 opera_option_test : opera_option_test.o
 	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/opera_option_test.o -o $(OUTPUT)/opera_option_test
+opera_test : opera_test.o
+	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/opera_test.o -o $(OUTPUT)/opera_test
 	
 clean :
 	rm -rf $(OUTPUTOJBECTS)

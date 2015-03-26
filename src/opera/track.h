@@ -59,6 +59,7 @@ public:
     init_speed_(init_speed), 
     interval_(interval){}
   long long id(){ return id_; }
+  TrackUnitSet* track_unit_set() const { return track_unit_set_; }
     
 private:
   long long id_;
