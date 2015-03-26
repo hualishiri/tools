@@ -74,23 +74,13 @@ class OperaOption {
   static OperaOption* Instance();
 
   OperaOption() : interval_(0.1) {}
-
-  inline void push_back_radar(const Radar& radar){ radars_.push_back(radar); }
+  void push_back_radar(Radar& radar);
   void pop_radar(long long id);
   inline std::size_t size_radar() const { return radars_.size(); }
-  inline void push_back_object(const Object& object) {
-    objects_.push_back(object);
-  }
+  void push_back_object(Object& object);
   void pop_object(long long id);
   inline std::size_t size_object() const { return objects_.size(); }
-  inline void push_back_track(const Track& track) {
-    assert(track.id >= 0);
-    assert(track.start_speed >= 0.0);
-    assert(track.acceleration >= 0.0);
-    assert(track.types.size()
-        == track.lines.size() + track.circles.size() + track.eclipses.size());
-    tracks_.push_back(track);
-  }
+  inline void push_back_track(Track& track);
   void pop_track(long long id);
   inline std::size_t size_track() const { return tracks_.size(); }
 
