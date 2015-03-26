@@ -10,6 +10,8 @@ namespace tools {
 class Opera2D {
  public:
   struct OperaState {
+    void ConvertToWgs();
+
     TrackSet2D::TrackSetState track_set_state;
     RadarSet2D::RadarSetState radar_set_state;
   };

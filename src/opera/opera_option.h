@@ -74,13 +74,13 @@ class OperaOption {
   static OperaOption* Instance();
 
   OperaOption() : interval_(0.1) {}
-  void push_back_radar(Radar& radar);
+  void push_back_radar(Radar& radar) { radars_.push_back(radar); }
   void pop_radar(long long id);
   inline std::size_t size_radar() const { return radars_.size(); }
-  void push_back_object(Object& object);
+  void push_back_object(Object& object) { objects_.push_back(object); }
   void pop_object(long long id);
   inline std::size_t size_object() const { return objects_.size(); }
-  inline void push_back_track(Track& track);
+  void push_back_track(Track& track) { tracks_.push_back(track); }
   void pop_track(long long id);
   inline std::size_t size_track() const { return tracks_.size(); }
 
@@ -99,6 +99,8 @@ class OperaOption {
 
   inline void set_interval(double interval) { interval_ = interval; }
   inline double interval() const { return interval_; } 
+
+  void ConvertToPixel();
   
  private:
   static OperaOption* opera_option_;

@@ -164,6 +164,22 @@ void Opera2D::Iterator::Value(OperaState& opera_state) {
                                opera_state.radar_set_state);
 }
 
+void Opera2D::OperaState::ConvertToWgs() {
+  for (std::size_t i=0;
+      i!=radar_set_state.radar_set_state.size();
+      ++i)
+    for (std::size_t j=0;
+        j!=radar_set_state.radar_set_state[i].targets.size();
+        ++j)
+      FromPixelToWgs(&radar_set_state.radar_set_state[i].targets[j].x,
+                     &radar_set_state.radar_set_state[i].targets[j].y);
+  for (std::size_t i=0;
+       i!=track_set_state.track_set_state.size();
+       ++i)
+    FromPixelToWgs(&track_set_state.track_set_state[i].point.x,
+                   &track_set_state.track_set_state[i].point.y);
+}
+
 void Opera2D::Iterator::Reset() {
   iter_track_set_->Reset();
 }

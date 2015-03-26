@@ -3,6 +3,8 @@
 #include <assert.h>
 #include <math.h>
 
+#include "map/map_projection.h"
+
 namespace tools {
 
 extern const double T_PI = 3.14159265359;
@@ -10,6 +12,9 @@ extern const double T_PI = 3.14159265359;
 namespace {
   
 long long id = 0x0beef;
+
+MapProjection::WgsPoint wgs_point;
+MapProjection::PixelPoint pixel_point;
 
 } //namespace
 
@@ -89,6 +94,22 @@ double AngleFromStartByClockInCircle(double start_x,
   if (delta_angle < 0) delta_angle += 2 * T_PI;
   assert(delta_angle >= 0.0 && delta_angle <= 2 * T_PI);
   return delta_angle;
+}
+
+void FromWgsToPixel(double* longitude, double* latitude) {
+  wgs_point.longitude = *longitude;
+  wgs_point.latitude = *latitude;
+  MapProjection::Instance(0)->FromWgsToPixel(wgs_point, pixel_point);
+  *longitude = pixel_point.x;
+  *latitude = pixel_point.y;
+}
+
+void FromPixelToWgs(double* x, double* y) {
+  pixel_point.x = *x;
+  pixel_point.y = *y;
+  MapProjection::Instance(0)->FromPixelToWgs(pixel_point, wgs_point);
+  *x = wgs_point.longitude;
+  *y =wgs_point.latitude;
 }
 
 } //namespace tools

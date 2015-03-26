@@ -39,12 +39,12 @@ MapProjection& MapProjection::set_zoom(double zoom) {
 
 void MapProjection::FromWgsToPixel(const WgsPoint& wgs_point,
                                    PixelPoint& pixel_point) {
-  pixel_point.x = round(pixel_center_.x + wgs_point.longitude 
+  pixel_point.x = (pixel_center_.x + wgs_point.longitude 
       * ratio_xpixel_to_degree_); 
   double f = min(max(sin(wgs_point.latitude * kRatioRadianToDegree),
                      -0.9999),
                  0.9999);
-  pixel_point.y = round(pixel_center_.y + 0.5 * log((1 + f) 
+  pixel_point.y = (pixel_center_.y + 0.5 * log((1 + f) 
       / (1 - f)) * -ratio_ypixel_to_radian_);
 }
 

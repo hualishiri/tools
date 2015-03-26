@@ -20,6 +20,9 @@ double AngleFromStartByClockInCircle(double start_x,
                                      double angle_x,
                                      double angle_y);
 
+void FromWgsToPixel(double* longitude, double* latitude);
+void FromPixelToWgs(double* x, double* y);
+
 } //namespace tools
 
 #endif //TOOLS_UTIL_TOOL_H_

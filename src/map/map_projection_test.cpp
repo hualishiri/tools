@@ -84,12 +84,12 @@ void FromWgsToPixel(int zoom,
   double ratio_ypixel_to_radian_ = pixel_global_size / (2 * PI);
   double pixel_center_x = pixel_global_size / 2;
   double pixel_center_y = pixel_global_size / 2; 
-  pixel_point.x = round(pixel_center_x + wgs_point.longitude 
+  pixel_point.x = (pixel_center_x + wgs_point.longitude 
       * ratio_xpixel_to_degree_); 
   double f = min(max(sin(wgs_point.latitude * kRatioRadianToDegree),
                      -0.9999),
                  0.9999);
-  pixel_point.y = round(pixel_center_y + 0.5 * log((1 + f) 
+  pixel_point.y = (pixel_center_y + 0.5 * log((1 + f) 
       / (1 - f)) * -ratio_ypixel_to_radian_);
 }
 
