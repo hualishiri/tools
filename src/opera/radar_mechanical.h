@@ -6,13 +6,22 @@
 
 namespace tools {
 
+class RadarNoise;
+
 class MechanicalRadar2D : public Radar2D {
  public:
-  MechanicalRadar2D(long long id,
-                    double x, double y,
-                    double max_distance_detect)
-    : id_(id), x_(x), y_(y),  max_distance_detect_(max_distance_detect) {
-  }
+  struct Radar {
+    long long id;
+    double x;
+    double y;
+    double angle_azimuth;
+    double angle_sector_range;
+    double distance_detect;
+    double level_noise;
+  };
+
+  MechanicalRadar2D(Radar* radar, RadarNoise* radar_noise) 
+      : radar_(radar), radar_noise_(radar_noise) {}
 
 virtual void GetState(const TrackSet2D::TrackSetState& track_set_state,
                       RadarState& radar_state);
@@ -20,10 +29,8 @@ virtual void GetState(const TrackSet2D::TrackSetState& track_set_state,
  private:
   bool IsCaptured(const Point2D& radar, const Point2D& target) const;
 
-  long long id_;
-  double x_;
-  double y_;
-  double max_distance_detect_;
+  Radar* radar_;
+  RadarNoise* radar_noise_;
 };
 
 } //namespace tools

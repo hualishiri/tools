@@ -6,7 +6,9 @@
 #include "opera/circle.h"
 #include "opera/line.h"
 #include "opera/opera_option.h"
+#include "opera/radar_sector.h"
 #include "opera/radar_mechanical.h"
+#include "opera/radar_noise_gauss.h"
 #include "util/logger.h"
 #include "util/tool.h"
 
@@ -20,14 +22,29 @@ void Opera2D::Initialize(const OperaOption& opera_option) {
 void Opera2D::BuildRadar(const OperaOption& opera_option) {
   RadarSet2D::RadarSet* rep_radar_set = new RadarSet2D::RadarSet();
   std::vector<OperaOption::Radar> radars = opera_option.radars();
-  double radius = 0.0;
+  //double radius = 0.0;
   for (std::size_t i = 0; i != radars.size(); ++i) {
-    radius = sqrt(pow(radars[i].start_x - radars[i].radius_x, 2)
+    /*radius = sqrt(pow(radars[i].start_x - radars[i].radius_x, 2)
         + pow(radars[i].start_y - radars[i].radius_y, 2));
     rep_radar_set->push_back(new MechanicalRadar2D(radars[i].id,
         radars[i].radius_x,
         radars[i].radius_y,
-        radius));
+        radius));*/
+
+    MechanicalRadar2D::Radar* radar = new MechanicalRadar2D::Radar();
+    radar->id = radars[i].id;
+    radar->x = radars[i].radius_x;
+    radar->y = radars[i].radius_y;
+    radar->angle_azimuth = 0.0;
+    radar->angle_sector_range = 2 * 3.1415;
+    radar->distance_detect = sqrt(pow(radars[i].start_x - radars[i].radius_x, 2)
+        + pow(radars[i].start_y - radars[i].radius_y, 2));
+
+    radar->level_noise = radars[i].level_noise;
+    RadarNoise* radar_noise = new RadarNoiseGauss(radar->level_noise);
+
+    MechanicalRadar2D* sector_radar = new MechanicalRadar2D(radar, radar_noise);
+    rep_radar_set->push_back(sector_radar);
   }
   radar_set_ = new RadarSet2D(rep_radar_set);
 }

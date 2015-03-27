@@ -4,6 +4,7 @@
 #include <assert.h>
 
 #include "opera/radar.h"
+#include "opera/radar_noise.h"
 #include "opera/track_set.h"
 #include "util/tool.h"
 
@@ -18,9 +19,11 @@ class SectorRadar : public Radar2D {
     double angle_azimuth;
     double angle_sector_range;
     double distance_detect;
+    double level_noise;
   };
 
-  SectorRadar(Radar* radar) : radar_(radar) {
+  SectorRadar(Radar* radar, RadarNoise* radar_noise)
+    : radar_(radar), radar_noise_(radar_noise) {
     assert(radar_->id > 0);
     assert(radar_->angle_azimuth >= 0.0 && radar_->angle_azimuth <= 2 * T_PI);
     assert(radar_->angle_sector_range >= 0.0 &&
@@ -35,6 +38,7 @@ class SectorRadar : public Radar2D {
   bool IsCaptured(const Point2D& radar, const Point2D& target) const;
 
   Radar* radar_;
+  RadarNoise* radar_noise_;
 };
 
 } //namespace tools

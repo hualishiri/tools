@@ -11,6 +11,8 @@ class Radar2D : public Sensor {
     long long id;
     Point2D point;
     std::vector<Point2D> targets;
+    std::vector<Point2D> targets_radar;
+    std::vector<Point2D> targets_filter;
     std::vector<long long> ids;
   };
 

@@ -1,5 +1,6 @@
 #include "radar_mechanical.h"
 
+#include "opera/radar_noise_gauss.h"
 #include "util/logger.h"
 #include "util/testharness.h"
 #include "util/tool.h"
@@ -9,7 +10,18 @@ namespace tools {
 class RADAR_MECHANICAL {};
 
 TEST(RADAR_MECHANICAL, GetState) {
-  Radar2D *radar = new MechanicalRadar2D(0x01, 0.0, 0.0, 20.0);
+  MechanicalRadar2D::Radar radar_internal;
+  radar_internal.x = 0.0;
+  radar_internal.y = 0.0;
+  radar_internal.id = 0x01;
+  radar_internal.distance_detect = 20.0;
+  radar_internal.level_noise = 10;
+
+  RadarNoiseGauss* radar_noise_gauss 
+      = new RadarNoiseGauss(radar_internal.level_noise);
+
+  Radar2D *radar = new MechanicalRadar2D(&radar_internal, radar_noise_gauss);
+
   double track_states[] = {
     0.3, 0.5, 
     1.5, 2.3, 
@@ -45,6 +57,16 @@ TEST(RADAR_MECHANICAL, GetState) {
                             radar_state.targets[i].x));
     ASSERT_TRUE(DoubleEqual(radar_state_std[2 * i + 1],
                             radar_state.targets[i].y));
+    LogInfo("Origin:(%f,%f)",
+        radar_state.targets[i].x,
+        radar_state.targets[i].y);
+    LogInfo("Noised:(%f,%f)",
+        radar_state.targets_radar[i].x,
+        radar_state.targets_radar[i].y);
+    LogInfo("Filter:(%f,%f)",
+        radar_state.targets_filter[i].x,
+        radar_state.targets_filter[i].y);
+    LogInfo("=====");
   }
 }
 

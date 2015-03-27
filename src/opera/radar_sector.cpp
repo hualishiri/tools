@@ -23,7 +23,15 @@ void SectorRadar::GetState(
       iter != track_set_state.track_set_state.end();
       ++iter) {
     if (IsCaptured(Point2D(radar_->x, radar_->y), iter->point)) {
+      std::size_t index = radar_state.targets.size();
       radar_state.targets.push_back(iter->point);  
+      radar_state.targets_radar.push_back(iter->point);
+      radar_noise_->ApplyNoise(&radar_state.targets_radar[index].x,
+                               &radar_state.targets_radar[index].y);
+      radar_state.targets_filter.push_back(Point2D(
+          (radar_state.targets[index].x + radar_state.targets[index].y) / 2.0,
+          (radar_state.targets_radar[index].x 
+          + radar_state.targets_radar[index].y) / 2.0));
       radar_state.ids.push_back(iter->id);
     }
   }
@@ -42,7 +50,7 @@ bool SectorRadar::IsCaptured(const Point2D& radar,
                                                               target.y);
   angle_target_amuzith -= radar_->angle_azimuth;
   if (angle_target_amuzith < 0.0)
-    angle_target_amuzith += 2 * M_PI;
+    angle_target_amuzith += 2 * T_PI;
   if (angle_target_amuzith < radar_->angle_sector_range)
     return true;
   return false;

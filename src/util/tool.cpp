@@ -2,8 +2,11 @@
 
 #include <assert.h>
 #include <math.h>
+#include <stdlib.h>
+#include <time.h>
 
 #include "map/map_projection.h"
+#include "util/logger.h"
 
 namespace tools {
 
@@ -110,6 +113,17 @@ void FromPixelToWgs(double* x, double* y) {
   MapProjection::Instance(0)->FromPixelToWgs(pixel_point, wgs_point);
   *x = wgs_point.longitude;
   *y =wgs_point.latitude;
+}
+
+double GetRandNumber(int seed) {
+  srand(static_cast<unsigned>(time(NULL)) + seed);
+  double number = rand() / (double)RAND_MAX;
+  number *= 10000;
+  number = number - static_cast<long long>(number);
+  number = number * 10000000000.0;
+  number = number / 10000000000.0;
+  number = number * 2.0 - 1.0;
+  return number;
 }
 
 } //namespace tools

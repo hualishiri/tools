@@ -17,6 +17,7 @@ class OperaOption {
     double start_y;
     double radius_x;
     double radius_y;
+    double level_noise;
   };
   
   struct Object {

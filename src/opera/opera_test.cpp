@@ -13,9 +13,23 @@ class OPERA {};
 TEST(OPERA, Iterator) {
   const int len = 4;
   double location_wgs[len] = {
-    -87.65005229999997, 41.850033, 
-    114.1223784, 22.3700556
+    //-87.65005229999997, 41.850033, 
+    //114.1223784, 22.3700556
+    0.0, 0.0,
+    4.0, 4.0
   };
+
+  tools::OperaOption::Radar radar;
+  radar.id = 0x012341;
+  //radar.start_x = -87.6500522999999;
+  radar.start_x = 0.0;
+  //radar.start_y = 41.850033;
+  radar.start_y = 0.0;
+  //radar.radius_x = 10.134189;
+  radar.radius_x = 2.0;
+  //radar.radius_y = 30.102435;
+  radar.radius_y = 2.0;
+  radar.level_noise = 100;
 
   tools::OperaOption::Track track;
   tools::OperaOption::Line line = {
@@ -30,18 +44,22 @@ TEST(OPERA, Iterator) {
   track.acceleration = 0;
   track.start_speed = 0.1;
 
+  tools::OperaOption::Instance()->push_back_radar(radar);
   tools::OperaOption::Instance()->push_back_track(track);
   tools::OperaOption::Instance()->set_interval(1.0);
 
   Opera2D opera;
-  tools::OperaOption::Instance()->ConvertToPixel();
+  //tools::OperaOption::Instance()->ConvertToPixel();
   opera.Initialize(*(OperaOption::Instance()));
   Opera2D::Iterator iter(&opera);
   Opera2D::OperaState *opera_state = new Opera2D::OperaState();
 
   while(iter.Valid()) {
     iter.Value(*opera_state);
-      opera_state->ConvertToWgs();
+      //opera_state->ConvertToWgs();
+        LogInfo("radar size: %d",
+            opera_state->radar_set_state.radar_set_state.size());
+        LogInfo("object size: %d", opera_state->radar_set_state.radar_set_state[1].targets.size());
         for(std::size_t i = 0;
             i != opera_state->radar_set_state.radar_set_state.size();
             ++i) {

@@ -23,6 +23,8 @@ double AngleFromStartByClockInCircle(double start_x,
 void FromWgsToPixel(double* longitude, double* latitude);
 void FromPixelToWgs(double* x, double* y);
 
+double GetRandNumber(int seed);
+
 } //namespace tools
 
 #endif //TOOLS_UTIL_TOOL_H_
