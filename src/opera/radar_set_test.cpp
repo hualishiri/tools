@@ -9,7 +9,7 @@ namespace tools {
 class RADARSET {};
 
 TEST(RADARSET, GetState) {
-  Radar2D* radar1 = new MechanicalRadar2D(0x1, 0.0, 0.0, 10);   
+  /*Radar2D* radar1 = new MechanicalRadar2D(0x1, 0.0, 0.0, 10);   
   Radar2D* radar2 = new MechanicalRadar2D(0x2, 0.0, 10.0, 10);   
   Radar2D* radar3 = new MechanicalRadar2D(0x3, 0.0, 5.0, 10);   
 
@@ -54,7 +54,7 @@ TEST(RADARSET, GetState) {
                radar_set_state.radar_set_state[j].targets[i].x,
                radar_set_state.radar_set_state[j].targets[i].y);
     }
-  }
+  }*/
 }
 
 } //namespace tools

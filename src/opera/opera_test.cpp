@@ -22,13 +22,15 @@ TEST(OPERA, Iterator) {
   tools::OperaOption::Radar radar;
   radar.id = 0x012341;
   //radar.start_x = -87.6500522999999;
-  radar.start_x = 0.0;
+  radar.start_x = 2.5;
   //radar.start_y = 41.850033;
-  radar.start_y = 0.0;
+  radar.start_y = 2.5;
   //radar.radius_x = 10.134189;
-  radar.radius_x = 2.0;
+  radar.radius_x = 3.0;
   //radar.radius_y = 30.102435;
-  radar.radius_y = 2.0;
+  radar.radius_y = 1.0;
+  radar.angle_azimuth = 0.0;
+  radar.angle_sector_range = 2 * 3.14;
   radar.level_noise = 100;
 
   tools::OperaOption::Track track;
@@ -59,7 +61,9 @@ TEST(OPERA, Iterator) {
       //opera_state->ConvertToWgs();
         LogInfo("radar size: %d",
             opera_state->radar_set_state.radar_set_state.size());
-        LogInfo("object size: %d", opera_state->radar_set_state.radar_set_state[1].targets.size());
+        LogInfo("object size: %d",
+            opera_state->radar_set_state.radar_set_state[0].targets.size());
+
         for(std::size_t i = 0;
             i != opera_state->radar_set_state.radar_set_state.size();
             ++i) {
@@ -68,11 +72,20 @@ TEST(OPERA, Iterator) {
           for (std::size_t j = 0;
               j != opera_state
               ->radar_set_state.radar_set_state[i].targets.size();
-              ++j)
+              ++j) {
             LogDebug(
-                "object position : (%f, %f)",
+                "object real position : (%f, %f)",
                 opera_state->radar_set_state.radar_set_state[i].targets[j].x,
                 opera_state->radar_set_state.radar_set_state[i].targets[j].y);
+            LogDebug(
+                "object noised position : (%f, %f)",
+                opera_state->radar_set_state.radar_set_state[i].targets_radar[j].x,
+                opera_state->radar_set_state.radar_set_state[i].targets_radar[j].y);
+            LogDebug(
+                "object filtered position : (%f, %f)",
+                opera_state->radar_set_state.radar_set_state[i].targets_filter[j].x,
+                opera_state->radar_set_state.radar_set_state[i].targets_filter[j].y);
+          }
         }
 
         for(std::size_t i = 0;

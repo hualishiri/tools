@@ -18,6 +18,8 @@ class OperaOption {
     double radius_x;
     double radius_y;
     double level_noise;
+    double angle_azimuth;
+    double angle_sector_range;
   };
   
   struct Object {
