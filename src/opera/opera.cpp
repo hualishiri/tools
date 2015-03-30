@@ -9,7 +9,6 @@
 #include "opera/radar_sector.h"
 #include "opera/radar_mechanical.h"
 #include "opera/radar_noise_gauss.h"
-#include "util/logger.h"
 #include "util/tool.h"
 
 namespace tools {
@@ -23,7 +22,6 @@ void Opera2D::BuildRadar(const OperaOption& opera_option) {
   RadarSet2D::RadarSet* rep_radar_set = new RadarSet2D::RadarSet();
   std::vector<OperaOption::Radar> radars = opera_option.radars();
   for (std::size_t i = 0; i != radars.size(); ++i) {
-    //MechanicalRadar2D::Radar* radar = new MechanicalRadar2D::Radar();
     SectorRadar::Radar* radar = new SectorRadar::Radar();
     radar->id = radars[i].id;
     radar->x = radars[i].radius_x;
@@ -35,7 +33,6 @@ void Opera2D::BuildRadar(const OperaOption& opera_option) {
 
     radar->level_noise = radars[i].level_noise;
     RadarNoise* radar_noise = new RadarNoiseGauss(radar->level_noise);
-    //MechanicalRadar2D* sector_radar = new MechanicalRadar2D(radar, radar_noise);
     SectorRadar* sector_radar = new SectorRadar(radar, radar_noise);
     rep_radar_set->push_back(sector_radar);
   }
@@ -51,7 +48,9 @@ void Opera2D::BuildTrack(const OperaOption& opera_option) {
        = new TrackSet2D::TrackSetPosition();;
   double old_speed = 0.0;
   double current_speed = 0.0;
+  TrackSet2D::TrackSetDelay* track_set_delay = new TrackSet2D::TrackSetDelay();
   for(std::size_t i=0; i != tracks.size(); ++i) {
+    track_set_delay->push_back(tracks[i].time_delay / opera_option.interval());
     Track2D::TrackUnitSet* track_unit_set = new Track2D::TrackUnitSet();
     int index_line = 0;
     int index_circle = 0;
@@ -97,8 +96,6 @@ void Opera2D::BuildTrack(const OperaOption& opera_option) {
                                            acc_uniform,
                                            opera_option.interval(),
                                            current_speed);
-      if (0 == track_unit)
-        LogInfo("TrackUnit Initial Fail");
       old_speed = track_unit->GetEndSpeed();
       track_unit_set->push_back(track_unit);
     }
@@ -108,9 +105,13 @@ void Opera2D::BuildTrack(const OperaOption& opera_option) {
         tracks[i].start_speed);
     track_set_rep->push_back(track);
   }
-  track_set_ = new TrackSet2D(track_set_rep,
-                              track_set_position,
-                              opera_option.interval());
+  TrackSet2D::TrackSetOption track_set_option = {
+    track_set_rep,
+    track_set_position,
+    track_set_delay,
+    opera_option.interval()
+  };
+  track_set_ = new TrackSet2D(track_set_option);
 }
 
 void Opera2D::Release() {

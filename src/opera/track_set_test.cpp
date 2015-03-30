@@ -10,7 +10,7 @@ namespace tools {
 
 class TRACKSET {};
 
-TEST(TRACKSET, Iterator) {
+TEST(TRACKSET, IteratorSuper) {
   double location[] = {
     116.420654, 39.857135,  //北京
     117.210526, 39.136095,/*  //天津
@@ -70,7 +70,21 @@ TEST(TRACKSET, Iterator) {
                location[index_i * 2],
                location[index_i * 2 + 1]);
     }
-    TrackSet2D track_set(&track_set_rep, &track_set_position, interval);
+
+    TrackSet2D::TrackSetDelay track_set_delay;
+
+    for (int i=0; i!=num_of_track; ++i) 
+      track_set_delay.push_back(i);
+    LogDebug("Num Of Track: %d", num_of_track);
+
+
+    TrackSet2D::TrackSetOption track_set_option = {&track_set_rep,
+      &track_set_position,
+      &track_set_delay,
+      interval};
+
+    TrackSet2D track_set(track_set_option);
+
     LogDebug("Track Set Infomation");
     for(std::size_t i=0; i!=track_set_rep.size(); ++i){
       LogDebug("Track ID : %X\tLength:%f", i + 1, track_set_rep[i]->GetLength());

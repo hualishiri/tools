@@ -12,6 +12,14 @@ class TrackSet2D {
  public:
   typedef std::vector<Track2D*> TrackSet;
   typedef std::vector<Point2D*> TrackSetPosition;
+  typedef std::vector<long long> TrackSetDelay;
+
+  struct TrackSetOption {
+    TrackSet* track_set;
+    TrackSetPosition* track_set_position;
+    TrackSetDelay* track_set_delay;
+    double interval;
+  };
 
   struct TrackSetState {
     std::vector<Track2D::TrackState> track_set_state;
@@ -32,20 +40,23 @@ class TrackSet2D {
     TrackSet2D* track_set_;
     TrackSet* rep_track_set_;
     TrackSetIterator* track_set_iter_;
+    TrackSetDelay* track_set_delay_;
+    long long tick_current_;
 
     void PositionChange(const TrackSetPosition& pos,
                         TrackSetState&
                         track_set_state);
   };
 
-  TrackSet2D(TrackSet* track_set,
-             TrackSetPosition* track_set_init_pos, 
-             float interval)
-      : rep_track_set_(track_set), 
-        track_set_init_pos_(track_set_init_pos),
-        interval_(interval) {
-      assert(track_set->size() == track_set_init_pos->size());
+  TrackSet2D(const TrackSetOption& track_set_option)
+      : rep_track_set_(track_set_option.track_set), 
+        track_set_init_pos_(track_set_option.track_set_position),
+        track_set_delay_(track_set_option.track_set_delay),
+        interval_(track_set_option.interval) {
+      assert(track_set_option.track_set->size() ==
+          track_set_option.track_set_position->size());
   }
+  
   long long GetSumTick() const;
   double GetSumLength() const;
   TrackSet* track_set() const { return rep_track_set_; }
@@ -59,6 +70,7 @@ class TrackSet2D {
 
   TrackSet* rep_track_set_;
   TrackSetPosition* track_set_init_pos_;
+  TrackSetDelay* track_set_delay_;
   float interval_;
 
   friend class Iterator;

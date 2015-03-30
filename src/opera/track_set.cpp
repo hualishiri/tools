@@ -5,11 +5,10 @@ namespace tools {
 long long TrackSet2D::GetSumTick() const{
   long long sum_tick = 0;
   long long temp = 0;
-  for(TrackSet::iterator iter = rep_track_set_->begin();
-      iter != rep_track_set_->end(); ++iter){
-      temp = (*iter)->GetSumTick();
-      if( temp > sum_tick )
-        sum_tick = temp;
+  for (std::size_t i=0; i!=rep_track_set_->size(); ++i) {
+    temp = (*rep_track_set_)[i]->GetSumTick() + (*track_set_delay_)[i];
+    if (temp > sum_tick)
+      sum_tick = temp;
   }
   return sum_tick;
 }
@@ -53,6 +52,8 @@ TrackSet2D::Iterator::Iterator(TrackSet2D* track_set){
   rep_track_set_ = track_set_->rep_track_set_;
   count_invalid_track_ = rep_track_set_->size();
   track_set_iter_ = new TrackSetIterator();
+  track_set_delay_ = track_set->track_set_delay_;
+  tick_current_ = 0;
   for(std::size_t i = 0; i != count_invalid_track_; ++i)
     track_set_iter_->push_back(Track2D::Iterator((*rep_track_set_)[i]));
 }
@@ -62,27 +63,36 @@ bool TrackSet2D::Iterator::Valid() const{
 }
 
 void TrackSet2D::Iterator::Next(){
-  for(TrackSetIterator::iterator iter = track_set_iter_->begin();
-      iter != track_set_iter_->end(); ++iter)
-    if(iter->Valid()){ 
+  std::size_t i = 0;
+  for (TrackSetIterator::iterator iter = track_set_iter_->begin();
+      iter != track_set_iter_->end();
+      ++iter) {
+    if (iter->Valid() && tick_current_ >= (*track_set_delay_)[i]){ 
       iter->Next();
-      if(!iter->Valid()) --count_invalid_track_;
+      if (!iter->Valid()) --count_invalid_track_;
     }
+    ++i;
+  }
+  ++tick_current_;
 }
 
 void TrackSet2D::Iterator::Value(TrackSetState& track_set_state){
   track_set_state.track_set_state.clear();
   Track2D::TrackState track_state;
+  std::size_t i = 0;
   for(TrackSetIterator::iterator iter = track_set_iter_->begin();
-      iter != track_set_iter_->end(); ++iter)
-    if(iter->Valid()){
+      iter != track_set_iter_->end(); ++iter) {
+    if(iter->Valid() && tick_current_ >= (*track_set_delay_)[i]){
       iter->Value(track_state);
       track_set_state.track_set_state.push_back(track_state);
     }
-    PositionChange(*(track_set_->track_set_init_pos_), track_set_state);
+    ++i;
+  }
+  PositionChange(*(track_set_->track_set_init_pos_), track_set_state);
 }
 
 void TrackSet2D::Iterator::Reset(){
+  tick_current_ = 0;
   count_invalid_track_ = rep_track_set_->size();
   delete track_set_iter_;
   track_set_iter_ = new TrackSetIterator();
