@@ -1,5 +1,7 @@
 #include "opera/opera.h"
 
+#include <assert.h>
+
 #include <vector>
 
 #include "opera/acceleration.h"
@@ -41,7 +43,7 @@ void Opera2D::BuildRadar(const OperaOption& opera_option) {
 
 void Opera2D::BuildTrack(const OperaOption& opera_option) {
   TrackSet2D::TrackSet *track_set_rep = new TrackSet2D::TrackSet();
-  std::vector<OperaOption::Track> tracks
+  std::vector<OperaOption::TrackInternal> tracks
        = opera_option.tracks();
   std::vector<OperaOption::TrackUnitType> tracks_type;
   TrackSet2D::TrackSetPosition* track_set_position

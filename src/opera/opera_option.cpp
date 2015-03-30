@@ -47,16 +47,6 @@ void OperaOption::pop_object(long long id) {
   }
 }
 
-void OperaOption::pop_track(long long id) {
-  std::vector<Track>::iterator iter = tracks_.begin();
-  for (; iter != tracks_.end(); ++iter) {
-    if (iter->id == id) {
-      tracks_.erase(iter);
-      return;
-    }
-  }
-}
-
 void OperaOption::ConvertToPixel() {
   for (std::size_t i=0; i!=radars_.size(); ++i) {
     FromWgsToPixel(&radars_[i].start_x, &radars_[i].start_y);

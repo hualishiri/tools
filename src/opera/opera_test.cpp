@@ -42,7 +42,11 @@ TEST(OPERA, Iterator) {
 
   track.lines.push_back(line);
   track.types.push_back(tools::OperaOption::LINE);
-  track.id = 0x14312;
+  track.ids.push_back(0x14310);
+  track.ids.push_back(0x14311);
+  track.ids.push_back(0x14312);
+  track.ids.push_back(0x14313);
+  track.batch_count = 4;
   track.acceleration = 0;
   track.start_speed = 0.1;
   track.time_delay = 5;
