@@ -79,12 +79,19 @@ TEST(OPERA, Iterator) {
                 opera_state->radar_set_state.radar_set_state[i].targets[j].y);
             LogDebug(
                 "object noised position : (%f, %f)",
-                opera_state->radar_set_state.radar_set_state[i].targets_radar[j].x,
-                opera_state->radar_set_state.radar_set_state[i].targets_radar[j].y);
+                opera_state->radar_set_state
+                    .radar_set_state[i].targets_radar[j].x,
+                opera_state->radar_set_state
+                    .radar_set_state[i].targets_radar[j].y);
             LogDebug(
                 "object filtered position : (%f, %f)",
-                opera_state->radar_set_state.radar_set_state[i].targets_filter[j].x,
-                opera_state->radar_set_state.radar_set_state[i].targets_filter[j].y);
+                opera_state->radar_set_state
+                    .radar_set_state[i].targets_filter[j].x,
+                opera_state->radar_set_state.
+                    radar_set_state[i].targets_filter[j].y);
+            LogDebug("Object Azimuth Angle : %f",
+                     opera_state->radar_set_state
+                        .radar_set_state[i].targets_angle_azimuth[j]);
           }
         }
 

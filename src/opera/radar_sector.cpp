@@ -32,6 +32,8 @@ void SectorRadar::GetState(
           (radar_state.targets[index].x + radar_state.targets[index].y) / 2.0,
           (radar_state.targets_radar[index].x 
           + radar_state.targets_radar[index].y) / 2.0));
+      radar_state.targets_angle_azimuth.push_back(
+          GetAngleOfAzimuth(Point2D(radar_->x, radar_->y), iter->point));
       radar_state.ids.push_back(iter->id);
     }
   }
@@ -42,18 +44,24 @@ bool SectorRadar::IsCaptured(const Point2D& radar,
   double distance = Distance2D(radar, target);
   if (distance >= radar_->distance_detect)
     return false;
-  double angle_target_amuzith = AngleFromStartByClockInCircle(radar.x,
-                                                              radar.y + 1.0,
-                                                              radar.x,
-                                                              radar.y,
-                                                              target.x,
-                                                              target.y);
+
+  double angle_target_amuzith = GetAngleOfAzimuth(radar, target);
   angle_target_amuzith -= radar_->angle_azimuth;
   if (angle_target_amuzith < 0.0)
     angle_target_amuzith += 2 * T_PI;
   if (angle_target_amuzith < radar_->angle_sector_range)
     return true;
   return false;
+}
+
+float SectorRadar::GetAngleOfAzimuth(const Point2D& radar,
+                                     const Point2D& target) const {
+  return AngleFromStartByClockInCircle(radar.x,
+                                       radar.y +1.0,
+                                       radar.x,
+                                       radar.y,
+                                       target.x,
+                                       target.y);
 }
 
 } //namespace tools

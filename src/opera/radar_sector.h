@@ -36,6 +36,7 @@ class SectorRadar : public Radar2D {
 
  private:
   bool IsCaptured(const Point2D& radar, const Point2D& target) const;
+  float GetAngleOfAzimuth(const Point2D& radar, const Point2D& target) const;
 
   Radar* radar_;
   RadarNoise* radar_noise_;
