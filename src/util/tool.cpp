@@ -115,6 +115,7 @@ void FromPixelToWgs(double* x, double* y) {
   *y =wgs_point.latitude;
 }
 
+/* product a double number range from -1.0 ~ 1.0 */
 double GetRandNumber(int seed) {
   srand(static_cast<unsigned>(time(NULL)) + seed);
   double number = rand() / (double)RAND_MAX;

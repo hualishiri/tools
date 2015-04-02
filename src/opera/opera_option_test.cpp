@@ -35,6 +35,7 @@ TEST(OPERAOPTION, PushBack) {
       track.types.push_back(OperaOption::LINE);
       track.id = i;
       track.ids.push_back(i);
+      track.level_noise_track = 10;
       opera_option.push_back_track(track);
     }
 }

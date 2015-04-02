@@ -69,6 +69,7 @@ class OperaOption {
     double acceleration;
     double time_delay;
     short batch_count;
+    double level_noise_track;
     std::vector<long long> ids;
     std::vector<Line> lines;
     std::vector<Circle> circles;
@@ -101,33 +102,14 @@ class OperaOption {
         + track.circles.size() + track.eclipses.size();
     assert( track_unit_size == track.types.size());
     assert(track.ids.size() == static_cast<std::size_t>(track.batch_count));
+    assert(track.level_noise_track >= 0.0 && track.level_noise_track <= 256);
     tracks_.push_back(track); 
   }
   inline std::size_t size_track() const { return tracks_.size(); }
 
   inline std::vector<Radar> radars() const { return radars_; }
   inline std::vector<Object> objects() const { return objects_; }
-  inline std::vector<TrackInternal> tracks() const { 
-    std::vector<TrackInternal> track_internals;
-    std::size_t track_batch_count = 0;
-    for (std::size_t i=0; i!=tracks_.size(); ++i) {
-      track_batch_count = static_cast<std::size_t>(tracks_[i].batch_count);
-      for (std::size_t j=0; j!=track_batch_count; ++j) {
-        TrackInternal track_internal = {
-          tracks_[i].ids[j],
-          tracks_[i].start_speed,
-          tracks_[i].acceleration,
-          tracks_[i].time_delay,
-          tracks_[i].lines,
-          tracks_[i].circles,
-          tracks_[i].eclipses,
-          tracks_[i].types
-        };
-        track_internals.push_back(track_internal);
-      }
-    }
-    return track_internals;
-  }
+  std::vector<TrackInternal> tracks() const;
 
   inline void clear_radars() { radars_.clear(); }
   inline void clear_objects() { objects_.clear(); }
@@ -144,6 +126,10 @@ class OperaOption {
   void ConvertToPixel();
   
  private:
+  void TrackInternalSift(TrackInternal& track_internal,
+                         double level_noise,
+                         int seed) const;
+
   static OperaOption* opera_option_;
 
   double interval_;

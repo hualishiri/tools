@@ -50,6 +50,7 @@ TEST(OPERA, Iterator) {
   track.acceleration = 0;
   track.start_speed = 0.1;
   track.time_delay = 5;
+  track.level_noise_track = 0.1;
 
   tools::OperaOption::Instance()->push_back_radar(radar);
   tools::OperaOption::Instance()->push_back_track(track);

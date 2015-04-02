@@ -1,23 +1,10 @@
 #include "opera/opera_option.h"
 
 #include "map/map_projection.h"
-#include "util/logger.h"
+#include "util/tool.h"
+//#include "util/logger.h"
 
 namespace tools {
-namespace {
-
-MapProjection::WgsPoint wgs_point;
-MapProjection::PixelPoint pixel_point;
-
-void FromWgsToPixel(double* longitude, double* latitude) {
-  wgs_point.longitude = *longitude;
-  wgs_point.latitude = *latitude;
-  MapProjection::Instance(0)->FromWgsToPixel(wgs_point, pixel_point);
-  *longitude = pixel_point.x;
-  *latitude = pixel_point.y;
-}
-
-} //namespace
 
 OperaOption* OperaOption::opera_option_ = 0;
 
@@ -54,28 +41,79 @@ void OperaOption::ConvertToPixel() {
   }  
   for (std::size_t i=0; i!=tracks_.size(); ++i) {
     for (std::size_t j=0; j!=tracks_[i].lines.size(); ++j) {
-      LogInfo("Before Convert: (%f, %f)",
-              tracks_[i].lines[j].start_x,
-              tracks_[i].lines[j].start_y);
-      FromWgsToPixel(&tracks_[i].lines[j].start_x, &tracks_[i].lines[j].start_y);
-      FromWgsToPixel(&tracks_[i].lines[j].end_x, &tracks_[i].lines[j].end_y);
-      LogInfo("After Convert: (%f, %f)",
-              tracks_[i].lines[j].start_x,
-              tracks_[i].lines[j].start_y);
+      FromWgsToPixel(&tracks_[i].lines[j].start_x,
+                     &tracks_[i].lines[j].start_y);
+      FromWgsToPixel(&tracks_[i].lines[j].end_x,
+                     &tracks_[i].lines[j].end_y);
     }
     for (std::size_t j=0; j!=tracks_[i].circles.size(); ++j) {
-      FromWgsToPixel(&tracks_[i].circles[j].start_x, &tracks_[i].circles[j].start_y);
-      FromWgsToPixel(&tracks_[i].circles[j].center_x, &tracks_[i].circles[j].center_y);
-      FromWgsToPixel(&tracks_[i].circles[j].side_x, &tracks_[i].circles[j].side_y);
-      FromWgsToPixel(&tracks_[i].circles[j].angle_x, &tracks_[i].circles[j].angle_y);
+      FromWgsToPixel(&tracks_[i].circles[j].start_x,
+                     &tracks_[i].circles[j].start_y);
+      FromWgsToPixel(&tracks_[i].circles[j].center_x,
+                     &tracks_[i].circles[j].center_y);
+      FromWgsToPixel(&tracks_[i].circles[j].side_x,
+                     &tracks_[i].circles[j].side_y);
+      FromWgsToPixel(&tracks_[i].circles[j].angle_x,
+                     &tracks_[i].circles[j].angle_y);
     }
     for (std::size_t j=0; j!=tracks_[i].eclipses.size(); ++j) {
-      FromWgsToPixel(&tracks_[i].eclipses[j].start_x, &tracks_[i].eclipses[j].start_y);
-      FromWgsToPixel(&tracks_[i].eclipses[j].center_x, &tracks_[i].eclipses[j].center_y);
-      FromWgsToPixel(&tracks_[i].eclipses[j].side_x, &tracks_[i].eclipses[j].side_y);
-      FromWgsToPixel(&tracks_[i].eclipses[j].end_x, &tracks_[i].eclipses[j].end_y);
-      FromWgsToPixel(&tracks_[i].eclipses[j].angle_x, &tracks_[i].eclipses[j].angle_y);
+      FromWgsToPixel(&tracks_[i].eclipses[j].start_x,
+                     &tracks_[i].eclipses[j].start_y);
+      FromWgsToPixel(&tracks_[i].eclipses[j].center_x,
+                     &tracks_[i].eclipses[j].center_y);
+      FromWgsToPixel(&tracks_[i].eclipses[j].side_x,
+                     &tracks_[i].eclipses[j].side_y);
+      FromWgsToPixel(&tracks_[i].eclipses[j].end_x,
+                     &tracks_[i].eclipses[j].end_y);
+      FromWgsToPixel(&tracks_[i].eclipses[j].angle_x,
+                     &tracks_[i].eclipses[j].angle_y);
     }
+  }
+}
+
+std::vector<OperaOption::TrackInternal> OperaOption::tracks() const { 
+  std::vector<TrackInternal> track_internals;
+  std::size_t track_batch_count = 0;
+  for (std::size_t i=0; i!=tracks_.size(); ++i) {
+    track_batch_count = static_cast<std::size_t>(tracks_[i].batch_count);
+    for (std::size_t j=0; j!=track_batch_count; ++j) {
+      TrackInternal track_internal = {
+        tracks_[i].ids[j],
+        tracks_[i].start_speed,
+        tracks_[i].acceleration,
+        tracks_[i].time_delay,
+        tracks_[i].lines,
+        tracks_[i].circles,
+        tracks_[i].eclipses,
+        tracks_[i].types
+      };
+      TrackInternalSift(track_internal, tracks_[i].level_noise_track, j);
+      track_internals.push_back(track_internal);
+    }
+  }
+  return track_internals;
+}
+
+void OperaOption::TrackInternalSift(TrackInternal& track_internal,
+                                    double level_noise,
+                                    int seed) const{
+  double x_sift = GetRandNumber(seed + 1) * level_noise;
+  double y_sift = GetRandNumber(seed + 2) * level_noise;
+  for (std::size_t i=0; i!=track_internal.lines.size(); ++i) {
+    track_internal.lines[i].start_x += x_sift;
+    track_internal.lines[i].start_y += y_sift;
+    track_internal.lines[i].end_x += x_sift;
+    track_internal.lines[i].end_y += y_sift;
+  }
+  for (std::size_t i=0; i!=track_internal.circles.size(); ++i) {
+    track_internal.circles[i].start_x += x_sift;
+    track_internal.circles[i].start_y += y_sift;
+    track_internal.circles[i].center_x+= x_sift;
+    track_internal.circles[i].center_y += y_sift;
+    track_internal.circles[i].side_x += x_sift;
+    track_internal.circles[i].side_y += y_sift;
+    track_internal.circles[i].angle_x += x_sift;
+    track_internal.circles[i].angle_y += y_sift;
   }
 }
 
