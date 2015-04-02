@@ -64,6 +64,7 @@ class OperaOption {
   };
   
   struct Track {
+    long long id;
     double start_speed;
     double acceleration;
     double time_delay;

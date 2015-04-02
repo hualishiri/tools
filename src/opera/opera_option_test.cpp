@@ -29,13 +29,14 @@ TEST(OPERAOPTION, PushBack) {
     ASSERT_TRUE(opera_option.size_object() == 8);
     for (int i = 1; i != 10; ++i) {
       OperaOption::Track track;
+      track.batch_count = 1;
+      OperaOption::Line line = {0x123, 21.34, 34.12, 34.12, 43.34};
+      track.lines.push_back(line);
+      track.types.push_back(OperaOption::LINE);
       track.id = i;
+      track.ids.push_back(i);
       opera_option.push_back_track(track);
     }
-    opera_option.pop_track(2);
-    ASSERT_TRUE(opera_option.size_track() == 8);
-    opera_option.pop_track(15);
-    ASSERT_TRUE(opera_option.size_track() == 8);
 }
 
 } //namespace tools
