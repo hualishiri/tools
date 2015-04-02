@@ -98,7 +98,7 @@ void Track2D::Iterator::Reset(){
 }
 
 float Track2D::Iterator::Azimuth(float x, float y) const {
-  float angle = AngleInCircle(x, y);
+  float angle = AngleInCircle(x, -1.0 * y);
   if (angle <= T_PI / 2.0)
     angle = T_PI / 2.0 - angle;
   else
