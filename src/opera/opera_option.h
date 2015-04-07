@@ -98,9 +98,8 @@ class OperaOption {
   void pop_object(long long id);
   inline std::size_t size_object() const { return objects_.size(); }
   void push_back_track(Track& track) {
-    std::size_t track_unit_size = track.lines.size() 
-        + track.circles.size() + track.eclipses.size();
-    assert( track_unit_size == track.types.size());
+    assert(track.lines.size() + track_circles.size()
+        + track.eclipses.size() == track.types.size());
     assert(track.ids.size() == static_cast<std::size_t>(track.batch_count));
     assert(track.level_noise_track >= 0.0 && track.level_noise_track <= 256);
     tracks_.push_back(track); 

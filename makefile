@@ -1,7 +1,7 @@
 CC = g++ -std=c++11 
 CCFLAG = -pg -g -I ./src -Wall -Werror $(VERSION)
 
-VERSION = $(DEBUG)
+VERSION = $(RELEASE)
 
 DEBUG = -D LOGDEBUG
 RELEASE = -D NDEBUG
@@ -11,7 +11,8 @@ OUTPUT = bin
 OBJECTS = testharness.o map.o map_projection.o tool.o logger.o \
 					js_create_object.o line.o circle.o eclipse.o track_unit.o \
 					track.o track_set.o radar_mechanical.o radar_set.o \
-					opera_option.o opera.o radar_sector.o radar_noise_gauss.o
+					opera_option.o opera.o radar_sector.o radar_noise_gauss.o \
+					opera_random.o
 
 OUTPUTOJBECTS = $(patsubst %, $(OUTPUT)/%, $(OBJECTS))
 
@@ -32,7 +33,8 @@ TESTS = \
 	radar_set_test \
 	opera_option_test \
 	opera_test \
-	radar_noise_gauss_test
+	radar_noise_gauss_test \
+	opera_random_test
 
 default : all
 	
@@ -78,6 +80,8 @@ radar_sector.o : src/opera/radar_sector.h src/opera/radar_sector.cpp
 	$(GCC) -c src/opera/radar_sector.cpp -o $(OUTPUT)/radar_sector.o
 radar_noise_gauss.o : src/opera/radar_noise_gauss.h src/opera/radar_noise_gauss.cpp
 	$(GCC) -c src/opera/radar_noise_gauss.cpp -o $(OUTPUT)/radar_noise_gauss.o
+opera_random.o : src/opera/opera_random.h src/opera/opera_random.cpp
+	$(GCC) -c src/opera/opera_random.cpp -o $(OUTPUT)/opera_random.o
 
 
 event_test.o : src/event/event.h src/event/event_test.cpp
@@ -119,6 +123,9 @@ opera_test.o : src/opera/opera.h src/opera/opera_test.cpp
 radar_noise_gauss_test.o : radar_noise_gauss.o tool.o\
 	src/opera/radar_noise_gauss_test.cpp
 	$(GCC) -c src/opera/radar_noise_gauss_test.cpp -o $(OUTPUT)/radar_noise_gauss_test.o
+opera_random_test.o : src/opera/opera_random.h src/opera/opera_random_test.cpp \
+	src/opera/opera_random.cpp
+	$(GCC) -c src/opera/opera_random_test.cpp -o $(OUTPUT)/opera_random_test.o
 	
 event_test : testharness.o event_test.o
 	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/event_test.o -o $(OUTPUT)/event_test
@@ -160,6 +167,8 @@ opera_test : opera_test.o
 	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/opera_test.o -o $(OUTPUT)/opera_test
 radar_noise_gauss_test : radar_noise_gauss_test.o
 	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/radar_noise_gauss_test.o -o $(OUTPUT)/radar_noise_gauss_test
+opera_random_test : opera_random_test.o
+	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/opera_random_test.o -o $(OUTPUT)/opera_random_test
 	
 clean :
 	rm -rf $(OUTPUTOJBECTS)
