@@ -1,7 +1,7 @@
 CC = g++ -std=c++11 
 CCFLAG = -pg -g -I ./src -Wall -Werror $(VERSION)
 
-VERSION = $(RELEASE)
+VERSION = $(DEBUG)
 
 DEBUG = -D LOGDEBUG
 RELEASE = -D NDEBUG

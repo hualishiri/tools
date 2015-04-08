@@ -2,6 +2,8 @@
 
 #include <assert.h>
 #include <math.h>
+#include <stdlib.h>
+#include <time.h>
 
 #include "opera/circle.h"
 #include "util/tool.h"
@@ -10,20 +12,14 @@
 namespace tools {
 
 void OperaRandom::GetResult(RandomOpera &random_opera) const {
-  LogInfo("Input GetResult");
-  LogInfo("first radar_number");
   int radar_number = GetRadarNumber(313);
   int track_number = GetTrackNumber(436);
   assert(radar_number >= 0);
   assert(track_number >= 0);
-  LogInfo("radar_number: %d", radar_number);
   for (int i=0; i!=radar_number; ++i) {
     random_opera.radars.push_back(GetRadar(12*i*i + 4));
-    LogInfo("%d", i);
   }
-  LogInfo("End");
   for (int i=0; i!=track_number; ++i) {
-    LogInfo("%d", i);
     random_opera.tracks.push_back(GetTrack(3*i+8*i));
   }
 }
@@ -73,8 +69,23 @@ OperaRandom::Track OperaRandom::GetTrack(int seed) const {
                          (seed << 2) + 2);
   GetRandomAngle(angles, track_circle_number, (seed << 2) + 3);
 
+  std::stack<std::pair<double ,double> > position_temp(position);
+  std::stack<double> angle_temp(angles);
+  std::stack<int> position_order_temp(position_order);
+
+  while(!position_order_temp.empty()) {
+    position_order_temp.pop();
+  }
+  while (!position_temp.empty()) {
+    position_temp.pop();
+  }
+  while (!angle_temp.empty()) {
+    angle_temp.pop();
+  }
+
   assert(track_unit_number + 1 == static_cast<int>(position.size()));
-  assert(track_unit_number + 1 == static_cast<int>(position_order.size()));
+  assert(track_unit_number == static_cast<int>(position_order.size()));
+  assert(static_cast<int>(angles.size()) == track_circle_number);
   
   double last_x = 0.0;
   double last_y = 0.0;
@@ -89,7 +100,6 @@ OperaRandom::Track OperaRandom::GetTrack(int seed) const {
     position.pop();
     last_x = line.end_x;
     last_y = line.end_y;
-    position_order.pop();
     track.lines.push_back(line);
     track.types.push_back(LINE);
   } else {
@@ -103,25 +113,28 @@ OperaRandom::Track OperaRandom::GetTrack(int seed) const {
     circle.angle = angles.top();
     angles.pop();
     GetArcEndPoint(circle, last_x, last_y);
-    position_order.pop();
     track.circles.push_back(circle);
     track.types.push_back(CIRCLE);
   }
+  position_order.pop();
   while (!position_order.empty()) {
     if (0 == position_order.top()) {
+      assert(!position.empty());
+      assert(!position_order.empty());
       Line line;
       line.start_x = last_x;
       line.start_y = last_y;
       line.end_x = position.top().first;
       line.end_y = position.top().second;
       position.pop();
-      position_order.pop();
       last_x = line.end_x;
       last_y = line.end_y;
       track.lines.push_back(line);
       track.types.push_back(LINE);
-    }
-    if (1 == position_order.top()) {
+    } else {
+      assert(!position.empty());
+      assert(!position_order.empty());
+      assert(!angles.empty());
       Circle circle;
       circle.start_x = last_x;
       circle.start_y = last_y;
@@ -131,10 +144,10 @@ OperaRandom::Track OperaRandom::GetTrack(int seed) const {
       circle.angle = angles.top();
       angles.pop();
       GetArcEndPoint(circle, last_x, last_y);
-      position_order.pop();
       track.circles.push_back(circle);
       track.types.push_back(CIRCLE);
     }
+    position_order.pop();
   }
   return track;
 }
@@ -215,8 +228,8 @@ void OperaRandom::GetRandomPositionOrder(std::stack<int> &pos_order,
   for (int i=line_number; i!=track_unit_number; ++i)
     array[i] = 1;
   for (int i=0; i!=track_unit_number; ++i) {
-    int index = static_cast<int>(fabs(GetRandNumber(seed + 13 * i * i + 3))
-        * track_unit_number);
+    srand(time(0) + i);
+    int index = rand() % (track_unit_number - i);
     int temp = array[index];
     array[index] = array[track_unit_number-1-i];
     array[track_unit_number-1-i] = temp;
@@ -228,10 +241,12 @@ void OperaRandom::GetRandomAngle(std::stack<double> &angles,
                                  int n,
                                  int seed) const {
   double x = 0.0;
+  int i = 0;
   while (static_cast<int>(angles.size()) != n) {
-    x = GetNumber(-2.0 * T_PI, 2.0 * T_PI, 2 * seed + seed * seed);
+    x = GetNumber(-2.0 * T_PI, 2.0 * T_PI, 2 * seed + seed * seed + i);
     if ( x > T_PI / 6.0 || x < T_PI / (-6.0) )
       angles.push(x);
+    ++i;
   }
 }
 

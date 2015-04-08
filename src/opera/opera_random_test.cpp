@@ -1,5 +1,7 @@
 #include "opera/opera_random.h"
 
+#include <assert.h>
+
 #include "util/testharness.h"
 #include "util/logger.h"
 #include "util/tool.h"
@@ -161,17 +163,20 @@ TEST(OPERARANDOM, GetTrack) {
 
   int line_index = 0;
   int circle_index = 0;
+  assert(track.types.size() == track.lines.size() + track.circles.size());
   for (int i=0; i!=static_cast<int>(track.types.size()); ++i) {
-
-    if (track.types[i] == OperaRandom::LINE)
-      LogInfo("Line: (%f, %f), (%f, %f)",
+    /*if (track.types[i] == OperaRandom::LINE) {
+      LogInfo("Line[%d]: (%f, %f), (%f, %f)",
+              line_index,
               track.lines[line_index].start_x,
               track.lines[line_index].start_y,
               track.lines[line_index].end_x,
               track.lines[line_index].end_y);
-    ++line_index;
-  if (OperaRandom::CIRCLE == track.types[i])
-    LogInfo("Circle: (%f, %f), (%f, %f), %f",
+    ++line_index; 
+  }
+  if (OperaRandom::CIRCLE == track.types[i]) {
+    LogInfo("Circle[%d]: (%f, %f), (%f, %f), %f",
+            circle_index,
             track.circles[circle_index].start_x,
             track.circles[circle_index].start_y,
             track.circles[circle_index].center_x,
@@ -179,10 +184,11 @@ TEST(OPERARANDOM, GetTrack) {
             track.circles[circle_index].angle
             );
     ++circle_index;
+    }*/
   }
 }
 
-/*TEST(OPERARANDOM, GetResult) {
+TEST(OPERARANDOM, GetResult) {
   OperaRandom::OperaRandomParameter opera_random_parameter = {
     10.0, 10.0,
     120.0, 120.0,
@@ -194,7 +200,6 @@ TEST(OPERARANDOM, GetTrack) {
   std::stack<double> angles;
   OperaRandom opera_random(opera_random_parameter);
 
-  LogInfo("Result first");
   OperaRandom::RandomOpera random_opera;
   opera_random.GetResult(random_opera);
   std::vector<OperaRandom::Radar> radars = random_opera.radars;
@@ -208,7 +213,7 @@ TEST(OPERARANDOM, GetTrack) {
             opera_random_parameter.track_number_max);
   ASSERT_GE(static_cast<int>(tracks.size()),
             opera_random_parameter.track_number_min);
-}*/
+}
 
 bool IsInRectangle(const OperaRandom::OperaRandomParameter& opera_para,
     double &x, double &y) {
