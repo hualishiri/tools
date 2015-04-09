@@ -87,7 +87,8 @@ std::vector<OperaOption::TrackInternal> OperaOption::tracks() const {
         tracks_[i].eclipses,
         tracks_[i].types
       };
-      TrackInternalSift(track_internal, tracks_[i].level_noise_track, j);
+      if (0 != j)
+        TrackInternalSift(track_internal, tracks_[i].level_noise_track, j);
       track_internals.push_back(track_internal);
     }
   }

@@ -3,13 +3,6 @@
 #include "util/tool.h"
 
 namespace tools {
-namespace {
-
-double Distance2D(const Point2D& lhs, const Point2D& rhs) {
-  return sqrt(pow(lhs.x - rhs.x, 2) + pow(lhs.y - rhs.y, 2));
-}
-
-} //namespace
 
 void SectorRadar::GetState(
     const TrackSet2D::TrackSetState& track_set_state,
@@ -41,7 +34,7 @@ void SectorRadar::GetState(
 
 bool SectorRadar::IsCaptured(const Point2D& radar,
                                    const Point2D& target) const {
-  double distance = Distance2D(radar, target);
+  double distance = Distance2DArc(radar.x, radar.y, target.x, target.y);
   if (distance >= radar_->distance_detect)
     return false;
 

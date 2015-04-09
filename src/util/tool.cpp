@@ -11,6 +11,7 @@
 namespace tools {
 
 extern const double T_PI = 3.14159265359;
+extern const double kRadius = 6378137.0;
 
 namespace {
   
@@ -125,6 +126,31 @@ double GetRandNumber(int seed) {
   number = number / 10000000000.0;
   number = number * 2.0 - 1.0;
   return number;
+}
+
+double Radius(double angle) {
+  return angle * T_PI / 180.0;
+}
+
+double Distance2D(double lhs_x, double lhs_y, double rhs_x, double rhs_y) {
+  return sqrt(pow(lhs_x - rhs_x, 2.0) + pow(lhs_y - rhs_y, 2.0));
+}
+
+double Distance2DArc(double lhs_x, double lhs_y, double rhs_x, double rhs_y) {
+  double wgs_lhs_x = lhs_x;
+  double wgs_lhs_y = lhs_y;
+  double wgs_rhs_x = rhs_x;
+  double wgs_rhs_y = rhs_y;
+  FromPixelToWgs(&wgs_lhs_x, &wgs_lhs_y);  
+  FromPixelToWgs(&wgs_rhs_x, &wgs_rhs_y);  
+  double longitude_range = Radius(wgs_rhs_x - wgs_lhs_x);
+  double latitude_range = Radius(wgs_rhs_y - wgs_lhs_y);
+  double a = pow(sin(latitude_range/2.0), 2.0)
+      + cos(Radius(wgs_lhs_y)) * cos(Radius(wgs_rhs_y)) *
+      pow(sin(longitude_range / 2.0), 2.0);
+  double c = 2.0 * atan2(sqrt(a), sqrt(1.0-a));
+  double d = kRadius * c;
+  return d; 
 }
 
 } //namespace tools

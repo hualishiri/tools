@@ -3,6 +3,7 @@
 
 namespace tools {
 
+extern const double kRadius;
 extern const double T_PI;
 
 long long GenerateId();
@@ -24,6 +25,12 @@ void FromWgsToPixel(double* longitude, double* latitude);
 void FromPixelToWgs(double* x, double* y);
 
 double GetRandNumber(int seed);
+
+double Radius(double angle);
+
+double Distance2D(double lhs_x, double lhs_y, double rhs_x, double rhs_y);
+
+double Distance2DArc(double lhs_x, double lhs_y, double rhs_x, double rhs_y);
 
 } //namespace tools
 
