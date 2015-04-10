@@ -143,14 +143,15 @@ double Distance2DArc(double lhs_x, double lhs_y, double rhs_x, double rhs_y) {
   double wgs_rhs_y = rhs_y;
   FromPixelToWgs(&wgs_lhs_x, &wgs_lhs_y);  
   FromPixelToWgs(&wgs_rhs_x, &wgs_rhs_y);  
-  double longitude_range = Radius(wgs_rhs_x - wgs_lhs_x);
-  double latitude_range = Radius(wgs_rhs_y - wgs_lhs_y);
-  double a = pow(sin(latitude_range/2.0), 2.0)
-      + cos(Radius(wgs_lhs_y)) * cos(Radius(wgs_rhs_y)) *
-      pow(sin(longitude_range / 2.0), 2.0);
-  double c = 2.0 * atan2(sqrt(a), sqrt(1.0-a));
-  double d = kRadius * c;
-  return d; 
+
+  double c = Radius(wgs_lhs_y);
+  double d = Radius(wgs_rhs_y);
+  double e = Radius(wgs_lhs_x);
+  double f = Radius(wgs_rhs_x);
+  double result = 2 * asin(sqrt(pow(sin((c-d)/2.0), 2.0) 
+      + cos(c)*cos(d)*pow(sin((e-f)/2.0), 2.0)));
+  result *= kRadius;
+  return result; 
 }
 
 } //namespace tools

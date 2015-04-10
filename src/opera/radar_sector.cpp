@@ -22,8 +22,8 @@ void SectorRadar::GetState(
       radar_noise_->ApplyNoise(&radar_state.targets_radar[index].x,
                                &radar_state.targets_radar[index].y);
       radar_state.targets_filter.push_back(Point2D(
-          (radar_state.targets[index].x + radar_state.targets[index].y) / 2.0,
-          (radar_state.targets_radar[index].x 
+          (radar_state.targets[index].x + radar_state.targets[index].x) / 2.0,
+          (radar_state.targets_radar[index].y 
           + radar_state.targets_radar[index].y) / 2.0));
       radar_state.targets_angle_azimuth.push_back(
           GetAngleOfAzimuth(Point2D(radar_->x, radar_->y), iter->point));
@@ -49,8 +49,8 @@ bool SectorRadar::IsCaptured(const Point2D& radar,
 
 float SectorRadar::GetAngleOfAzimuth(const Point2D& radar,
                                      const Point2D& target) const {
-  return AngleFromStartByClockInCircle(radar.x,
-                                       radar.y +1.0,
+  return 2.0 * T_PI - AngleFromStartByClockInCircle(radar.x,
+                                       radar.y - 1.0,
                                        radar.x,
                                        radar.y,
                                        target.x,

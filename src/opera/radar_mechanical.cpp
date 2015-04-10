@@ -38,7 +38,6 @@ void MechanicalRadar2D::GetState(
           + radar_state.targets_radar[index].y) / 2.0));
       radar_state.ids.push_back(iter->id);
       index = radar_state.targets.size();
-      LogInfo("Object NUMBER: %d", radar_state.targets.size());
     }
   }
 }

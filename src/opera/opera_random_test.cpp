@@ -161,8 +161,8 @@ TEST(OPERARANDOM, GetTrack) {
   OperaRandom opera_random(opera_random_parameter);
   OperaRandom::Track track = opera_random.GetTrack(100);
 
-  int line_index = 0;
-  int circle_index = 0;
+  //int line_index = 0;
+  //int circle_index = 0;
   assert(track.types.size() == track.lines.size() + track.circles.size());
   for (int i=0; i!=static_cast<int>(track.types.size()); ++i) {
     /*if (track.types[i] == OperaRandom::LINE) {
