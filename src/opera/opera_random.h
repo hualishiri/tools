@@ -1,6 +1,8 @@
 #ifndef TOOLS_OPERA_OPERA_RANDOM_H_
 #define TOOLS_OPERA_OPERA_RANDOM_H_
 
+#include <assert.h>
+
 #include <stack>
 #include <vector>
 
@@ -66,15 +68,11 @@ class OperaRandom {
     void ConvertToWgs();
   };
 
-  OperaRandom(const OperaRandomParameter& opera_random_para) 
-    : opera_random_para_(opera_random_para) {
-  }
+  OperaRandom(const OperaRandomParameter& opera_random_para);
 
   void GetResult(RandomOpera &random_opera) const;
 
-  void SetOperaRandomParameter(const OperaRandomParameter& opera_random_para) {
-    opera_random_para_ = opera_random_para;
-  }
+  void SetOperaRandomParameter(const OperaRandomParameter& opera_random_para);
 
  //private:
   Radar GetRadar(int seed) const;
@@ -97,6 +95,7 @@ class OperaRandom {
   void GetArcEndPoint(const Circle& circle, double &x, double &y) const;
   bool CircleValid(const Circle& circle) const;
   void AmendCircle(Circle& circle, int seed) const;
+  bool OperaRandomParameterValid(const OperaRandomParameter& para) const;
 
   OperaRandomParameter opera_random_para_;
 };

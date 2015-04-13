@@ -11,6 +11,10 @@ void SectorRadar::GetState(
   radar_state.point.x = radar_->x;
   radar_state.point.y = radar_->y;
   radar_state.targets.clear();
+  radar_state.targets_radar.clear();
+  radar_state.targets_filter.clear();
+  radar_state.targets_angle_azimuth.clear();
+  radar_state.ids.clear();
   for (std::vector<Track2D::TrackState>::const_iterator iter 
       = track_set_state.track_set_state.begin();
       iter != track_set_state.track_set_state.end();

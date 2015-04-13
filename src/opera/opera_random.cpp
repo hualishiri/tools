@@ -13,6 +13,50 @@
 #include "util/logger.h"
 
 namespace tools {
+bool OperaRandom::OperaRandomParameterValid(
+    const OperaRandomParameter& para) const {
+    assert(para.rectangle_down_x >= 0.0 
+        && para.rectangle_down_x <= 256.0);
+    assert(para.rectangle_down_y >= 0.0 
+        && para.rectangle_down_y <= 256.0);
+    assert(para.rectangle_up_x >= 0.0 
+        && para.rectangle_up_x <= 256.0);
+    assert(para.rectangle_up_y >= 0.0 
+        && para.rectangle_up_y <= 256.0);
+    assert(para.radar_number_min >= 0);
+    assert(para.radar_number_min
+        <= para.radar_number_max);
+    assert(para.radar_radius_min >= 0.0);
+    assert(para.radar_radius_max <= 256.0);
+    assert(para.radar_radius_min <= para.radar_radius_max);
+    assert(para.track_number_min >= 0);
+    assert(para.track_number_min
+        <= para.track_number_max);
+    assert(para.track_unit_number_min >= 0);
+    assert(para.track_unit_number_min 
+        <= para.track_unit_number_max);
+    assert(para.track_batch_min >= 0);
+    assert(para.track_batch_min 
+        <= para.track_batch_max);
+    assert(para.ratio_line_in_sum_min >= 0.0
+        && para.ratio_line_in_sum_min <= 1.0);
+    assert(para.ratio_line_in_sum_max >= 0.0
+        && para.ratio_line_in_sum_max <= 1.0);
+    assert(para.ratio_line_in_sum_min
+        <= para.ratio_line_in_sum_max);
+    return true;
+}
+
+OperaRandom::OperaRandom(const OperaRandomParameter& opera_random_para) 
+    : opera_random_para_(opera_random_para) {
+  OperaRandomParameterValid(opera_random_para_);
+}
+
+void OperaRandom::SetOperaRandomParameter(
+    const OperaRandomParameter& opera_random_para) {
+  opera_random_para_ = opera_random_para;
+  OperaRandomParameterValid(opera_random_para_);
+}
 
 void OperaRandom::GetResult(RandomOpera &random_opera) const {
   int radar_number = GetRadarNumber(313);
@@ -274,7 +318,7 @@ void OperaRandom::RandomOpera::ConvertToWgs() {
   for (std::size_t i=0; i!=radars.size(); ++i)
     FromPixelToWgs(&radars[i].center_x, &radars[i].center_y);
   for (std::size_t i=0; i!=tracks.size(); ++i) {
-    for (std::size_t j=0; j!=tracks[i].lines.size(); ++i) {
+    for (std::size_t j=0; j!=tracks[i].lines.size(); ++j) {
       FromPixelToWgs(&tracks[i].lines[j].start_x, &tracks[i].lines[j].start_y);
       FromPixelToWgs(&tracks[i].lines[j].end_x, &tracks[i].lines[j].end_y);
     } 
