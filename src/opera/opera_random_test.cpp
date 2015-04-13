@@ -20,7 +20,9 @@ TEST(OPERARANDOM, GetRadar) {
     5, 10,
     3.0, 10.0,
     3, 5,
-    5, 10
+    5, 10,
+    3, 6,
+    1.0, 1.0
   };
   for (int i=0; i!=1000; ++i) {
     OperaRandom opera_random(opera_random_parameter);
@@ -47,7 +49,9 @@ TEST(OPERARANDOM, GetRadarNumber) {
     3, 10,  //radar number range
     3.0, 10.0,  //radar radius range
     3, 5, //track number range
-    5, 10  // track unit number range
+    5, 10,  // track unit number range
+    3, 6,
+    1.0, 1.0
   };
   OperaRandom opera_random(opera_random_parameter);
   for (int i=0; i!=1000; ++i) {
@@ -64,7 +68,9 @@ TEST(OPERARANDOM, GetTrackNumber) {
     3, 10,  //radar number range
     3.0, 10.0,  //radar radius range
     3, 5, //track number range
-    5, 10  // track unit number range
+    5, 10,  // track unit number range
+    3, 6,
+    1.0, 1.0
   };
   OperaRandom opera_random(opera_random_parameter);
   for (int i=0; i!=1000; ++i) {
@@ -81,7 +87,9 @@ TEST(OPERARANDOM, GetRandomPositionSet) {
     3, 10,  //radar number range
     3.0, 10.0,  //radar radius range
     3, 5, //track number range
-    5, 10  // track unit number range
+    5, 10,  // track unit number range
+    3, 6,
+    1.0, 1.0
   };
   std::stack<std::pair<double, double> > position_set;
   OperaRandom opera_random(opera_random_parameter);
@@ -106,13 +114,15 @@ TEST(OPERARANDOM, GetRandomPositionOrder) {
     3, 10,  //radar number range
     3.0, 10.0,  //radar radius range
     3, 5, //track number range
-    5, 10  // track unit number range
+    5, 10, // track unit number range
+    3, 6,
+    1.0, 1.0
   };
   std::stack<int> position_order;
   OperaRandom opera_random(opera_random_parameter);
 
   for (int i=10; i!=20; ++i) {
-    opera_random.GetRandomPositionOrder(position_order, i, i/2, i);
+    opera_random.GetRandomPositionOrder(position_order, i, i, i);
     ASSERT_EQ(static_cast<int>(position_order.size()), i);
 
     while (!position_order.empty()) {
@@ -130,7 +140,9 @@ TEST(OPERARANDOM, GetRandomAngle) {
     3, 10,  //radar number range
     3.0, 10.0,  //radar radius range
     3, 5, //track number range
-    5, 10  // track unit number range
+    5, 10,  // track unit number range
+    3, 6,
+    1.0, 1.0
   };
   std::stack<double> angles;
   OperaRandom opera_random(opera_random_parameter);
@@ -155,7 +167,9 @@ TEST(OPERARANDOM, GetTrack) {
     3, 10,  //radar number range
     3.0, 10.0,  //radar radius range
     3, 5, //track number range
-    5, 10  // track unit number range
+    5, 10,  // track unit number range
+    3, 6,
+    1.0, 1.0
   };
   std::stack<double> angles;
   OperaRandom opera_random(opera_random_parameter);
@@ -195,7 +209,9 @@ TEST(OPERARANDOM, GetResult) {
     3, 10,  //radar number range
     3.0, 10.0,  //radar radius range
     3, 5, //track number range
-    5, 10  // track unit number range
+    5, 10,  // track unit number range
+    3, 6,
+    1.0, 1.0
   };
   std::stack<double> angles;
   OperaRandom opera_random(opera_random_parameter);

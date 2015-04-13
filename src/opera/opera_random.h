@@ -11,18 +11,24 @@ class OperaRandom {
   enum TrackUnitType {LINE, CIRCLE};
 
   struct OperaRandomParameter {
-    double rectangle_up_x;
-    double rectangle_up_y;
-    double rectangle_down_x;
-    double rectangle_down_y;
-    int radar_number_min;
+    double rectangle_up_x; //wgs coordination
+    double rectangle_up_y; //wgs coordination
+    double rectangle_down_x; //wgs coordination
+    double rectangle_down_y;  //wgs coordination
+    int radar_number_min;   
     int radar_number_max;
-    double radar_radius_min;
-    double radar_radius_max;
+    double radar_radius_min;    //pixel coordination
+    double radar_radius_max;   //pixel coordination
     int track_number_min;
     int track_number_max;
     int track_unit_number_min;
     int track_unit_number_max;
+    int track_batch_min;
+    int track_batch_max;
+    double ratio_line_in_sum_min;
+    double ratio_line_in_sum_max;
+
+    void ConvertToPixel();
   };
 
   struct Radar {
@@ -47,6 +53,7 @@ class OperaRandom {
   };
 
   struct Track {
+    int track_batch;
     std::vector<Line> lines;
     std::vector<Circle> circles;
     std::vector<TrackUnitType> types;
@@ -56,6 +63,7 @@ class OperaRandom {
   struct RandomOpera{
     std::vector<Radar> radars;
     std::vector<Track> tracks;
+    void ConvertToWgs();
   };
 
   OperaRandom(const OperaRandomParameter& opera_random_para) 
@@ -87,6 +95,8 @@ class OperaRandom {
                               int seed) const;
   void GetRandomAngle(std::stack<double> &angles, int n, int seed) const;
   void GetArcEndPoint(const Circle& circle, double &x, double &y) const;
+  bool CircleValid(const Circle& circle) const;
+  void AmendCircle(Circle& circle, int seed) const;
 
   OperaRandomParameter opera_random_para_;
 };

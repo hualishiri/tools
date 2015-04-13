@@ -4,6 +4,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 #include "opera/circle.h"
 #include "util/tool.h"
@@ -54,15 +55,19 @@ OperaRandom::Track OperaRandom::GetTrack(int seed) const {
       GetNumber(opera_random_para_.track_unit_number_min,
                 opera_random_para_.track_unit_number_max,
                 seed));
-  int track_line_number = static_cast<int>(GetNumber(1,
-                                                     track_unit_number,
-                                                     seed + 1));
+  int track_line_number = static_cast<int>(GetNumber(
+      opera_random_para_.ratio_line_in_sum_min * track_unit_number,
+      opera_random_para_.ratio_line_in_sum_max * track_unit_number,
+      seed + 1));
   int track_circle_number = track_unit_number - track_line_number;
   Track track;
   std::stack<std::pair<double, double> > position;
   std::stack<int> position_order;
   std::stack<double> angles;
   GetRandomPositionSet(position, track_unit_number + 1, (seed << 2) + 1);
+  LogInfo("Function Caller: TrackUnit:%d, TrackLine:%d",
+          track_unit_number,
+          track_line_number);
   GetRandomPositionOrder(position_order,
                          track_unit_number,
                          track_line_number,
@@ -144,11 +149,16 @@ OperaRandom::Track OperaRandom::GetTrack(int seed) const {
       circle.angle = angles.top();
       angles.pop();
       GetArcEndPoint(circle, last_x, last_y);
+      AmendCircle(circle, 0);
       track.circles.push_back(circle);
       track.types.push_back(CIRCLE);
     }
     position_order.pop();
   }
+  track.track_batch = GetNumber(
+      static_cast<double>(opera_random_para_.track_batch_min),
+      static_cast<double>(opera_random_para_.track_batch_max),
+      static_cast<int>(track.lines.size() + track.circles.size()));
   return track;
 }
 
@@ -178,6 +188,7 @@ bool OperaRandom::RangeValid(double min, double max) const {
 }
 
 double OperaRandom::GetNumber(double min, double max, int seed) const {
+  LogInfo("Min:%f, Max:%f", min, max);
   return min + (max - min ) * fabs(GetRandNumber(seed));
 }
 
@@ -220,6 +231,8 @@ void OperaRandom::GetRandomPositionOrder(std::stack<int> &pos_order,
                                          int track_unit_number,
                                          int line_number,
                                          int seed) const {
+  LogInfo("Track Unit Number:%d, Line Number:%d",
+          track_unit_number, line_number);
   while(!pos_order.empty())
     pos_order.pop();
   int *array = new int[track_unit_number];
@@ -248,6 +261,63 @@ void OperaRandom::GetRandomAngle(std::stack<double> &angles,
       angles.push(x);
     ++i;
   }
+}
+
+void OperaRandom::OperaRandomParameter::ConvertToPixel() {
+  FromWgsToPixel(&rectangle_down_x, &rectangle_down_y);
+  FromWgsToPixel(&rectangle_up_x, &rectangle_up_y);
+}
+
+void OperaRandom::RandomOpera::ConvertToWgs() {
+  for (std::size_t i=0; i!=radars.size(); ++i)
+    FromPixelToWgs(&radars[i].center_x, &radars[i].center_y);
+  for (std::size_t i=0; i!=tracks.size(); ++i) {
+    for (std::size_t j=0; j!=tracks[i].lines.size(); ++i) {
+      FromPixelToWgs(&tracks[i].lines[j].start_x, &tracks[i].lines[j].start_y);
+      FromPixelToWgs(&tracks[i].lines[j].end_x, &tracks[i].lines[j].end_y);
+    } 
+    for (std::size_t j=0; j!=tracks[i].circles.size(); ++j) {
+      FromPixelToWgs(&tracks[i].circles[j].start_x,
+                     &tracks[i].circles[j].start_y);
+      FromPixelToWgs(&tracks[i].circles[j].center_x,
+                     &tracks[i].circles[j].center_y);
+    }
+  }
+}
+
+bool OperaRandom::CircleValid(const Circle& circle) const {
+  double radius = sqrt(pow(circle.start_x - circle.center_x, 2)
+      + pow(circle.start_y - circle.center_y, 2));
+  double x_min = fmin(opera_random_para_.rectangle_up_x,
+                      opera_random_para_.rectangle_down_x);
+  double x_max = fmax(opera_random_para_.rectangle_up_x,
+                      opera_random_para_.rectangle_down_x);
+  double y_min = fmin(opera_random_para_.rectangle_up_y,
+                      opera_random_para_.rectangle_down_y);
+  double y_max = fmax(opera_random_para_.rectangle_up_y,
+                      opera_random_para_.rectangle_down_y);
+  double x_min_circle = circle.center_x - radius;
+  double x_max_circle = circle.center_x + radius;
+  double y_min_circle = circle.center_y - radius;
+  double y_max_circle = circle.center_y + radius;
+  if (x_min_circle < x_min
+      || x_max_circle > x_max
+      || y_min_circle < y_min
+      || y_max_circle > y_max)
+    return false;
+  return true;
+}
+
+void OperaRandom::AmendCircle(Circle& circle, int seed) const{
+  if(CircleValid(circle)) return;
+  circle.center_x = GetNumber(opera_random_para_.rectangle_down_x,
+                              opera_random_para_.rectangle_up_x,
+                              time(0) + seed + 1);
+  circle.center_y = GetNumber(opera_random_para_.rectangle_down_y,
+                              opera_random_para_.rectangle_up_y,
+                              time(0) + seed + 2);
+  if (seed > 20)  return;
+  AmendCircle(circle, seed + 2);
 }
 
 } //namespace tools
