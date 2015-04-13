@@ -6,6 +6,8 @@
 #include <time.h>
 #include <math.h>
 
+#include <algorithm>
+
 #include "opera/circle.h"
 #include "util/tool.h"
 #include "util/logger.h"
@@ -288,13 +290,13 @@ void OperaRandom::RandomOpera::ConvertToWgs() {
 bool OperaRandom::CircleValid(const Circle& circle) const {
   double radius = sqrt(pow(circle.start_x - circle.center_x, 2)
       + pow(circle.start_y - circle.center_y, 2));
-  double x_min = fmin(opera_random_para_.rectangle_up_x,
+  double x_min = std::min(opera_random_para_.rectangle_up_x,
                       opera_random_para_.rectangle_down_x);
-  double x_max = fmax(opera_random_para_.rectangle_up_x,
+  double x_max = std::max(opera_random_para_.rectangle_up_x,
                       opera_random_para_.rectangle_down_x);
-  double y_min = fmin(opera_random_para_.rectangle_up_y,
+  double y_min = std::min(opera_random_para_.rectangle_up_y,
                       opera_random_para_.rectangle_down_y);
-  double y_max = fmax(opera_random_para_.rectangle_up_y,
+  double y_max = std::max(opera_random_para_.rectangle_up_y,
                       opera_random_para_.rectangle_down_y);
   double x_min_circle = circle.center_x - radius;
   double x_max_circle = circle.center_x + radius;

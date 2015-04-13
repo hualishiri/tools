@@ -25,9 +25,9 @@ class SectorRadar : public Radar2D {
   SectorRadar(Radar* radar, RadarNoise* radar_noise)
     : radar_(radar), radar_noise_(radar_noise) {
     assert(radar_->id > 0);
-    assert(radar_->angle_azimuth >= 0.0 && radar_->angle_azimuth <= 2 * T_PI);
+    assert(radar_->angle_azimuth >= 0.0 && radar_->angle_azimuth <= 2.0 * T_PI);
     assert(radar_->angle_sector_range >= 0.0 &&
-        radar_->angle_sector_range <= 2 * T_PI);
+        radar_->angle_sector_range <= 2.0 * T_PI);
     assert(radar_->distance_detect >= 0.0);
   }
 
