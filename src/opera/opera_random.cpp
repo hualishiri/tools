@@ -21,6 +21,18 @@ bool OperaRandom::OperaRandomParameterValid(
         && para.rectangle_down_y <= 256.0);
     assert(para.rectangle_up_x >= 0.0 
         && para.rectangle_up_x <= 256.0);
+
+
+
+
+
+
+
+
+
+
+
+
     assert(para.rectangle_up_y >= 0.0 
         && para.rectangle_up_y <= 256.0);
     assert(para.radar_number_min >= 0);

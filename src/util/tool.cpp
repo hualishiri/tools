@@ -154,4 +154,10 @@ double Distance2DArc(double lhs_x, double lhs_y, double rhs_x, double rhs_y) {
   return result; 
 }
 
+bool ValidOfLongitude(double l) { return l >= -180.0 && l <= 180.0; }
+
+bool ValidOfLatitude(double l) { return l <= 90.0 && l >= -90.0; }
+
+bool ValidOfCircleAngle(double angle) { return angle <= 360.0 && angle >= 0.0; }
+
 } //namespace tools

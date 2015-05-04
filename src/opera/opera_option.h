@@ -13,11 +13,14 @@ class OperaOption {
   struct Radar {
     long long id;
     unsigned char type;
-    double start_x;
-    double start_y;
+    double start_x; // longitude by degree
+    double start_y; // latitude by degree
     double radius_x;
     double radius_y;
     double level_noise;
+    double error_system;
+    double error_random;;
+    double error_overall;
     double angle_azimuth;
     double angle_sector_range;
   };
@@ -65,9 +68,9 @@ class OperaOption {
   
   struct Track {
     long long id;
-    double start_speed;
-    double acceleration;
-    double time_delay;
+    std::vector<double> start_speeds;
+    std::vector<double> accelerations;
+    std::vector<double> time_delays;
     short batch_count;
     double level_noise_track;
     std::vector<long long> ids;
@@ -91,19 +94,13 @@ class OperaOption {
   static OperaOption* Instance();
 
   OperaOption() : interval_(0.1) {}
-  void push_back_radar(Radar& radar) { radars_.push_back(radar); }
+  void push_back_radar(Radar& radar);
   void pop_radar(long long id);
   inline std::size_t size_radar() const { return radars_.size(); }
   void push_back_object(Object& object) { objects_.push_back(object); }
   void pop_object(long long id);
   inline std::size_t size_object() const { return objects_.size(); }
-  void push_back_track(Track& track) {
-    assert(track.lines.size() + track.circles.size()
-        + track.eclipses.size() == track.types.size());
-    assert(track.ids.size() == static_cast<std::size_t>(track.batch_count));
-    assert(track.level_noise_track >= 0.0 && track.level_noise_track <= 256);
-    tracks_.push_back(track); 
-  }
+  void push_back_track(Track& track);
   inline std::size_t size_track() const { return tracks_.size(); }
 
   inline std::vector<Radar> radars() const { return radars_; }

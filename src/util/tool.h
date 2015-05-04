@@ -32,6 +32,15 @@ double Distance2D(double lhs_x, double lhs_y, double rhs_x, double rhs_y);
 
 double Distance2DArc(double lhs_x, double lhs_y, double rhs_x, double rhs_y);
 
+// From -180.0 to 180.0
+bool ValidOfLongitude(double l);
+
+// From -90.0 to 90.0
+bool ValidOfLatitude(double l);
+
+// From 0.0 to 360.0
+bool ValidOfCircleAngle(double angle);
+
 } //namespace tools
 
 #endif //TOOLS_UTIL_TOOL_H_

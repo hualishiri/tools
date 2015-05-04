@@ -1,5 +1,7 @@
 #include "opera/opera_option.h"
 
+#include <assert.h>
+
 #include "map/map_projection.h"
 #include "util/tool.h"
 //#include "util/logger.h"
@@ -12,6 +14,24 @@ OperaOption* OperaOption::Instance() {
   if (opera_option_ == 0)
     opera_option_ = new OperaOption();
   return opera_option_;
+}
+
+
+void OperaOption::push_back_radar(Radar& radar) {
+  assert(radar.id > 0);
+  assert(ValidOfLongitude(radar.start_x));
+  assert(ValidOfLatitude(radar.start_y));
+  assert(ValidOfLongitude(radar.radius_x));
+  assert(ValidOfLatitude(radar.radius_y));
+  assert(radar.level_noise >= 0.0 && radar.level_noise <= 256.0);
+  assert(ValidOfCircleAngle(radar.angle_azimuth));
+  assert(ValidOfCircleAngle(radar.angle_sector_range));
+  assert(radar.error_system >= -10.0 && radar.error_system <= 10.0);
+  assert(radar.error_random >= -10.0 && radar.error_random <= 10.0);
+  assert(radar.error_overall >= -10.0 && radar.error_overall <= 10.0);
+  radar.level_noise = 0.3 * radar.error_system + 0.3 * radar.error_random
+    + 0.4 * radar.error_overall;
+  radars_.push_back(radar);
 }
 
 void OperaOption::pop_radar(long long id) {
@@ -32,6 +52,17 @@ void OperaOption::pop_object(long long id) {
       return;
     }
   }
+}
+
+void OperaOption::push_back_track(Track& track) {
+  assert(track.lines.size() + track.circles.size()
+      + track.eclipses.size() == track.types.size());
+  assert(track.ids.size() == static_cast<std::size_t>(track.batch_count));
+  assert(track.level_noise_track >= 0.0 && track.level_noise_track <= 256);
+  assert(track.id >= 0);
+  for (std::size_t i = 0; i != track.start_speeds.size(); ++i)
+    assert(track.start_speeds[i] >= 0.0 && track.start_speeds[i] <= 10);
+  tracks_.push_back(track); 
 }
 
 void OperaOption::ConvertToPixel() {
@@ -79,9 +110,9 @@ std::vector<OperaOption::TrackInternal> OperaOption::tracks() const {
     for (std::size_t j=0; j!=track_batch_count; ++j) {
       TrackInternal track_internal = {
         tracks_[i].ids[j],
-        tracks_[i].start_speed,
-        tracks_[i].acceleration,
-        tracks_[i].time_delay,
+        tracks_[i].start_speeds[j],
+        tracks_[i].accelerations[j],
+        tracks_[i].time_delays[j],
         tracks_[i].lines,
         tracks_[i].circles,
         tracks_[i].eclipses,
