@@ -21,18 +21,6 @@ bool OperaRandom::OperaRandomParameterValid(
         && para.rectangle_down_y <= 256.0);
     assert(para.rectangle_up_x >= 0.0 
         && para.rectangle_up_x <= 256.0);
-
-
-
-
-
-
-
-
-
-
-
-
     assert(para.rectangle_up_y >= 0.0 
         && para.rectangle_up_y <= 256.0);
     assert(para.radar_number_min >= 0);
@@ -123,9 +111,6 @@ OperaRandom::Track OperaRandom::GetTrack(int seed) const {
   std::stack<int> position_order;
   std::stack<double> angles;
   GetRandomPositionSet(position, track_unit_number + 1, (seed << 2) + 1);
-  LogInfo("Function Caller: TrackUnit:%d, TrackLine:%d",
-          track_unit_number,
-          track_line_number);
   GetRandomPositionOrder(position_order,
                          track_unit_number,
                          track_line_number,
@@ -246,7 +231,6 @@ bool OperaRandom::RangeValid(double min, double max) const {
 }
 
 double OperaRandom::GetNumber(double min, double max, int seed) const {
-  LogInfo("Min:%f, Max:%f", min, max);
   return min + (max - min ) * fabs(GetRandNumber(seed));
 }
 
@@ -289,8 +273,6 @@ void OperaRandom::GetRandomPositionOrder(std::stack<int> &pos_order,
                                          int track_unit_number,
                                          int line_number,
                                          int seed) const {
-  LogInfo("Track Unit Number:%d, Line Number:%d",
-          track_unit_number, line_number);
   while(!pos_order.empty())
     pos_order.pop();
   int *array = new int[track_unit_number];
