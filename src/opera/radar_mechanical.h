@@ -23,8 +23,11 @@ class MechanicalRadar2D : public Radar2D {
   MechanicalRadar2D(Radar* radar, RadarNoise* radar_noise) 
       : radar_(radar), radar_noise_(radar_noise) {}
 
-virtual void GetState(const TrackSet2D::TrackSetState& track_set_state,
-                      RadarState& radar_state);
+  virtual void GetState(const TrackSet2D::TrackSetState& track_set_state,
+                        RadarState& radar_state);
+  virtual long long id() const { return radar_->id; }
+  virtual void SetPosition(double x, double y);
+
   
  private:
   bool IsCaptured(const Point2D& radar, const Point2D& target) const;

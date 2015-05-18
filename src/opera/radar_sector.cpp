@@ -8,6 +8,7 @@ void SectorRadar::GetState(
     const TrackSet2D::TrackSetState& track_set_state,
     RadarState& radar_state) {
   radar_state.id = radar_->id;
+  radar_state.type = radar_->type;
   radar_state.point.x = radar_->x;
   radar_state.point.y = radar_->y;
   radar_state.targets.clear();
@@ -59,6 +60,11 @@ float SectorRadar::GetAngleOfAzimuth(const Point2D& radar,
                                        radar.y,
                                        target.x,
                                        target.y);
+}
+
+void SectorRadar::SetPosition(double x, double y) {
+  radar_->x = x;
+  radar_->y = y;
 }
 
 } //namespace tools

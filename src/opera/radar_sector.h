@@ -14,6 +14,7 @@ class SectorRadar : public Radar2D {
  public:
   struct Radar {
     long long id;
+    int type;
     double x;
     double y;
     double angle_azimuth;
@@ -33,10 +34,11 @@ class SectorRadar : public Radar2D {
 
   virtual void GetState(const TrackSet2D::TrackSetState& track_set_state,
                         RadarState& radar_state);
-
+  virtual void SetPosition(double x, double y);
  private:
   bool IsCaptured(const Point2D& radar, const Point2D& target) const;
   float GetAngleOfAzimuth(const Point2D& radar, const Point2D& target) const;
+  inline long long id() const { return radar_->id; }
 
   Radar* radar_;
   RadarNoise* radar_noise_;

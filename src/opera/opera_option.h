@@ -4,15 +4,20 @@
 #include <assert.h>
 
 #include <vector>
+#include <string>
+#include <iostream>
 
 namespace tools {
 
 class OperaOption {
  public:
+  friend std::ostream& operator<< (std::ostream& os, const OperaOption& op);
+  friend std::istream& operator>> (std::istream& in, OperaOption& op);
+
   enum TrackUnitType { LINE, CIRCLE, ECLIPSE };
   struct Radar {
     long long id;
-    unsigned char type;
+    int type;
     double start_x; // longitude by degree
     double start_y; // latitude by degree
     double radius_x;
@@ -120,6 +125,9 @@ class OperaOption {
   inline double interval() const { return interval_; } 
 
   void ConvertToPixel();
+  void ConvertToPlaneCoodinate(void (*)(double*, double*));
+
+  bool operator==(const OperaOption& opera_option) const;
   
  private:
   void TrackInternalSift(TrackInternal& track_internal,
@@ -133,6 +141,9 @@ class OperaOption {
   std::vector<Object> objects_;
   std::vector<Track> tracks_;
 };
+
+std::ostream& operator<< (std::ostream& os, const OperaOption& op);
+std::istream& operator>> (std::istream& in, OperaOption& op);
 
 } //namespace tools
 

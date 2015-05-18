@@ -50,4 +50,9 @@ bool MechanicalRadar2D::IsCaptured(const Point2D& radar,
   return false;
 }
 
+void MechanicalRadar2D::SetPosition(double x, double y) {
+  radar_->x = x;
+  radar_->y = y;
+}
+
 } //namespace tools

@@ -12,7 +12,7 @@ OBJECTS = testharness.o map.o map_projection.o tool.o logger.o \
 					js_create_object.o line.o circle.o eclipse.o track_unit.o \
 					track.o track_set.o radar_mechanical.o radar_set.o \
 					opera_option.o opera.o radar_sector.o radar_noise_gauss.o \
-					opera_random.o
+					opera_random.o opera_analysis.o
 
 OUTPUTOJBECTS = $(patsubst %, $(OUTPUT)/%, $(OBJECTS))
 
@@ -34,7 +34,8 @@ TESTS = \
 	opera_option_test \
 	opera_test \
 	radar_noise_gauss_test \
-	opera_random_test
+	opera_random_test \
+	opera_analysis_test
 
 default : all
 	
@@ -82,6 +83,8 @@ radar_noise_gauss.o : src/opera/radar_noise_gauss.h src/opera/radar_noise_gauss.
 	$(GCC) -c src/opera/radar_noise_gauss.cpp -o $(OUTPUT)/radar_noise_gauss.o
 opera_random.o : src/opera/opera_random.h src/opera/opera_random.cpp
 	$(GCC) -c src/opera/opera_random.cpp -o $(OUTPUT)/opera_random.o
+opera_analysis.o : src/opera/opera_analysis.h src/opera/opera_analysis.cpp
+	$(GCC) -c src/opera/opera_analysis.cpp -o $(OUTPUT)/opera_analysis.o
 
 
 event_test.o : src/event/event.h src/event/event_test.cpp
@@ -126,6 +129,9 @@ radar_noise_gauss_test.o : radar_noise_gauss.o tool.o\
 opera_random_test.o : src/opera/opera_random.h src/opera/opera_random_test.cpp \
 	src/opera/opera_random.cpp
 	$(GCC) -c src/opera/opera_random_test.cpp -o $(OUTPUT)/opera_random_test.o
+opera_analysis_test.o : src/opera/opera_analysis.h src/opera/opera_analysis.cpp \
+	src/opera/radar_set.h src/opera/radar_set.cpp
+	$(GCC) -c src/opera/opera_analysis_test.cpp -o $(OUTPUT)/opera_analysis_test.o
 	
 event_test : testharness.o event_test.o
 	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/event_test.o -o $(OUTPUT)/event_test
@@ -169,6 +175,9 @@ radar_noise_gauss_test : radar_noise_gauss_test.o
 	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/radar_noise_gauss_test.o -o $(OUTPUT)/radar_noise_gauss_test
 opera_random_test : opera_random_test.o
 	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/opera_random_test.o -o $(OUTPUT)/opera_random_test
+opera_analysis_test : opera_analysis_test.o
+	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/opera_analysis_test.o -o \
+		$(OUTPUT)/opera_analysis_test
 	
 clean :
 	rm -rf $(OUTPUTOJBECTS)

@@ -1,6 +1,10 @@
 #include "opera/opera.h"
 
+#include <string.h>
+
 #include <iomanip>
+#include <iostream>
+#include <sstream>
 
 #include "opera/opera_option.h"
 #include "util/logger.h"
@@ -31,7 +35,10 @@ TEST(OPERA, Iterator) {
   radar.radius_y = 1.0;
   radar.angle_azimuth = 0.0;
   radar.angle_sector_range = 2 * 3.14;
-  radar.level_noise = 100;
+  radar.level_noise = 1;
+  radar.error_system = 1.0;
+  radar.error_random = 2.0;
+  radar.error_overall = 3.0;
 
   tools::OperaOption::Track track;
   tools::OperaOption::Line line = {
@@ -40,6 +47,7 @@ TEST(OPERA, Iterator) {
     location_wgs[2], location_wgs[3]
   };
 
+  track.id = 103;
   track.lines.push_back(line);
   track.types.push_back(tools::OperaOption::LINE);
   track.ids.push_back(0x14310);
@@ -47,9 +55,14 @@ TEST(OPERA, Iterator) {
   track.ids.push_back(0x14312);
   track.ids.push_back(0x14313);
   track.batch_count = 4;
-  track.acceleration = 0;
-  track.start_speed = 0.1;
-  track.time_delay = 5;
+
+  std::size_t size_batch = static_cast<std::size_t>(track.batch_count);
+  for (std::size_t i=0; i!=size_batch; ++i) {
+    track.accelerations.push_back(0);
+    track.start_speeds.push_back(0.1);
+    track.time_delays.push_back(5);
+  }
+
   track.level_noise_track = 0.1;
 
   tools::OperaOption::Instance()->push_back_radar(radar);
@@ -122,6 +135,48 @@ TEST(OPERA, Iterator) {
     iter.Next();
   }
   opera.Release();
+}
+
+TEST(OPERA, OperaState) {
+  Opera2D::OperaState opera_state;
+  Track2D::TrackState track_state;
+
+  for (std::size_t i=0; i!=5; ++i) {
+    track_state.id = i+1;
+    track_state.point.x = 128.341;
+    track_state.point.y = 18.4114;
+    track_state.tick = 41243124;
+    track_state.acc = 4.14312;
+    track_state.speed = 1.43124;
+    track_state.distance = 43.43124312;
+    track_state.azimuth = 23.414312;
+    opera_state.track_set_state.track_set_state.push_back(track_state);
+  }
+
+  Radar2D::RadarState radar_state;
+  for (std::size_t i=0; i!=5; ++i) {
+    radar_state.id = i + 20;
+    radar_state.point.x = 12.34141;
+    radar_state.point.y = 34.4132412;
+    for (std::size_t j=0; j!=3; ++j) {
+      radar_state.targets.push_back(Point2D(23.2412, 28.9841));
+      radar_state.targets_radar.push_back(Point2D(2.43122, 8.843141));
+      radar_state.targets_filter.push_back(Point2D(42.2412, 31.9841));
+      radar_state.ids.push_back(j*j);
+      radar_state.targets_angle_azimuth.push_back(28.431243);
+    }
+    opera_state.radar_set_state.radar_set_state.push_back(radar_state);
+  }
+
+  std::ostringstream ostrstream;
+  ostrstream << opera_state;
+
+  std::istringstream istrstream(ostrstream.str().c_str());
+  Opera2D::OperaState opera_state_temp;
+  istrstream >> opera_state_temp;
+  std::ostringstream ostrstream_temp;
+  ostrstream_temp << opera_state_temp;
+  assert(0 == strcmp(ostrstream.str().c_str(), ostrstream_temp.str().c_str()));
 }
 
 } //namespace tools
