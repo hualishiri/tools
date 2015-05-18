@@ -88,27 +88,10 @@ TEST(TRACK, Iterator) {
   Track2D track(0x01, track_unit_set, interval, init_speed);
   Track2D::Iterator iter(&track);
   Track2D::TrackState track_state;
-  LogDebug("%s\t%s\t%s\t%s\t%s\t%s\n",
-           "Track ID",
-           "Position",
-           "Time",
-           "Acceleration",
-           "Speed",
-           "Distance");
   while(iter.Valid()){
     iter.Value(track_state);
-    LogDebug("\t\t0x%X\t(%f,%f)\t%d\t%f\t%f\t%f\n",
-             track_state.id,
-             track_state.point.x,
-             track_state.point.y,
-             track_state.tick,
-             track_state.acc,
-             track_state.speed,
-             track_state.distance);
     iter.Next();
   }
-  LogDebug("\t\tTrack Best Length: %f\n", track.GetLength());
-  LogDebug("\t\tTrack Sum Tick: %d\n", track.GetSumTick());
 }
 
 } //namespace tools

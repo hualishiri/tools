@@ -126,10 +126,8 @@ TEST(OPERARANDOM, GetRandomPositionOrder) {
     ASSERT_EQ(static_cast<int>(position_order.size()), i);
 
     while (!position_order.empty()) {
-      LogDebug("%d", position_order.top());
       position_order.pop();
     }
-    LogDebug("\n");
   }
 }
 
@@ -156,7 +154,6 @@ TEST(OPERARANDOM, GetRandomAngle) {
       ASSERT_LE(angles.top(), 2.0 * T_PI);
       angles.pop();
     }
-    LogDebug("\n");
   }
 }
 
@@ -178,28 +175,6 @@ TEST(OPERARANDOM, GetTrack) {
   //int line_index = 0;
   //int circle_index = 0;
   assert(track.types.size() == track.lines.size() + track.circles.size());
-  for (int i=0; i!=static_cast<int>(track.types.size()); ++i) {
-    /*if (track.types[i] == OperaRandom::LINE) {
-      LogDebug("Line[%d]: (%f, %f), (%f, %f)",
-              line_index,
-              track.lines[line_index].start_x,
-              track.lines[line_index].start_y,
-              track.lines[line_index].end_x,
-              track.lines[line_index].end_y);
-    ++line_index; 
-  }
-  if (OperaRandom::CIRCLE == track.types[i]) {
-    LogDebug("Circle[%d]: (%f, %f), (%f, %f), %f",
-            circle_index,
-            track.circles[circle_index].start_x,
-            track.circles[circle_index].start_y,
-            track.circles[circle_index].center_x,
-            track.circles[circle_index].center_y,
-            track.circles[circle_index].angle
-            );
-    ++circle_index;
-    }*/
-  }
 }
 
 TEST(OPERARANDOM, GetResult) {

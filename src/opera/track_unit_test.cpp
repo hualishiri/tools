@@ -25,32 +25,13 @@ TEST(TRACKUNIT, Iterator) {
     TrackUnit::Iterator iter(&track_unit);
     int count = 0;
     TrackUnit::TrackUnitState track_unit_state;
-    LogDebug("\t%s\t%s\t%s\t%s\t%s\n",
-             "position",
-             "time",
-             "acc",
-             "speed",
-             "distance");
     while (iter.Valid()) {
       iter.Value(track_unit_state);
-      LogDebug("\t%f\t%f\t%d\t%f\t%f\t%f\n",
-               track_unit_state.point.x,
-               track_unit_state.point.y,
-               track_unit_state.tick,
-               track_unit_state.acc,
-               track_unit_state.speed,
-               track_unit_state.distance);
       iter.Next();
       ++count;
     }
     
     track_unit.GetEndPoint(track_unit_state.point);
-    LogDebug("Track Unit End Position: (%f, %f)\n",
-             track_unit_state.point.x,
-             track_unit_state.point.y);
-    LogDebug("Track Unit Sum Step: %d\n", count);
-    LogDebug("Track Unit Sum Length: %f\n", track_unit.GetSumLength());
-    LogDebug("Track Unit End Speed: %f\n", track_unit.GetEndSpeed());
 }
 
 } //namespace tools

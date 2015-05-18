@@ -65,18 +65,12 @@ TEST(TRACKSET, IteratorSuper) {
       index_i = i / (len-1);
       track_set_position.push_back(new Point2D(location[index_i*2],
                                                location[index_i*2+1]));
-      LogDebug("Track Init Position: ID：%d\t(%f,%f)]",
-               i,
-               location[index_i * 2],
-               location[index_i * 2 + 1]);
     }
 
     TrackSet2D::TrackSetDelay track_set_delay;
 
     for (int i=0; i!=num_of_track; ++i) 
       track_set_delay.push_back(i);
-    LogDebug("Num Of Track: %d", num_of_track);
-
 
     TrackSet2D::TrackSetOption track_set_option = {&track_set_rep,
       &track_set_position,
@@ -85,32 +79,15 @@ TEST(TRACKSET, IteratorSuper) {
 
     TrackSet2D track_set(track_set_option);
 
-    LogDebug("Track Set Infomation");
-    for(std::size_t i=0; i!=track_set_rep.size(); ++i){
-      LogDebug("Track ID : %X\tLength:%f", i + 1, track_set_rep[i]->GetLength());
-    }
-
     TrackSet2D::Iterator iter(&track_set);
     TrackSet2D::TrackSetState track_set_state;
     int count = 0;
     while(iter.Valid()){
       iter.Value(track_set_state);
-      LogDebug("Track NO.\tPosition\tTime\tAcceleration\tSpeed\tDistance\n");
       for(std::size_t i = 0; i != track_set_state.track_set_state.size(); ++i)
-        LogDebug("ID:0x%X\tPOS:(%f,%f)\tT:%d\tA:%f\tS:%f\tD:%f",
-                 track_set_state.track_set_state[i].id,
-                 track_set_state.track_set_state[i].point.x,
-                 track_set_state.track_set_state[i].point.y,
-                 track_set_state.track_set_state[i].tick,
-                 track_set_state.track_set_state[i].acc,
-                 track_set_state.track_set_state[i].speed,
-                 track_set_state.track_set_state[i].distance);
       iter.Next();
       ++count;
     }
-    LogDebug("Track Set Sum Count: %d", count);
-    LogDebug("Track Set Max Sum Tick: %d", track_set.GetSumTick());
-    LogDebug("Track Set Max Length: %f", track_set.GetSumLength());
 }
 
 } //namespace tools
