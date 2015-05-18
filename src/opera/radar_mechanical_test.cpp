@@ -57,16 +57,16 @@ TEST(RADAR_MECHANICAL, GetState) {
                             radar_state.targets[i].x));
     ASSERT_TRUE(DoubleEqual(radar_state_std[2 * i + 1],
                             radar_state.targets[i].y));
-    LogInfo("Origin:(%f,%f)",
+    LogDebug("Origin:(%f,%f)",
         radar_state.targets[i].x,
         radar_state.targets[i].y);
-    LogInfo("Noised:(%f,%f)",
+    LogDebug("Noised:(%f,%f)",
         radar_state.targets_radar[i].x,
         radar_state.targets_radar[i].y);
-    LogInfo("Filter:(%f,%f)",
+    LogDebug("Filter:(%f,%f)",
         radar_state.targets_filter[i].x,
         radar_state.targets_filter[i].y);
-    LogInfo("=====");
+    LogDebug("=====");
   }
 }
 

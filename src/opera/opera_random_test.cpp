@@ -180,7 +180,7 @@ TEST(OPERARANDOM, GetTrack) {
   assert(track.types.size() == track.lines.size() + track.circles.size());
   for (int i=0; i!=static_cast<int>(track.types.size()); ++i) {
     /*if (track.types[i] == OperaRandom::LINE) {
-      LogInfo("Line[%d]: (%f, %f), (%f, %f)",
+      LogDebug("Line[%d]: (%f, %f), (%f, %f)",
               line_index,
               track.lines[line_index].start_x,
               track.lines[line_index].start_y,
@@ -189,7 +189,7 @@ TEST(OPERARANDOM, GetTrack) {
     ++line_index; 
   }
   if (OperaRandom::CIRCLE == track.types[i]) {
-    LogInfo("Circle[%d]: (%f, %f), (%f, %f), %f",
+    LogDebug("Circle[%d]: (%f, %f), (%f, %f), %f",
             circle_index,
             track.circles[circle_index].start_x,
             track.circles[circle_index].start_y,

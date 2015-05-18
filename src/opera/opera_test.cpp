@@ -78,9 +78,9 @@ TEST(OPERA, Iterator) {
   while(iter.Valid()) {
     iter.Value(*opera_state);
       //opera_state->ConvertToWgs();
-        LogInfo("radar size: %d",
+        LogDebug("radar size: %d",
             opera_state->radar_set_state.radar_set_state.size());
-        LogInfo("object size: %d",
+        LogDebug("object size: %d",
             opera_state->radar_set_state.radar_set_state[0].targets.size());
 
         for(std::size_t i = 0;
@@ -129,7 +129,7 @@ TEST(OPERA, Iterator) {
               << opera_state->track_set_state.track_set_state[i].acc << ", "
               << opera_state->track_set_state.track_set_state[i].speed << ", "
               << opera_state->track_set_state.track_set_state[i].azimuth << ");";
-            LogInfo("%s", streamTemp.str().c_str());
+            LogDebug("%s", streamTemp.str().c_str());
             streamTemp.clear();
         }
     iter.Next();

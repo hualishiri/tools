@@ -12,7 +12,7 @@ TEST(RADARNOISEGAUSS, ApplyNoise) {
   double y = 30;
   RadarNoise* radar_noise = new RadarNoiseGauss(156);
   radar_noise->ApplyNoise(&x, &y);
-  LogInfo("(%f, %f)", x, y);
+  LogDebug("(%f, %f)", x, y);
 }
 
 } //namespace tools

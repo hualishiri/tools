@@ -21,10 +21,6 @@ OperaOption* OperaOption::Instance() {
 
 void OperaOption::push_back_radar(Radar& radar) {
   assert(radar.id > 0);
-  LogInfo("char: %d\n", radar.type);
-  if (!ValidOfLongitude(radar.start_x)) {
-    LogInfo("%f\n", radar.start_x);
-  }
   assert(ValidOfLongitude(radar.start_x));
   assert(ValidOfLatitude(radar.start_y));
   assert(ValidOfLongitude(radar.radius_x));
