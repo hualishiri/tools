@@ -44,15 +44,9 @@ TEST(RADARSET, GetState) {
   radar_set.GetState(track_set_state, radar_set_state);
   
   for (std::size_t j = 0; j != radar_set_state.radar_set_state.size(); ++j) {
-    LogDebug("Radar ID : [%d] And the Radars It Detected:",
-             radar_set_state.radar_set_state[j].id);
     for (std::size_t i=0;
         i!=radar_set_state.radar_set_state[j].targets.size();
         ++i) {
-      LogDebug("Object ID: 0x%X\tPosition : (%f,%f)",
-               radar_set_state.radar_set_state[j].ids[i],
-               radar_set_state.radar_set_state[j].targets[i].x,
-               radar_set_state.radar_set_state[j].targets[i].y);
     }
   }*/
 }

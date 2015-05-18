@@ -78,39 +78,13 @@ TEST(OPERA, Iterator) {
   while(iter.Valid()) {
     iter.Value(*opera_state);
       //opera_state->ConvertToWgs();
-        LogDebug("radar size: %d",
-            opera_state->radar_set_state.radar_set_state.size());
-        LogDebug("object size: %d",
-            opera_state->radar_set_state.radar_set_state[0].targets.size());
-
         for(std::size_t i = 0;
             i != opera_state->radar_set_state.radar_set_state.size();
             ++i) {
-          LogDebug("radar id : %d",
-              opera_state->radar_set_state.radar_set_state[i].id);
           for (std::size_t j = 0;
               j != opera_state
               ->radar_set_state.radar_set_state[i].targets.size();
               ++j) {
-            LogDebug(
-                "object real position : (%f, %f)",
-                opera_state->radar_set_state.radar_set_state[i].targets[j].x,
-                opera_state->radar_set_state.radar_set_state[i].targets[j].y);
-            LogDebug(
-                "object noised position : (%f, %f)",
-                opera_state->radar_set_state
-                    .radar_set_state[i].targets_radar[j].x,
-                opera_state->radar_set_state
-                    .radar_set_state[i].targets_radar[j].y);
-            LogDebug(
-                "object filtered position : (%f, %f)",
-                opera_state->radar_set_state
-                    .radar_set_state[i].targets_filter[j].x,
-                opera_state->radar_set_state.
-                    radar_set_state[i].targets_filter[j].y);
-            LogDebug("Object Azimuth Angle : %f",
-                     opera_state->radar_set_state
-                        .radar_set_state[i].targets_angle_azimuth[j]);
           }
         }
 
@@ -129,7 +103,6 @@ TEST(OPERA, Iterator) {
               << opera_state->track_set_state.track_set_state[i].acc << ", "
               << opera_state->track_set_state.track_set_state[i].speed << ", "
               << opera_state->track_set_state.track_set_state[i].azimuth << ");";
-            LogDebug("%s", streamTemp.str().c_str());
             streamTemp.clear();
         }
     iter.Next();
