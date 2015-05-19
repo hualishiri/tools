@@ -5,6 +5,8 @@ namespace tools {
 void OperaAnalysis::Handle(const RadarSet2D::RadarSetState& radar_set_state,
                            OperaAnalysisState& opera_analysis_state) {
   OperaAnalysis::OperaAnalysisUnit opera_analysis_unit;
+  opera_analysis_state.track_radar.clear();
+  opera_analysis_state.track_algorithm.clear();
 
   for (std::size_t i=0;
       i!=radar_set_state.radar_set_state.size();
