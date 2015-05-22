@@ -29,8 +29,8 @@ void Opera2D::BuildRadar(const OperaOption& opera_option) {
     radar->type = radars[i].type;
     radar->x = radars[i].radius_x;
     radar->y = radars[i].radius_y;
-    radar->angle_azimuth = radars[i].angle_azimuth;
-    radar->angle_sector_range = radars[i].angle_sector_range;
+    radar->azimuth_range = radars[i].azimuth_range;
+
     radar->distance_detect = Distance2DArc(radars[i].start_x,
                                            radars[i].start_y,
                                            radars[i].radius_x,

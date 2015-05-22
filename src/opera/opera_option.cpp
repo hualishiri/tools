@@ -25,8 +25,10 @@ void OperaOption::push_back_radar(Radar& radar) {
   assert(ValidOfLatitude(radar.start_y));
   assert(ValidOfLongitude(radar.radius_x));
   assert(ValidOfLatitude(radar.radius_y));
-  assert(ValidOfCircleAngle(radar.angle_azimuth));
-  assert(ValidOfCircleAngle(radar.angle_sector_range));
+  for (std::size_t i=0; i!=radar.azimuth_range.size(); ++i) {
+    assert(ValidOfCircleAngle(radar.azimuth_range[i].first));
+    assert(ValidOfCircleAngle(radar.azimuth_range[i].second));
+  }
   assert(radar.error_system >= -10.0 && radar.error_system <= 10.0);
   assert(radar.error_random >= -10.0 && radar.error_random <= 10.0);
   assert(radar.error_overall >= -10.0 && radar.error_overall <= 10.0);
@@ -203,9 +205,13 @@ std::ostream& operator<< (std::ostream& os, const OperaOption& op) {
         << op.radars_[i].radius_y << " "   
         << op.radars_[i].error_system << " "   
         << op.radars_[i].error_random << " "   
-        << op.radars_[i].error_overall << " "   
-        << op.radars_[i].angle_azimuth << " "   
-        << op.radars_[i].angle_sector_range << std::endl;
+        << op.radars_[i].error_overall << " ";
+
+    os << op.radars_[i].azimuth_range.size() << " ";
+    for (std::size_t j=0; j!=op.radars_[i].azimuth_range.size(); ++j) {
+      os << op.radars_[i].azimuth_range[j].first << " ";
+      os << op.radars_[i].azimuth_range[j].second << " ";
+    }
   }
   os << op.tracks_.size() << " ";
   for (std::size_t i=0; i!=op.tracks_.size(); ++i) {
@@ -259,8 +265,8 @@ std::istream& operator>> (std::istream& in, OperaOption& op) {
   op.tracks_.clear();
   std::size_t size_radar;
   in >> size_radar;
-  OperaOption::Radar radar;
   for (std::size_t i=0; i!=size_radar; ++i) {
+    OperaOption::Radar radar;
     in >> radar.id
         >> radar.type
         >> radar.start_x
@@ -269,9 +275,18 @@ std::istream& operator>> (std::istream& in, OperaOption& op) {
         >> radar.radius_y
         >> radar.error_system
         >> radar.error_random
-        >> radar.error_overall
-        >> radar.angle_azimuth
-        >> radar.angle_sector_range;
+        >> radar.error_overall;
+
+    std::size_t size_azimuth_range = 0;
+    in >> size_azimuth_range;
+    double angle_azimuth;
+    double angle_sector_range;
+    for (std::size_t j=0; j!=size_azimuth_range; ++j) {
+      in >> angle_azimuth
+          >> angle_sector_range;
+      radar.azimuth_range.push_back(
+          std::make_pair(angle_azimuth, angle_sector_range));
+    }
     op.push_back_radar(radar); 
   }
 
@@ -364,12 +379,19 @@ bool OperaOption::operator==(const OperaOption& opera_option) const{
           DoubleEqual(radars_[i].error_random,
                       opera_option.radars_[i].error_random) &&
           DoubleEqual(radars_[i].error_overall,
-                      opera_option.radars_[i].error_overall) &&
-          DoubleEqual(radars_[i].angle_azimuth,
-                      opera_option.radars_[i].angle_azimuth) &&
-          DoubleEqual(radars_[i].angle_sector_range,
-                      opera_option.radars_[i].angle_sector_range))) {
+                      opera_option.radars_[i].error_overall)))
         return false;
+
+      if (radars_[i].azimuth_range.size() 
+          != opera_option.radars_[i].azimuth_range.size())
+      return false;
+      for (std::size_t j=0; j!=radars_[i].azimuth_range.size(); ++j) {
+        if(!(DoubleEqual(radars_[i].azimuth_range[j].first,
+            opera_option.radars_[i].azimuth_range[j].first) &&
+            DoubleEqual(radars_[i].azimuth_range[j].second,
+            opera_option.radars_[i].azimuth_range[j].second))) {
+          return false;
+        }
       }
     }
   }
@@ -399,7 +421,6 @@ bool OperaOption::operator==(const OperaOption& opera_option) const{
       }
     }
   }
-
   return flag;
 }
 

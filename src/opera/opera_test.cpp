@@ -33,8 +33,8 @@ TEST(OPERA, Iterator) {
   radar.radius_x = 3.0;
   //radar.radius_y = 30.102435;
   radar.radius_y = 1.0;
-  radar.angle_azimuth = 0.0;
-  radar.angle_sector_range = 2 * 3.14;
+  radar.azimuth_range.push_back(std::make_pair(0.0, 3.14));
+  radar.azimuth_range.push_back(std::make_pair(3.14, 3.30));
   radar.level_noise = 1;
   radar.error_system = 1.0;
   radar.error_random = 2.0;

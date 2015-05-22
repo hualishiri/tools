@@ -24,8 +24,7 @@ TEST(OPERAOPTION, PushBack) {
       radar.error_system = 1.321;
       radar.error_random = 3.31;
       radar.error_overall = 9.21341;
-      radar.angle_azimuth = 14.0;
-      radar.angle_sector_range = 50.0;
+      radar.azimuth_range.push_back(std::make_pair(14.0, 50.0));
       opera_option.push_back_radar(radar);
     }
     opera_option.pop_radar(2);
@@ -59,8 +58,8 @@ TEST(OPERAOPTION, OPERATOR_OUT) {
   std::ostringstream strstream; 
   OperaOption opera_option;
 
-  OperaOption::Radar radar;
   for (int i = 0; i != 10; ++i) {
+    OperaOption::Radar radar;
     radar.id = i + 1;
     radar.type = i % 3;
     radar.start_x = 32.32;
@@ -70,8 +69,7 @@ TEST(OPERAOPTION, OPERATOR_OUT) {
     radar.error_system = 1.321;
     radar.error_random = 3.31;
     radar.error_overall = 9.21341;
-    radar.angle_azimuth = 14.0;
-    radar.angle_sector_range = 50.0;
+    radar.azimuth_range.push_back(std::make_pair(14.0, 50.0));
 
     opera_option.push_back_radar(radar);
   }

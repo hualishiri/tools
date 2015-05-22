@@ -26,8 +26,7 @@ class OperaOption {
     double error_system;
     double error_random;;
     double error_overall;
-    double angle_azimuth;
-    double angle_sector_range;
+    std::vector<std::pair<double, double> > azimuth_range; 
   };
   
   struct Object {
