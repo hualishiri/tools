@@ -84,8 +84,9 @@ TEST(OPERAOPTION, OPERATOR_OUT) {
     track.level_noise_track = 203;
 
     for (int j=0; j!=track.batch_count; ++j) {
+      std::vector<float> accs;
       track.start_speeds.push_back(2.0);
-      track.accelerations.push_back(5.0);
+      track.accelerations.push_back(accs);
       track.time_delays.push_back(14.4);
       track.ids.push_back(j);
     }
@@ -106,10 +107,16 @@ TEST(OPERAOPTION, OPERATOR_OUT) {
     circle.side_y = 14.874321;
     circle.angle_x = 98.13412;
     circle.angle_y = 29.412;
+
     track.types.push_back(OperaOption::LINE);
     track.lines.push_back(line);
     track.types.push_back(OperaOption::CIRCLE);
     track.circles.push_back(circle);
+
+    std::size_t batch_count_size = static_cast<std::size_t>(track.batch_count);
+    for (std::size_t j=0; j!=batch_count_size; ++j)
+      for (std::size_t k=0; k!=track.types.size(); ++k)
+        track.accelerations[j].push_back(5.0);
     opera_option.push_back_track(track);
   }
 

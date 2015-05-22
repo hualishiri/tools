@@ -91,7 +91,8 @@ void Opera2D::BuildTrack(const OperaOption& opera_option) {
           ++index_circle;
       } else if (tracks[i].types[j] == OperaOption::ECLIPSE) { }
       Acceleration* acc_uniform = new ConstantAcceleration(
-          tracks[i].acceleration);
+          tracks[i].acceleration[j]);
+
       if (0 == j)
        current_speed = tracks[i].start_speed;
      else

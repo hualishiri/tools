@@ -65,6 +65,10 @@ void OperaOption::push_back_track(Track& track) {
   for (std::size_t i = 0; i != track.start_speeds.size(); ++i)
     assert(track.start_speeds[i] >= 0.0 && track.start_speeds[i] <= 10);
   tracks_.push_back(track); 
+  assert(track.accelerations.size() == 
+      static_cast<std::size_t>(track.batch_count));
+  for (std::size_t i=0; i!= track.accelerations.size(); ++i )
+    assert(track.accelerations[i].size() == track.types.size());
 }
 
 void OperaOption::ConvertToPixel() {
@@ -208,13 +212,17 @@ std::ostream& operator<< (std::ostream& os, const OperaOption& op) {
     os << op.tracks_[i].id << " ";
     os << op.tracks_[i].batch_count << " ";
     os << op.tracks_[i].level_noise_track << " ";
+
     os << op.tracks_[i].start_speeds.size() << " ";
     
     for (std::size_t j=0; j!=op.tracks_[i].start_speeds.size(); ++j) {
       os << op.tracks_[i].start_speeds[j] << " "
-         << op.tracks_[i].accelerations[j] << " "
          << op.tracks_[i].time_delays[j] << " "
          << op.tracks_[i].ids[j] << " ";
+
+      os << op.tracks_[i].accelerations[j].size() << " ";
+      for (std::size_t k=0; k!=op.tracks_[i].accelerations[j].size(); ++k)
+         os << op.tracks_[i].accelerations[j][k] << " ";
     }
 
     int line_index = 0, circle_index = 0;
@@ -291,11 +299,19 @@ std::istream& operator>> (std::istream& in, OperaOption& op) {
       in >> temp;
       track.start_speeds.push_back(temp);
       in >> temp;
-      track.accelerations.push_back(temp);
-      in >> temp;
       track.time_delays.push_back(temp);
       in >> temp;
       track.ids.push_back(static_cast<long long>(temp));
+
+      float acc = 0.0f;
+      size_t size_accele;
+      in >> size_accele;
+      std::vector<float> vec_acc;
+      track.accelerations.push_back(vec_acc);
+      for (std::size_t k=0; k!=size_accele; ++k) {
+        in >> acc;
+        track.accelerations[j].push_back(acc);
+      }
     }
 
     std::size_t size_type;

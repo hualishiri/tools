@@ -74,7 +74,7 @@ class OperaOption {
   struct Track {
     long long id;
     std::vector<double> start_speeds;
-    std::vector<double> accelerations;
+    std::vector<std::vector<float> > accelerations;
     std::vector<double> time_delays;
     short batch_count;
     double level_noise_track;
@@ -88,7 +88,7 @@ class OperaOption {
   struct TrackInternal {
     long long id;
     double start_speed;
-    double acceleration;
+    std::vector<float> acceleration;
     double time_delay;
     std::vector<Line> lines;
     std::vector<Circle> circles;
