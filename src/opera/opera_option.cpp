@@ -2,6 +2,7 @@
 
 #include <assert.h>
 
+#include <set>
 #include <sstream>
 
 #include "map/map_projection.h"
@@ -36,6 +37,7 @@ void OperaOption::push_back_radar(Radar& radar) {
     + 0.4 * radar.error_overall;
   assert(radar.level_noise >= 0.0 && radar.level_noise <= 256.0);
   radars_.push_back(radar);
+  assert(IsIDUnique());
 }
 
 void OperaOption::pop_radar(long long id) {
@@ -71,6 +73,7 @@ void OperaOption::push_back_track(Track& track) {
       static_cast<std::size_t>(track.batch_count));
   for (std::size_t i=0; i!= track.accelerations.size(); ++i )
     assert(track.accelerations[i].size() == track.types.size());
+  assert(IsIDUnique());
 }
 
 void OperaOption::ConvertToPixel() {
@@ -422,6 +425,29 @@ bool OperaOption::operator==(const OperaOption& opera_option) const{
     }
   }
   return flag;
+}
+
+bool OperaOption::IsIDUnique() const {
+  std::set<long long> ids; 
+  for (std::size_t i=0; i!=radars_.size(); ++i) {
+    if (ids.count(radars_[i].id) == 1)   
+      return false;
+    else
+      ids.insert(radars_[i].id);
+  }
+  for (std::size_t i=0; i!=tracks_.size(); ++i) {
+    if (ids.count(tracks_[i].id) == 1)
+      return false;
+    else
+      ids.insert(tracks_[i].id);
+    for (std::size_t j=0; j!=tracks_[i].ids.size(); ++j) {
+      if (ids.count(tracks_[i].ids[j]) == 1)
+        return false;
+      else
+        ids.insert(tracks_[i].ids[j]);
+    }
+  }
+  return true;
 }
 
 } //namespace tools

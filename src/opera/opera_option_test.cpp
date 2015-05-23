@@ -77,7 +77,7 @@ TEST(OPERAOPTION, OPERATOR_OUT) {
   for (int i=1; i!=5; ++i) {
     OperaOption::Track track;
 
-    track.id = 100;
+    track.id = 100 + i;
     track.batch_count = 5;
     track.level_noise_track = 203;
 
@@ -86,7 +86,7 @@ TEST(OPERAOPTION, OPERATOR_OUT) {
       track.start_speeds.push_back(2.0);
       track.accelerations.push_back(accs);
       track.time_delays.push_back(14.4);
-      track.ids.push_back(j);
+      track.ids.push_back(track.id * track.batch_count + j);
     }
     OperaOption::Line line;
     line.id = 143;

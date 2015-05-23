@@ -132,6 +132,7 @@ class OperaOption {
   void TrackInternalSift(TrackInternal& track_internal,
                          double level_noise,
                          int seed) const;
+  bool IsIDUnique() const;
 
   static OperaOption* opera_option_;
 

@@ -177,7 +177,7 @@ void Opera2D::Iterator::Next() {
 
 void Opera2D::Iterator::Value(OperaState& opera_state) {
   iter_track_set_->Value(opera_state.track_set_state);
-  ChangeRadarPosition(opera_state);
+  //ChangeRadarPosition(opera_state);
   opera_->radar_set_->GetState(opera_state.track_set_state, 
                                opera_state.radar_set_state);
   OperaAnalysis::Handle(opera_state.radar_set_state,
