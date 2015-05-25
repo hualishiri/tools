@@ -141,6 +141,7 @@ class OperaOption {
                          double level_noise,
                          int seed) const;
   bool IsIDUnique() const;
+  bool IsIDExistInTrackSet(long long id) const;
 
   static OperaOption* opera_option_;
 

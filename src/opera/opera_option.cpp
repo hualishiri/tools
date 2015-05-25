@@ -22,6 +22,7 @@ OperaOption* OperaOption::Instance() {
 
 void OperaOption::push_back_radar(Radar& radar) {
   assert(radar.id > 0);
+  assert(radar.type == R_STATIC || radar.type == R_DYNAMIC);
   assert(ValidOfLongitude(radar.start_x));
   assert(ValidOfLatitude(radar.start_y));
   assert(ValidOfLongitude(radar.radius_x));
@@ -36,7 +37,15 @@ void OperaOption::push_back_radar(Radar& radar) {
   radar.level_noise = 0.3 * radar.error_system + 0.3 * radar.error_random
     + 0.4 * radar.error_overall;
   assert(radar.level_noise >= 0.0 && radar.level_noise <= 256.0);
+
+  if (radar.type == R_STATIC) {
+    radar.track_id = 0;
+  } 
+  if (radar.type == R_DYNAMIC){
+    assert(IsIDExistInTrackSet(radar.track_id));
+  }
   radars_.push_back(radar);
+
   assert(IsIDUnique());
 }
 
@@ -448,6 +457,19 @@ bool OperaOption::IsIDUnique() const {
     }
   }
   return true;
+}
+
+bool OperaOption::IsIDExistInTrackSet(long long id) const {
+  std::set<long long> ids;
+  for (std::size_t i=0; i!=tracks_.size(); ++i) {
+    for (std::size_t j=0; j!=tracks_[i].ids.size(); ++j) {
+      ids.insert(tracks_[i].ids[j]);
+    }
+  }
+  if (ids.count(id) == 1)
+    return true;
+  else 
+    return false;
 }
 
 } //namespace tools

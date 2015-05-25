@@ -26,6 +26,7 @@ TEST(OPERA, Iterator) {
   tools::OperaOption::Radar radar;
   radar.id = 0x012341;
   //radar.start_x = -87.6500522999999;
+  radar.type = OperaOption::R_STATIC;
   radar.start_x = 2.5;
   //radar.start_y = 41.850033;
   radar.start_y = 2.5;

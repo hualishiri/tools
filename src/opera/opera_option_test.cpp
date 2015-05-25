@@ -16,7 +16,7 @@ TEST(OPERAOPTION, PushBack) {
     for (int i = 1; i != 10; ++i) {
       OperaOption::Radar radar;
       radar.id = i;
-      radar.type = i % 3;
+      radar.type = OperaOption::R_STATIC;
       radar.start_x = 32.32;
       radar.start_y = 15.32;
       radar.radius_x = 98.321;
@@ -61,7 +61,7 @@ TEST(OPERAOPTION, OPERATOR_OUT) {
   for (int i = 0; i != 10; ++i) {
     OperaOption::Radar radar;
     radar.id = i + 1;
-    radar.type = i % 3;
+    radar.type = OperaOption::R_STATIC;
     radar.start_x = 32.32;
     radar.start_y = 15.32;
     radar.radius_x = 98.321;
