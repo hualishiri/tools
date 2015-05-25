@@ -10,7 +10,7 @@ GCC = $(CC) $(CCFLAG)
 OUTPUT = bin
 OBJECTS = testharness.o map.o map_projection.o tool.o logger.o \
 					js_create_object.o line.o circle.o eclipse.o track_unit.o \
-					track.o track_set.o radar_mechanical.o radar_set.o \
+					track.o track_set.o radar_set.o \
 					opera_option.o opera.o radar_sector.o radar_noise_gauss.o \
 					opera_random.o opera_analysis.o
 
@@ -29,7 +29,6 @@ TESTS = \
 	track_unit_test \
 	track_test \
 	track_set_test \
-	radar_mechanical_test \
 	radar_set_test \
 	opera_option_test \
 	opera_test \
@@ -69,8 +68,6 @@ track.o : src/opera/track.h src/opera/track.cpp
 	$(GCC) -c src/opera/track.cpp -o $(OUTPUT)/track.o
 track_set.o : src/opera/track_set.h src/opera/track_set.cpp
 	$(GCC) -c src/opera/track_set.cpp -o $(OUTPUT)/track_set.o
-radar_mechanical.o : src/opera/radar_mechanical.h src/opera/radar_mechanical.cpp
-	$(GCC) -c src/opera/radar_mechanical.cpp -o $(OUTPUT)/radar_mechanical.o
 radar_set.o : src/opera/radar_set.h src/opera/radar_set.cpp
 	$(GCC) -c src/opera/radar_set.cpp -o $(OUTPUT)/radar_set.o
 opera_option.o : src/opera/opera_option.h src/opera/opera_option.cpp
@@ -113,10 +110,6 @@ track_test.o : src/opera/track.h src/opera/track_test.cpp
 	$(GCC) -c src/opera/track_test.cpp -o $(OUTPUT)/track_test.o
 track_set_test.o : src/opera/track_set.h src/opera/track_set_test.cpp
 	$(GCC) -c src/opera/track_set_test.cpp -o $(OUTPUT)/track_set_test.o
-radar_mechanical_test.o : src/opera/radar_mechanical.h \
-	src/opera/radar_mechanical_test.cpp
-	$(GCC) -c src/opera/radar_mechanical_test.cpp \
-		-o $(OUTPUT)/radar_mechanical_test.o
 radar_set_test.o : src/opera/radar_set.h src/opera/radar_set_test.cpp
 	$(GCC) -c src/opera/radar_set_test.cpp -o $(OUTPUT)/radar_set_test.o
 opera_option_test.o : src/opera/opera_option.h src/opera/opera_option_test.cpp
@@ -162,9 +155,6 @@ track_test : track_test.o
 	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/track_test.o -o $(OUTPUT)/track_test
 track_set_test : track_set_test.o
 	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/track_set_test.o -o $(OUTPUT)/track_set_test
-radar_mechanical_test : radar_mechanical_test.o
-	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/radar_mechanical_test.o \
-		-o $(OUTPUT)/radar_mechanical_test
 radar_set_test : radar_set_test.o
 	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/radar_set_test.o -o $(OUTPUT)/radar_set_test
 opera_option_test : opera_option_test.o

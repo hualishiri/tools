@@ -14,10 +14,18 @@ class OperaOption {
   friend std::ostream& operator<< (std::ostream& os, const OperaOption& op);
   friend std::istream& operator>> (std::istream& in, OperaOption& op);
 
-  enum TrackUnitType { LINE, CIRCLE, ECLIPSE };
+  enum TrackUnitType { LINE=0, CIRCLE, ECLIPSE };
+  enum RadarType {R_STATIC=0, R_DYNAMIC};
+
   struct Radar {
     long long id;
+
+    //RadarType
     int type;
+
+    //The value of OperaOption::Track::ids
+    int track_id;
+
     double start_x; // longitude by degree
     double start_y; // latitude by degree
     double radius_x;

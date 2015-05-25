@@ -22,6 +22,8 @@ class Radar2D : public Sensor {
                         RadarState& radar_state) = 0;
   virtual void SetPosition(double x, double y) = 0;
   virtual long long id() const = 0;
+  virtual int type() const = 0;
+  virtual long long track_id() const = 0;
 };
 
 } //namespace tools

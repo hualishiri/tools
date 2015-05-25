@@ -9,7 +9,6 @@
 #include "opera/line.h"
 #include "opera/opera_option.h"
 #include "opera/radar_sector.h"
-#include "opera/radar_mechanical.h"
 #include "opera/radar_noise_gauss.h"
 #include "util/tool.h"
 
@@ -27,6 +26,12 @@ void Opera2D::BuildRadar(const OperaOption& opera_option) {
     SectorRadar::Radar* radar = new SectorRadar::Radar();
     radar->id = radars[i].id;
     radar->type = radars[i].type;
+    if (radars[i].type == OperaOption::R_STATIC) {
+      radar->track_id = 0;
+    } 
+    if (radars[i].type == OperaOption::R_DYNAMIC) {
+      radar->track_id = radars[i].track_id;
+    }
     radar->x = radars[i].radius_x;
     radar->y = radars[i].radius_y;
     radar->azimuth_range = radars[i].azimuth_range;
@@ -177,7 +182,7 @@ void Opera2D::Iterator::Next() {
 
 void Opera2D::Iterator::Value(OperaState& opera_state) {
   iter_track_set_->Value(opera_state.track_set_state);
-  //ChangeRadarPosition(opera_state);
+  ChangeRadarPosition(opera_state);
   opera_->radar_set_->GetState(opera_state.track_set_state, 
                                opera_state.radar_set_state);
   OperaAnalysis::Handle(opera_state.radar_set_state,
@@ -240,14 +245,18 @@ void Opera2D::Iterator::ChangeRadarPosition(OperaState& opera_state) {
   std::size_t size_radar = opera_->radar_set_->radar_set()->size();
   std::size_t size_track = opera_state.track_set_state.track_set_state.size();
   for (std::size_t i=0; i!=size_radar; ++i) {
-    for (std::size_t j=0; j!=size_track; ++j) {
-      if ((*(opera_->radar_set_->radar_set()))[i]->id() 
-          == opera_state.track_set_state.track_set_state[j].id) {
-        (*(opera_->radar_set_->radar_set()))[i]->SetPosition(
-            opera_state.track_set_state.track_set_state[j].point.x,
-            opera_state.track_set_state.track_set_state[j].point.y);
+    // 1 refer to a shipbased radar
+    if ((*(opera_->radar_set_->radar_set()))[i]->type() == 1) {
+      for (std::size_t j=0; j!=size_track; ++j) {
+        if ((*(opera_->radar_set_->radar_set()))[i]->track_id() 
+            == opera_state.track_set_state.track_set_state[j].id) {
+          (*(opera_->radar_set_->radar_set()))[i]->SetPosition(
+              opera_state.track_set_state.track_set_state[j].point.x,
+              opera_state.track_set_state.track_set_state[j].point.y);
+        }
       }
     }
+
   }
 }
 

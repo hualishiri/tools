@@ -1,6 +1,5 @@
 #include "opera/radar_set.h"
 
-#include "opera/radar_mechanical.h"
 #include "util/logger.h"
 #include "util/testharness.h"
 

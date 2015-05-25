@@ -17,10 +17,9 @@ class SectorRadar : public Radar2D {
   struct Radar {
     long long id;
     int type;
+    long long track_id;
     double x;
     double y;
-    //double angle_azimuth;
-    //double angle_sector_range;
     std::vector<std::pair<double, double> > azimuth_range;
     double distance_detect;
     double level_noise;
@@ -43,10 +42,13 @@ class SectorRadar : public Radar2D {
   virtual void GetState(const TrackSet2D::TrackSetState& track_set_state,
                         RadarState& radar_state);
   virtual void SetPosition(double x, double y);
+  virtual long long id() const { return radar_->id; }
+  virtual int type() const { return radar_->type; }
+  virtual long long track_id() const { return radar_->track_id; }
+
  private:
   bool IsCaptured(const Point2D& radar, const Point2D& target) const;
   float GetAngleOfAzimuth(const Point2D& radar, const Point2D& target) const;
-  inline long long id() const { return radar_->id; }
   bool IsInRange(const std::vector<std::pair<double, double> > azimuth_range,
                  double angle_azimuth_radar) const;
 
