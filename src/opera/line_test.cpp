@@ -1,5 +1,7 @@
 #include "opera/line.h"
 
+#include <vector>
+
 #include "util/testharness.h"
 #include "util/tool.h"
 
@@ -8,6 +10,8 @@ namespace tools {
 class LINE {};
 
 TEST(LINE, GetLength) {
+  std::vector<Shape2D*> point_pointer;
+
   for (int i = -20; i != 20; ++i) {
     for (int j = -20; j != 20; ++j) {
     Shape2D* line = new Line2D(Point2D(i, j));

@@ -33,15 +33,6 @@ TEST(OPERAOPTION, PushBack) {
     ASSERT_TRUE(opera_option.size_radar() == 8);
 
     for (int i = 1; i != 10; ++i) {
-      OperaOption::Object object;
-      object.id = i;
-      opera_option.push_back_object(object);
-    }
-    opera_option.pop_object(2);
-    ASSERT_TRUE(opera_option.size_object() == 8);
-    opera_option.pop_object(15);
-    ASSERT_TRUE(opera_option.size_object() == 8);
-    for (int i = 1; i != 10; ++i) {
       /*OperaOption::Track track;
       track.batch_count = 1;
       OperaOption::Line line = {0x123, 21.34, 34.12, 34.12, 43.34};
@@ -101,10 +92,7 @@ TEST(OPERAOPTION, OPERATOR_OUT) {
     circle.start_y = 19.431;
     circle.center_x = 98.431;
     circle.center_y = 32.412;
-    circle.side_x = 41.234;
-    circle.side_y = 14.874321;
-    circle.angle_x = 98.13412;
-    circle.angle_y = 29.412;
+    circle.angle = 1.78;
 
     track.types.push_back(OperaOption::LINE);
     track.lines.push_back(line);

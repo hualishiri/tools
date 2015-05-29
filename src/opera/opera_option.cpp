@@ -59,19 +59,8 @@ void OperaOption::pop_radar(long long id) {
   }
 }
 
-void OperaOption::pop_object(long long id) {
-  std::vector<Object>::iterator iter = objects_.begin();
-  for (; iter != objects_.end(); ++iter) {
-    if (iter->id == id) {
-      objects_.erase(iter);
-      return;
-    }
-  }
-}
-
 void OperaOption::push_back_track(Track& track) {
-  assert(track.lines.size() + track.circles.size()
-      + track.eclipses.size() == track.types.size());
+  assert(track.lines.size() + track.circles.size() == track.types.size());
   assert(track.ids.size() == static_cast<std::size_t>(track.batch_count));
   assert(track.level_noise_track >= 0.0 && track.level_noise_track <= 256);
   assert(track.id >= 0);
@@ -102,22 +91,6 @@ void OperaOption::ConvertToPixel() {
                      &tracks_[i].circles[j].start_y);
       FromWgsToPixel(&tracks_[i].circles[j].center_x,
                      &tracks_[i].circles[j].center_y);
-      FromWgsToPixel(&tracks_[i].circles[j].side_x,
-                     &tracks_[i].circles[j].side_y);
-      FromWgsToPixel(&tracks_[i].circles[j].angle_x,
-                     &tracks_[i].circles[j].angle_y);
-    }
-    for (std::size_t j=0; j!=tracks_[i].eclipses.size(); ++j) {
-      FromWgsToPixel(&tracks_[i].eclipses[j].start_x,
-                     &tracks_[i].eclipses[j].start_y);
-      FromWgsToPixel(&tracks_[i].eclipses[j].center_x,
-                     &tracks_[i].eclipses[j].center_y);
-      FromWgsToPixel(&tracks_[i].eclipses[j].side_x,
-                     &tracks_[i].eclipses[j].side_y);
-      FromWgsToPixel(&tracks_[i].eclipses[j].end_x,
-                     &tracks_[i].eclipses[j].end_y);
-      FromWgsToPixel(&tracks_[i].eclipses[j].angle_x,
-                     &tracks_[i].eclipses[j].angle_y);
     }
   }
 }
@@ -139,22 +112,6 @@ void OperaOption::ConvertToPlaneCoodinate(void (Conv)(double*, double*)) {
                      &tracks_[i].circles[j].start_y);
       Conv(&tracks_[i].circles[j].center_x,
                      &tracks_[i].circles[j].center_y);
-      Conv(&tracks_[i].circles[j].side_x,
-                     &tracks_[i].circles[j].side_y);
-      Conv(&tracks_[i].circles[j].angle_x,
-                     &tracks_[i].circles[j].angle_y);
-    }
-    for (std::size_t j=0; j!=tracks_[i].eclipses.size(); ++j) {
-      Conv(&tracks_[i].eclipses[j].start_x,
-                     &tracks_[i].eclipses[j].start_y);
-      Conv(&tracks_[i].eclipses[j].center_x,
-                     &tracks_[i].eclipses[j].center_y);
-      Conv(&tracks_[i].eclipses[j].side_x,
-                     &tracks_[i].eclipses[j].side_y);
-      Conv(&tracks_[i].eclipses[j].end_x,
-                     &tracks_[i].eclipses[j].end_y);
-      Conv(&tracks_[i].eclipses[j].angle_x,
-                     &tracks_[i].eclipses[j].angle_y);
     }
   }
 }
@@ -172,7 +129,6 @@ std::vector<OperaOption::TrackInternal> OperaOption::tracks() const {
         tracks_[i].time_delays[j],
         tracks_[i].lines,
         tracks_[i].circles,
-        tracks_[i].eclipses,
         tracks_[i].types
       };
       if (0 != j)
@@ -199,10 +155,6 @@ void OperaOption::TrackInternalSift(TrackInternal& track_internal,
     track_internal.circles[i].start_y += y_sift;
     track_internal.circles[i].center_x+= x_sift;
     track_internal.circles[i].center_y += y_sift;
-    track_internal.circles[i].side_x += x_sift;
-    track_internal.circles[i].side_y += y_sift;
-    track_internal.circles[i].angle_x += x_sift;
-    track_internal.circles[i].angle_y += y_sift;
   }
 }
 
@@ -261,10 +213,7 @@ std::ostream& operator<< (std::ostream& os, const OperaOption& op) {
             << op.tracks_[i].circles[circle_index].start_y << " "
             << op.tracks_[i].circles[circle_index].center_x << " "
             << op.tracks_[i].circles[circle_index].center_y << " "
-            << op.tracks_[i].circles[circle_index].side_x << " "
-            << op.tracks_[i].circles[circle_index].side_y << " "
-            << op.tracks_[i].circles[circle_index].angle_x << " "
-            << op.tracks_[i].circles[circle_index].angle_y << " ";
+            << op.tracks_[i].circles[circle_index].angle << " ";
       }
     }
   }
@@ -273,7 +222,6 @@ std::ostream& operator<< (std::ostream& os, const OperaOption& op) {
     
 std::istream& operator>> (std::istream& in, OperaOption& op) {
   op.radars_.clear();
-  op.objects_.clear();
   op.tracks_.clear();
   std::size_t size_radar;
   in >> size_radar;
@@ -362,10 +310,7 @@ std::istream& operator>> (std::istream& in, OperaOption& op) {
             >> circle.start_y
             >> circle.center_x
             >> circle.center_y
-            >> circle.side_x
-            >> circle.side_y
-            >> circle.angle_x
-            >> circle.angle_y;
+            >> circle.angle;
         track.circles.push_back(circle);
         track.types.push_back(OperaOption::CIRCLE);
       }

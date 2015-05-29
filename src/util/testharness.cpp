@@ -39,6 +39,10 @@ int RunAllTests() {
     }
   }
   fprintf(stderr, " ==== PASSED %d tests\n", num);
+  if (tests != NULL) {
+    delete tests;
+    tests = NULL;
+  }
   return 0;
 }
 

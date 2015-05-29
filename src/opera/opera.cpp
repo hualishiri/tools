@@ -87,12 +87,7 @@ void Opera2D::BuildTrack(const OperaOption& opera_option) {
               - tracks[i].circles[index_circle].start_x,
               tracks[i].circles[index_circle].center_y
               - tracks[i].circles[index_circle].start_y),
-          AngleFromStartByClockInCircle(tracks[i].circles[index_circle].start_x,
-              tracks[i].circles[index_circle].start_y,
-              tracks[i].circles[index_circle].center_x,
-              tracks[i].circles[index_circle].center_y,
-              tracks[i].circles[index_circle].angle_x,
-              tracks[i].circles[index_circle].angle_y));
+              tracks[i].circles[index_circle].angle);
           ++index_circle;
       } else if (tracks[i].types[j] == OperaOption::ECLIPSE) { }
       Acceleration* acc_uniform = new ConstantAcceleration(
