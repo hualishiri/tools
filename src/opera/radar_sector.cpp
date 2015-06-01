@@ -49,8 +49,8 @@ bool SectorRadar::IsCaptured(const Point2D& radar,
 
 float SectorRadar::GetAngleOfAzimuth(const Point2D& radar,
                                      const Point2D& target) const {
-  return 2.0 * T_PI - AngleFromStartByClockInCircle(radar.x,
-                                       radar.y - 1.0,
+  return T_PI - AngleFromStartByClockInCircle(radar.x,
+                                       radar.y + 1.0,
                                        radar.x,
                                        radar.y,
                                        target.x,
@@ -67,10 +67,8 @@ bool SectorRadar::IsInRange(
     double target_angle) const {
   double angle_relative = 0.0;
   for (std::size_t i=0; i!=azimuth_range.size(); ++i) {
-    angle_relative = target_angle - azimuth_range[i].first;
-    if (angle_relative < 0.0)
-      angle_relative += 2 * T_PI;
-    if (angle_relative < azimuth_range[i].second)
+    if (target_angle >= azimuth_range[i].first && 
+        target_angle <= azimuth_range[i].first + azimuth_range[i].second)
       return true;
   }
   return false;
