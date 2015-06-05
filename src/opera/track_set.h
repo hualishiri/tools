@@ -64,7 +64,6 @@ class TrackSet2D {
     return track_set_init_pos_;
   }
 
-
  private:
   const Point2D& GetInitPosition(long long id) const;
 

@@ -19,6 +19,7 @@ public:
     float speed;
     double distance;
     float azimuth;
+    int track_type;
   };
   class Iterator{
   public:
@@ -57,15 +58,20 @@ public:
     :id_(id),
     track_unit_set_(track_unit_set), 
     init_speed_(init_speed), 
-    interval_(interval){}
+    interval_(interval){
+      track_type_ = ~0x00;
+    }
   long long id(){ return id_; }
   TrackUnitSet* track_unit_set() const { return track_unit_set_; }
+  int track_type() const { return track_type_; }
+  void set_track_type(int track_type) { track_type_ = track_type; }
     
 private:
   long long id_;
   TrackUnitSet* track_unit_set_;
   float init_speed_;
   const long long interval_;    //the inverval of iteration
+  int track_type_;
 
   Track2D(const Track2D&);
   Track2D& operator=(const Track2D&);

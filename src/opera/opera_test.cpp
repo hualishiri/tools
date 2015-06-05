@@ -35,11 +35,13 @@ TEST(OPERA, Iterator) {
   //radar.radius_y = 30.102435;
   radar.radius_y = 1.0;
   radar.azimuth_range.push_back(std::make_pair(0.0, 3.14));
-  radar.azimuth_range.push_back(std::make_pair(3.14, 3.30));
+  radar.azimuth_range.push_back(std::make_pair(3.14, 3.14));
   radar.level_noise = 1;
   radar.error_system = 1.0;
   radar.error_random = 2.0;
   radar.error_overall = 3.0;
+  radar.detecting_objects_types = 
+      OperaOption::AIRCRAFT | OperaOption::LANDCRAFT | OperaOption::UNDERCRAFT;
 
   tools::OperaOption::Track track;
   tools::OperaOption::Line line = {
@@ -65,6 +67,9 @@ TEST(OPERA, Iterator) {
       track.accelerations[i].push_back(0);
     track.start_speeds.push_back(0.1);
     track.time_delays.push_back(5);
+    track.track_types.push_back(
+      OperaOption::AIRCRAFT | OperaOption::LANDCRAFT | OperaOption::UNDERCRAFT);
+      //0);
   }
 
   track.level_noise_track = 0.1;
@@ -82,15 +87,15 @@ TEST(OPERA, Iterator) {
   while(iter.Valid()) {
     iter.Value(*opera_state);
       //opera_state->ConvertToWgs();
-        for(std::size_t i = 0;
-            i != opera_state->radar_set_state.radar_set_state.size();
-            ++i) {
-          for (std::size_t j = 0;
-              j != opera_state
-              ->radar_set_state.radar_set_state[i].targets.size();
-              ++j) {
-          }
+      for(std::size_t i = 0;
+          i != opera_state->radar_set_state.radar_set_state.size();
+          ++i) {
+        for (std::size_t j = 0;
+            j != opera_state
+            ->radar_set_state.radar_set_state[i].targets.size();
+            ++j) {
         }
+      }
 
         for(std::size_t i = 0;
             i!= opera_state->track_set_state.track_set_state.size();
@@ -107,7 +112,7 @@ TEST(OPERA, Iterator) {
               << opera_state->track_set_state.track_set_state[i].acc << ", "
               << opera_state->track_set_state.track_set_state[i].speed << ", "
               << opera_state->track_set_state.track_set_state[i].azimuth << ");";
-            streamTemp.clear();
+          streamTemp.clear();
         }
     iter.Next();
   }

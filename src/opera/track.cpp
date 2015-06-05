@@ -78,6 +78,7 @@ void Track2D::Iterator::Value(TrackState& track_state){
   track_state.distance = distance_current_ + track_unit_state_.distance;
   track_state.azimuth = Azimuth(track_state.point.x - last_x_,
                                 track_state.point.y - last_y_);
+  track_state.track_type = track_->track_type_;
   last_x_ = track_state.point.x;
   last_y_ = track_state.point.y;
 }

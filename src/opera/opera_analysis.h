@@ -12,7 +12,18 @@ class OperaAnalysis {
   struct OperaAnalysisUnit {
     long long radar_id;
     long long object_id;
-    double error_square;
+    double error_system_distance;
+    double error_system_azimuth;
+    double error_system_elevation;
+    double error_random_distance;
+    double error_random_azimuth;
+    double error_random_elevation;
+    double error_overall_distance;
+    double error_overall_azimuth;
+    double error_overall_elevation;
+    double error_space;
+    double error_velocity;
+    double error_distance;
   };
 
   struct OperaAnalysisState {

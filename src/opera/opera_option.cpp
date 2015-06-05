@@ -44,6 +44,8 @@ void OperaOption::push_back_radar(Radar& radar) {
   if (radar.type == R_DYNAMIC){
     assert(IsIDExistInTrackSet(radar.track_id));
   }
+  assert(((~(AIRCRAFT | LANDCRAFT | UNDERCRAFT)) & 
+      radar.detecting_objects_types) == 0x0);
   radars_.push_back(radar);
 
   assert(IsIDUnique());
@@ -71,6 +73,12 @@ void OperaOption::push_back_track(Track& track) {
       static_cast<std::size_t>(track.batch_count));
   for (std::size_t i=0; i!= track.accelerations.size(); ++i )
     assert(track.accelerations[i].size() == track.types.size());
+  assert(track.track_types.size() == 
+      static_cast<std::size_t>(track.batch_count));
+  for (std::size_t i=0; i!=track.track_types.size(); ++i) {
+    assert(((~(AIRCRAFT | LANDCRAFT | UNDERCRAFT)) & 
+        track.track_types[i]) == 0x00);
+  }
   assert(IsIDUnique());
 }
 
@@ -95,7 +103,7 @@ void OperaOption::ConvertToPixel() {
   }
 }
 
-void OperaOption::ConvertToPlaneCoodinate(void (Conv)(double*, double*)) {
+void OperaOption::ConvertToPlaneCoodinate(void (*Conv)(double*, double*)) {
   for (std::size_t i=0; i!=radars_.size(); ++i) {
     Conv(&radars_[i].start_x, &radars_[i].start_y);
     Conv(&radars_[i].radius_x, &radars_[i].radius_y);
@@ -127,6 +135,7 @@ std::vector<OperaOption::TrackInternal> OperaOption::tracks() const {
         tracks_[i].start_speeds[j],
         tracks_[i].accelerations[j],
         tracks_[i].time_delays[j],
+        tracks_[i].track_types[j],
         tracks_[i].lines,
         tracks_[i].circles,
         tracks_[i].types
@@ -167,6 +176,7 @@ std::ostream& operator<< (std::ostream& os, const OperaOption& op) {
         << op.radars_[i].start_y << " "   
         << op.radars_[i].radius_x << " "   
         << op.radars_[i].radius_y << " "   
+        << op.radars_[i].detecting_objects_types << " "
         << op.radars_[i].error_system << " "   
         << op.radars_[i].error_random << " "   
         << op.radars_[i].error_overall << " ";
@@ -216,6 +226,10 @@ std::ostream& operator<< (std::ostream& os, const OperaOption& op) {
             << op.tracks_[i].circles[circle_index].angle << " ";
       }
     }
+
+    os << op.tracks_[i].track_types.size() << " "; 
+    for (std::size_t j=0; j!=op.tracks_[i].track_types.size(); ++j)
+      os << op.tracks_[i].track_types[j] << " ";
   }
   return os;
 }
@@ -233,9 +247,11 @@ std::istream& operator>> (std::istream& in, OperaOption& op) {
         >> radar.start_y
         >> radar.radius_x
         >> radar.radius_y
+        >> radar.detecting_objects_types
         >> radar.error_system
         >> radar.error_random
         >> radar.error_overall;
+
 
     std::size_t size_azimuth_range = 0;
     in >> size_azimuth_range;
@@ -261,6 +277,7 @@ std::istream& operator>> (std::istream& in, OperaOption& op) {
     track.circles.clear();
     track.lines.clear();
     track.types.clear();
+    track.track_types.clear();
     
     in >> track.id;
     in >> track.batch_count;
@@ -314,6 +331,14 @@ std::istream& operator>> (std::istream& in, OperaOption& op) {
         track.circles.push_back(circle);
         track.types.push_back(OperaOption::CIRCLE);
       }
+    }
+    
+    std::size_t size_track_types;
+    in >> size_track_types;
+    int track_type = 0;
+    for (std::size_t j=0; j!=size_track_types; ++j) {
+      in >> track_type;
+      track.track_types.push_back(track_type);
     }
     op.push_back_track(track);
   }

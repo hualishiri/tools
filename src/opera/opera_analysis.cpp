@@ -19,7 +19,7 @@ void OperaAnalysis::Handle(const RadarSet2D::RadarSetState& radar_set_state,
       opera_analysis_unit.object_id = 
           radar_set_state.radar_set_state[i].ids[j];
 
-      opera_analysis_unit.error_square = sqrt(pow(
+      opera_analysis_unit.error_distance = sqrt(pow(
             radar_set_state.radar_set_state[i].targets[j].x
             - radar_set_state.radar_set_state[i].targets_radar[j].x,
             2) + pow(
@@ -28,7 +28,7 @@ void OperaAnalysis::Handle(const RadarSet2D::RadarSetState& radar_set_state,
             2));
       opera_analysis_state.track_radar.push_back(opera_analysis_unit);
       
-      opera_analysis_unit.error_square = sqrt(pow(
+      opera_analysis_unit.error_distance = sqrt(pow(
             radar_set_state.radar_set_state[i].targets[j].x
             - radar_set_state.radar_set_state[i].targets_filter[j].x,
             2) + pow(

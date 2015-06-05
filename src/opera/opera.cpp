@@ -42,6 +42,7 @@ void Opera2D::BuildRadar(const OperaOption& opera_option) {
                                            radars[i].radius_y);
 
     radar->level_noise = radars[i].level_noise;
+    radar->detecting_objects_types = radars[i].detecting_objects_types;
     RadarNoise* radar_noise = new RadarNoiseGauss(radar->level_noise);
     SectorRadar* sector_radar = new SectorRadar(radar, radar_noise);
     rep_radar_set->push_back(sector_radar);
@@ -109,6 +110,7 @@ void Opera2D::BuildTrack(const OperaOption& opera_option) {
         track_unit_set,
         opera_option.interval(),
         tracks[i].start_speed);
+    track->set_track_type(tracks[i].track_type);
     track_set_rep->push_back(track);
   }
   TrackSet2D::TrackSetOption track_set_option = {
@@ -208,7 +210,7 @@ void Opera2D::OperaState::ConvertToWgs() {
                    &track_set_state.track_set_state[i].point.y);
 }
 
-void Opera2D::OperaState::ConvertToWgs(void (Conv)(double*, double*)) {
+void Opera2D::OperaState::ConvertToWgs(void (*Conv)(double*, double*)) {
   for (std::size_t i=0;
       i!=radar_set_state.radar_set_state.size();
       ++i) {

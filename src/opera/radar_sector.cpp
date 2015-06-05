@@ -1,5 +1,6 @@
 #include "opera/radar_sector.h"
 
+#include "util/logger.h"
 #include "util/tool.h"
 
 namespace tools {
@@ -20,7 +21,8 @@ void SectorRadar::GetState(
       = track_set_state.track_set_state.begin();
       iter != track_set_state.track_set_state.end();
       ++iter) {
-    if (IsCaptured(Point2D(radar_->x, radar_->y), iter->point)) {
+    Target target = {iter->point.x, iter->point.y, iter->track_type};
+    if (IsCaptured(*radar_, target)) {
       std::size_t index = radar_state.targets.size();
       radar_state.targets.push_back(iter->point);  
       radar_state.targets_radar.push_back(iter->point);
@@ -37,19 +39,21 @@ void SectorRadar::GetState(
   }
 }
 
-bool SectorRadar::IsCaptured(const Point2D& radar,
-                                   const Point2D& target) const {
+bool SectorRadar::IsCaptured(const Radar& radar,
+                                   const Target& target) const {
   double distance = Distance2DArc(radar.x, radar.y, target.x, target.y);
   if (distance >= radar_->distance_detect)
     return false;
-
-  double angle_target_amuzith = GetAngleOfAzimuth(radar, target);
+  if (!(radar.detecting_objects_types & target.target_type))
+    return false;
+  double angle_target_amuzith = GetAngleOfAzimuth(Point2D(radar.x, radar.y),
+                                                  Point2D(target.x, target.y));
   return IsInRange(radar_->azimuth_range, angle_target_amuzith);
 }
 
 float SectorRadar::GetAngleOfAzimuth(const Point2D& radar,
                                      const Point2D& target) const {
-  return T_PI - AngleFromStartByClockInCircle(radar.x,
+  return AngleFromStartByClockInCircle(radar.x,
                                        radar.y + 1.0,
                                        radar.x,
                                        radar.y,
@@ -65,7 +69,6 @@ void SectorRadar::SetPosition(double x, double y) {
 bool SectorRadar::IsInRange(
     const std::vector<std::pair<double, double> > azimuth_range,
     double target_angle) const {
-  double angle_relative = 0.0;
   for (std::size_t i=0; i!=azimuth_range.size(); ++i) {
     if (target_angle >= azimuth_range[i].first && 
         target_angle <= azimuth_range[i].first + azimuth_range[i].second)

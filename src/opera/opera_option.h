@@ -16,12 +16,25 @@ class OperaOption {
 
   enum TrackUnitType { LINE=0, CIRCLE, ECLIPSE };
   enum RadarType {R_STATIC=0, R_DYNAMIC};
+  enum ObjectType {AIRCRAFT=1, LANDCRAFT=2, UNDERCRAFT=4};
+
+    struct Error {
+      double error_random_distance;
+      double error_random_azimuth;
+      double error_random_elevation;
+      double error_system_distance;
+      double error_system_azimuth;
+      double error_system_elevation;
+    };
 
   struct Radar {
     long long id;
 
     //RadarType
     int type;
+
+    //The 'or' operators of ObjectType values
+    int detecting_objects_types;
 
     //The value of OperaOption::Track::ids
     int track_id;
@@ -31,6 +44,8 @@ class OperaOption {
     double radius_x;
     double radius_y;
     double level_noise;
+    struct Error error;
+
     double error_system;
     double error_random;;
     double error_overall;
@@ -65,6 +80,9 @@ class OperaOption {
     std::vector<Line> lines;
     std::vector<Circle> circles;
     std::vector<TrackUnitType> types;
+
+    //The 'or' operators of ObjectType values
+    std::vector<int> track_types;
   };
 
   struct TrackInternal {
@@ -72,6 +90,7 @@ class OperaOption {
     double start_speed;
     std::vector<float> acceleration;
     double time_delay;
+    int track_type;
     std::vector<Line> lines;
     std::vector<Circle> circles;
     std::vector<TrackUnitType> types;

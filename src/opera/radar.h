@@ -14,7 +14,7 @@ class Radar2D : public Sensor {
     std::vector<Point2D> targets;
     std::vector<Point2D> targets_radar;
     std::vector<Point2D> targets_filter;
-    std::vector<float> targets_angle_azimuth;
+    std::vector<double> targets_angle_azimuth;
     std::vector<long long> ids;
   };
 
