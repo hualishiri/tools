@@ -41,7 +41,14 @@ void Opera2D::BuildRadar(const OperaOption& opera_option) {
                                            radars[i].radius_x,
                                            radars[i].radius_y);
 
-    radar->level_noise = radars[i].level_noise;
+    //radar->level_noise = radars[i].level_noise;
+    radar->error_random_distance = radars[i].error.error_random_distance;
+    radar->error_random_azimuth = radars[i].error.error_random_azimuth;
+    radar->error_random_elevation = radars[i].error.error_random_elevation;
+    radar->error_system_distance = radars[i].error.error_system_distance;
+    radar->error_system_azimuth = radars[i].error.error_system_azimuth;
+    radar->error_system_elevation = radars[i].error.error_system_elevation;
+
     radar->detecting_objects_types = radars[i].detecting_objects_types;
     RadarNoise* radar_noise = new RadarNoiseGauss(radar->level_noise);
     SectorRadar* sector_radar = new SectorRadar(radar, radar_noise);
@@ -90,7 +97,7 @@ void Opera2D::BuildTrack(const OperaOption& opera_option) {
               - tracks[i].circles[index_circle].start_y),
               tracks[i].circles[index_circle].angle);
           ++index_circle;
-      } else if (tracks[i].types[j] == OperaOption::ECLIPSE) { }
+      }
       Acceleration* acc_uniform = new ConstantAcceleration(
           tracks[i].acceleration[j]);
 

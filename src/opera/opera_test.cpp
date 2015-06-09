@@ -36,10 +36,14 @@ TEST(OPERA, Iterator) {
   radar.radius_y = 1.0;
   radar.azimuth_range.push_back(std::make_pair(0.0, 3.14));
   radar.azimuth_range.push_back(std::make_pair(3.14, 3.14));
-  radar.level_noise = 1;
-  radar.error_system = 1.0;
-  radar.error_random = 2.0;
-  radar.error_overall = 3.0;
+
+  radar.error.error_random_distance = 1.0;
+  radar.error.error_random_azimuth = 0.001;
+  radar.error.error_random_elevation = 0.001;
+  radar.error.error_system_distance = 1.0;
+  radar.error.error_system_azimuth = 0.001;
+  radar.error.error_system_elevation = 0.001;
+
   radar.detecting_objects_types = 
       OperaOption::AIRCRAFT | OperaOption::LANDCRAFT | OperaOption::UNDERCRAFT;
 

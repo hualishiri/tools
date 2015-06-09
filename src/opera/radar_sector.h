@@ -24,6 +24,13 @@ class SectorRadar : public Radar2D {
     double distance_detect;
     double level_noise;
     int detecting_objects_types;
+    
+    double error_random_distance;
+    double error_random_azimuth;
+    double error_random_elevation;
+    double error_system_distance;
+    double error_system_azimuth;
+    double error_system_elevation;
   };
 
   struct Target {
@@ -32,19 +39,7 @@ class SectorRadar : public Radar2D {
     int target_type;
   };
 
-  SectorRadar(Radar* radar, RadarNoise* radar_noise)
-    : radar_(radar), radar_noise_(radar_noise) {
-    assert(radar_->id > 0);
-
-    for (std::size_t i=0; i!=radar->azimuth_range.size(); ++i) {
-      assert(radar_->azimuth_range[i].first >= 0.0 && 
-          radar_->azimuth_range[i].first <= 2.0 * T_PI);
-      assert(radar_->azimuth_range[i].second >= 0.0 &&
-          radar_->azimuth_range[i].second <= 2.0 * T_PI);
-    }
-
-    assert(radar_->distance_detect >= 0.0);
-  }
+  SectorRadar(Radar* radar, RadarNoise* radar_noise);
 
   virtual void GetState(const TrackSet2D::TrackSetState& track_set_state,
                         RadarState& radar_state);
@@ -58,9 +53,17 @@ class SectorRadar : public Radar2D {
   float GetAngleOfAzimuth(const Point2D& radar, const Point2D& target) const;
   bool IsInRange(const std::vector<std::pair<double, double> > azimuth_range,
                  double angle_azimuth_radar) const;
+  void CalculateRadarError(int seed);
+  void CalculateRadarState(RadarState& radar_state);
+  void CalculateObjectPosition(const Point2D& radar,
+                               double azimuth,
+                               double distance,
+                               Point2D& target);
+  void ClearRadarState(RadarState& radar_state) const;
 
   Radar* radar_;
   RadarNoise* radar_noise_;
+  RadarError error_;
 };
 
 } //namespace tools

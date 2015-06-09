@@ -32,7 +32,8 @@ TESTS = \
 	opera_test \
 	radar_noise_gauss_test \
 	opera_random_test \
-	opera_analysis_test
+	opera_analysis_test \
+	radar_sector_test
 
 default : all
 	
@@ -114,6 +115,9 @@ opera_random_test.o : src/opera/opera_random.h src/opera/opera_random_test.cpp \
 opera_analysis_test.o : src/opera/opera_analysis.h src/opera/opera_analysis.cpp \
 	src/opera/radar_set.h src/opera/radar_set.cpp
 	$(GCC) -c src/opera/opera_analysis_test.cpp -o $(OUTPUT)/opera_analysis_test.o
+radar_sector_test.o : src/opera/radar_sector.h src/opera/radar_sector.cpp \
+	src/opera/radar_sector_test.cpp
+	$(GCC) -c src/opera/radar_sector_test.cpp -o $(OUTPUT)/radar_sector_test.o
 	
 map_test : testharness.o map.o map_test.o
 	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/map_test.o -o $(OUTPUT)/map_test
@@ -152,6 +156,8 @@ opera_random_test : opera_random_test.o
 opera_analysis_test : opera_analysis_test.o
 	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/opera_analysis_test.o -o \
 		$(OUTPUT)/opera_analysis_test
+radar_sector_test : radar_sector_test.o
+	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/radar_sector_test.o -o $(OUTPUT)/radar_sector_test
 	
 clean :
 	rm -rf $(OUTPUTOJBECTS)

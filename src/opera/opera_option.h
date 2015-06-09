@@ -14,9 +14,9 @@ class OperaOption {
   friend std::ostream& operator<< (std::ostream& os, const OperaOption& op);
   friend std::istream& operator>> (std::istream& in, OperaOption& op);
 
-  enum TrackUnitType { LINE=0, CIRCLE, ECLIPSE };
-  enum RadarType {R_STATIC=0, R_DYNAMIC};
-  enum ObjectType {AIRCRAFT=1, LANDCRAFT=2, UNDERCRAFT=4};
+  enum TrackUnitType { LINE=0, CIRCLE };
+  enum RadarType { R_STATIC=0, R_DYNAMIC };
+  enum ObjectType { AIRCRAFT=1, LANDCRAFT=2, UNDERCRAFT=4 };
 
     struct Error {
       double error_random_distance;
@@ -43,12 +43,8 @@ class OperaOption {
     double start_y; // latitude by degree
     double radius_x;
     double radius_y;
-    double level_noise;
     struct Error error;
 
-    double error_system;
-    double error_random;;
-    double error_overall;
     std::vector<std::pair<double, double> > azimuth_range; 
   };
   

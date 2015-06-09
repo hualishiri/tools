@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "util/testharness.h"
+#include "util/logger.h"
 
 namespace tools {
 namespace {
@@ -67,6 +68,16 @@ TEST(Empty, AngleFromStartByClockInCircle) {
       }
     }
   }*/
+}
+
+TEST(Empty, FromAngleOfClock2AngleOfCircle) {
+  double angle_clock = 0.0;
+  double angle_circle = 0.0;
+  for (int i=0; i!=6; ++i) {
+    angle_clock = FromAngleOfClock2AngleOfCircle(static_cast<double>(i));
+    angle_circle =  FromAngleOfCircle2AngleOfClock(static_cast<double>(i));
+    ASSERT_TRUE(DoubleEqual(angle_clock, angle_circle));
+  }
 }
 
 double StdAngleInCircle(double x, double y) {

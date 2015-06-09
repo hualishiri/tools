@@ -21,6 +21,10 @@ double AngleFromStartByClockInCircle(double start_x,
                                      double angle_x,
                                      double angle_y);
 
+double FromAngleOfClock2AngleOfCircle(double angle_clock);
+
+double FromAngleOfCircle2AngleOfClock(double angle_circle);
+
 void FromWgsToPixel(double* longitude, double* latitude);
 void FromPixelToWgs(double* x, double* y);
 
@@ -31,6 +35,8 @@ double Radius(double angle);
 double Distance2D(double lhs_x, double lhs_y, double rhs_x, double rhs_y);
 
 double Distance2DArc(double lhs_x, double lhs_y, double rhs_x, double rhs_y);
+
+double Elevation(double distance, double height);
 
 // From -180.0 to 180.0
 bool ValidOfLongitude(double l);

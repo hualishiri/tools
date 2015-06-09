@@ -100,6 +100,23 @@ double AngleFromStartByClockInCircle(double start_x,
   return delta_angle;
 }
 
+double FromAngleOfClock2AngleOfCircle(double angle_clock) {
+  double result = 0.0;
+  result = (T_PI / 2.0 - angle_clock );
+  if (result < 0.0)
+    result += 2.0 * T_PI;
+  return result;
+}
+
+double FromAngleOfCircle2AngleOfClock(double angle_circle) {
+  double result = 0.0;
+  result = (T_PI / 2.0 - angle_circle);
+  if (result < 0.0)
+    result += 2.0 * T_PI;
+  return result;
+  
+}
+
 void FromWgsToPixel(double* longitude, double* latitude) {
   wgs_point.longitude = *longitude;
   wgs_point.latitude = *latitude;
@@ -116,7 +133,7 @@ void FromPixelToWgs(double* x, double* y) {
   *y =wgs_point.latitude;
 }
 
-/* product a double number range from -1.0 ~ 1.0 */
+/* Generates a double number ranging from -1.0 to 1.0 */
 double GetRandNumber(int seed) {
   srand(static_cast<unsigned>(time(NULL)) + seed);
   double number = rand() / (double)RAND_MAX;
@@ -134,6 +151,11 @@ double Radius(double angle) {
 
 double Distance2D(double lhs_x, double lhs_y, double rhs_x, double rhs_y) {
   return sqrt(pow(lhs_x - rhs_x, 2.0) + pow(lhs_y - rhs_y, 2.0));
+}
+
+double Elevation(double distance, double height) {
+  assert(distance > 0.0 && height > 0.0 );
+  return atan2(height, distance);
 }
 
 double Distance2DArc(double lhs_x, double lhs_y, double rhs_x, double rhs_y) {

@@ -21,9 +21,14 @@ TEST(OPERAOPTION, PushBack) {
       radar.start_y = 15.32;
       radar.radius_x = 98.321;
       radar.radius_y = 19.1342;
-      radar.error_system = 1.321;
-      radar.error_random = 3.31;
-      radar.error_overall = 9.21341;
+
+      radar.error.error_random_azimuth = 0.001;
+      radar.error.error_random_distance = 1.0;
+      radar.error.error_random_elevation = 0.001;
+      radar.error.error_system_azimuth = 0.001;
+      radar.error.error_system_distance = 1.0;
+      radar.error.error_system_elevation = 0.001;
+
       radar.detecting_objects_types = 
           OperaOption::AIRCRAFT | OperaOption::LANDCRAFT;
       radar.azimuth_range.push_back(std::make_pair(14.0, 50.0));
@@ -59,9 +64,13 @@ TEST(OPERAOPTION, OPERATOR_OUT) {
     radar.start_y = 15.32;
     radar.radius_x = 98.321;
     radar.radius_y = 19.1342;
-    radar.error_system = 1.321;
-    radar.error_random = 3.31;
-    radar.error_overall = 9.21341;
+    radar.error.error_random_azimuth = 0.01;
+    radar.error.error_random_distance = 1.0;
+    radar.error.error_random_distance = 0.01;
+    radar.error.error_system_azimuth = 0.01;
+    radar.error.error_system_distance = 1.0;
+    radar.error.error_system_elevation = 0.01;
+
     radar.detecting_objects_types = OperaOption::AIRCRAFT | 
         OperaOption::LANDCRAFT;
     radar.azimuth_range.push_back(std::make_pair(14.0, 50.0));

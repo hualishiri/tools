@@ -31,12 +31,6 @@ void OperaOption::push_back_radar(Radar& radar) {
     assert(ValidOfCircleAngle(radar.azimuth_range[i].first));
     assert(ValidOfCircleAngle(radar.azimuth_range[i].second));
   }
-  assert(radar.error_system >= -10.0 && radar.error_system <= 10.0);
-  assert(radar.error_random >= -10.0 && radar.error_random <= 10.0);
-  assert(radar.error_overall >= -10.0 && radar.error_overall <= 10.0);
-  radar.level_noise = 0.3 * radar.error_system + 0.3 * radar.error_random
-    + 0.4 * radar.error_overall;
-  assert(radar.level_noise >= 0.0 && radar.level_noise <= 256.0);
 
   if (radar.type == R_STATIC) {
     radar.track_id = 0;
@@ -177,9 +171,12 @@ std::ostream& operator<< (std::ostream& os, const OperaOption& op) {
         << op.radars_[i].radius_x << " "   
         << op.radars_[i].radius_y << " "   
         << op.radars_[i].detecting_objects_types << " "
-        << op.radars_[i].error_system << " "   
-        << op.radars_[i].error_random << " "   
-        << op.radars_[i].error_overall << " ";
+        << op.radars_[i].error.error_random_azimuth << " "   
+        << op.radars_[i].error.error_random_distance << " "   
+        << op.radars_[i].error.error_random_elevation << " "
+        << op.radars_[i].error.error_system_azimuth << " "
+        << op.radars_[i].error.error_system_distance << " "
+        << op.radars_[i].error.error_system_elevation << " ";
 
     os << op.radars_[i].azimuth_range.size() << " ";
     for (std::size_t j=0; j!=op.radars_[i].azimuth_range.size(); ++j) {
@@ -248,10 +245,12 @@ std::istream& operator>> (std::istream& in, OperaOption& op) {
         >> radar.radius_x
         >> radar.radius_y
         >> radar.detecting_objects_types
-        >> radar.error_system
-        >> radar.error_random
-        >> radar.error_overall;
-
+        >> radar.error.error_random_azimuth
+        >> radar.error.error_random_distance
+        >> radar.error.error_random_elevation
+        >> radar.error.error_system_azimuth
+        >> radar.error.error_system_distance
+        >> radar.error.error_system_elevation;
 
     std::size_t size_azimuth_range = 0;
     in >> size_azimuth_range;
@@ -356,12 +355,18 @@ bool OperaOption::operator==(const OperaOption& opera_option) const{
           DoubleEqual(radars_[i].start_y, opera_option.radars_[i].start_y) &&
           DoubleEqual(radars_[i].radius_x, opera_option.radars_[i].radius_x) &&
           DoubleEqual(radars_[i].radius_y, opera_option.radars_[i].radius_y) &&
-          DoubleEqual(radars_[i].error_system,
-                      opera_option.radars_[i].error_system) &&
-          DoubleEqual(radars_[i].error_random,
-                      opera_option.radars_[i].error_random) &&
-          DoubleEqual(radars_[i].error_overall,
-                      opera_option.radars_[i].error_overall)))
+          DoubleEqual(radars_[i].error.error_random_azimuth,
+                      opera_option.radars_[i].error.error_random_azimuth) &&
+          DoubleEqual(radars_[i].error.error_random_distance,
+                      opera_option.radars_[i].error.error_random_distance) &&
+          DoubleEqual(radars_[i].error.error_random_elevation,
+                      opera_option.radars_[i].error.error_random_elevation) &&
+          DoubleEqual(radars_[i].error.error_system_azimuth,
+                      opera_option.radars_[i].error.error_system_azimuth) &&
+          DoubleEqual(radars_[i].error.error_system_distance,
+                      opera_option.radars_[i].error.error_system_distance) &&
+          DoubleEqual(radars_[i].error.error_system_elevation,
+                      opera_option.radars_[i].error.error_system_elevation)))
         return false;
 
       if (radars_[i].azimuth_range.size() 
