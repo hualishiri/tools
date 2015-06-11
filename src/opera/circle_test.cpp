@@ -31,6 +31,7 @@ TEST(CIRCLE, GetLength) {
         ASSERT_TRUE(DoubleEqual(temp.y, temp_std.y));
         ASSERT_TRUE(DoubleEqual(line->GetLength(), fabs(k) * sqrt(i * i + j * j)));   
         delete line;
+        line = NULL;
       }
     }
   }

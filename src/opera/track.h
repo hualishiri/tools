@@ -24,6 +24,9 @@ public:
   class Iterator{
   public:
     explicit Iterator(Track2D* track);
+    Iterator(const Iterator& iterator);
+    Iterator& operator=(const Iterator& iterator);
+    ~Iterator();
     bool Valid() const;
     void Next();
     void Reset();

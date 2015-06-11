@@ -1,5 +1,7 @@
 #include "track_set.h"
 
+#include <vector>
+
 #include "opera/acceleration.h"
 #include "opera/shape.h"
 #include "opera/line.h"
@@ -38,6 +40,13 @@ TEST(TRACKSET, IteratorSuper) {
   float interval = 10.0f;
   Acceleration* acc_uniform = new UniformAcceleration();
   TrackSet2D::TrackSet track_set_rep;
+
+  std::vector<Shape2D*> garbage_shapes;
+  std::vector<TrackUnit*> garbage_track_units;
+  std::vector<Track2D::TrackUnitSet*> garbage_unit_sets;
+  std::vector<Track2D*> garbage_tracks;
+  std::vector<Point2D*> garbage_points;
+
   unsigned long long index = 0xdeadbeef00000001;
   for(int i=0; i!=len; ++i){
     for(int j=0; j!=len; ++j){
@@ -56,6 +65,11 @@ TEST(TRACKSET, IteratorSuper) {
                                      interval,
                                      init_speed);
         track_set_rep.push_back(track);
+
+        garbage_shapes.push_back(line);
+        garbage_track_units.push_back(track_unit);
+        garbage_unit_sets.push_back(track_unit_set1);
+        garbage_tracks.push_back(track);
     }
   }
     TrackSet2D::TrackSetPosition track_set_position;
@@ -63,8 +77,9 @@ TEST(TRACKSET, IteratorSuper) {
     int index_i = 0;
     for(int i = 0; i != num_of_track; ++i){
       index_i = i / (len-1);
-      track_set_position.push_back(new Point2D(location[index_i*2],
-                                               location[index_i*2+1]));
+      Point2D* point = new Point2D(location[index_i*2], location[index_i*2+1]);
+      track_set_position.push_back(point);
+      garbage_points.push_back(point);
     }
 
     TrackSet2D::TrackSetDelay track_set_delay;
@@ -80,7 +95,7 @@ TEST(TRACKSET, IteratorSuper) {
     TrackSet2D track_set(track_set_option);
 
     TrackSet2D::Iterator iter(&track_set);
-    TrackSet2D::TrackSetState track_set_state;
+    TrackSet2D::TrackSetState track_set_state; 
     int count = 0;
     while(iter.Valid()){
       iter.Value(track_set_state);
@@ -88,6 +103,18 @@ TEST(TRACKSET, IteratorSuper) {
       iter.Next();
       ++count;
     }
+
+    delete acc_uniform;
+    for (std::size_t i=0; i!=garbage_shapes.size(); ++i)
+      delete garbage_shapes[i];
+    for (std::size_t i=0; i!=garbage_track_units.size(); ++i)
+      delete garbage_track_units[i];
+    for (std::size_t i=0; i!=garbage_unit_sets.size(); ++i)
+      delete garbage_unit_sets[i];
+    for (std::size_t i=0; i!=garbage_tracks.size(); ++i)
+      delete garbage_tracks[i];
+    for (std::size_t i=0; i!=garbage_points.size(); ++i)
+      delete garbage_points[i];
 }
 
 } //namespace tools

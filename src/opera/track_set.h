@@ -28,6 +28,8 @@ class TrackSet2D {
   class Iterator {
    public:
     Iterator(TrackSet2D* track_set);
+    Iterator(const Iterator& iterator);
+    Iterator& operator=(const Iterator& iterator);
     ~Iterator();
     bool Valid() const;
     void Next();

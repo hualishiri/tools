@@ -44,6 +44,47 @@ Track2D::Iterator::Iterator(Track2D* track){
   last_y_ = 0.0;
 }
 
+Track2D::Iterator::Iterator(const Iterator& iterator) {
+  interval_ = iterator.interval_;
+  tick_current_ = iterator.tick_current_;
+  kTickSum_ = iterator.kTickSum_; 
+  distance_current_ = iterator.distance_current_;
+  distance_dot_ = iterator.distance_dot_;
+  origin_current_ = iterator.origin_current_;
+  temp_ = iterator.temp_;
+  track_unit_state_ = iterator.track_unit_state_;
+  track_ = iterator.track_;
+  iter_track_ = iterator.iter_track_;
+  iter_track_unit_ = new TrackUnit::Iterator(*iter_track_);
+  last_x_ = iterator.last_x_;
+  last_y_ = iterator.last_y_;
+}
+
+Track2D::Iterator& Track2D::Iterator::operator=(const Iterator& iterator) {
+  interval_ = iterator.interval_;
+  tick_current_ = iterator.tick_current_;
+  kTickSum_ = iterator.kTickSum_; 
+  distance_current_ = iterator.distance_current_;
+  distance_dot_ = iterator.distance_dot_;
+  origin_current_ = iterator.origin_current_;
+  temp_ = iterator.temp_;
+  track_unit_state_ = iterator.track_unit_state_;
+  track_ = iterator.track_;
+  iter_track_ = iterator.iter_track_;
+  if (iter_track_unit_) {
+    delete iter_track_unit_;
+    iter_track_unit_ = NULL; 
+  }
+  iter_track_unit_ = new TrackUnit::Iterator(*iter_track_);
+  last_x_ = iterator.last_x_;
+  last_y_ = iterator.last_y_;
+  return *this;
+}
+
+Track2D::Iterator::~Iterator() {
+  delete iter_track_unit_;
+}
+
 bool Track2D::Iterator::Valid() const{
   return tick_current_ <= kTickSum_;
 }
@@ -58,7 +99,6 @@ void Track2D::Iterator::Next(){
       origin_current_.x += temp_.x;
       origin_current_.y += temp_.y;
       delete iter_track_unit_;
-      iter_track_unit_ = NULL;
       iter_track_unit_ = new TrackUnit::Iterator(*iter_track_);
       iter_track_unit_->Value(track_unit_state_);
     }else if(iter_track_ != track_->track_unit_set_->end()){
@@ -88,6 +128,7 @@ void Track2D::Iterator::Reset(){
   distance_current_ = 0.0; 
   origin_current_.x = origin_current_.y = 0;
   iter_track_ = track_->track_unit_set_->begin();
+  delete iter_track_unit_;
   iter_track_unit_ = new TrackUnit::Iterator(*iter_track_);
   TrackUnit::TrackUnitState track_unit_state;
   iter_track_unit_->Value(track_unit_state);

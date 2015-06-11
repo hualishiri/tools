@@ -30,8 +30,10 @@ TEST(TRACKUNIT, Iterator) {
       iter.Next();
       ++count;
     }
-    
     track_unit.GetEndPoint(track_unit_state.point);
+
+    delete acc_variable;
+    delete shape_circle;
 }
 
 } //namespace tools

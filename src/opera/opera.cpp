@@ -21,9 +21,11 @@ void Opera2D::Initialize(const OperaOption& opera_option) {
 
 void Opera2D::BuildRadar(const OperaOption& opera_option) {
   RadarSet2D::RadarSet* rep_radar_set = new RadarSet2D::RadarSet();
+  garbage_.garbage_radar_set2d_radar_sets.push_back(rep_radar_set);
   std::vector<OperaOption::Radar> radars = opera_option.radars();
   for (std::size_t i = 0; i != radars.size(); ++i) {
     SectorRadar::Radar* radar = new SectorRadar::Radar();
+    garbage_.garbage_sector_radar_radars.push_back(radar);
     radar->id = radars[i].id;
     radar->type = radars[i].type;
     if (radars[i].type == OperaOption::R_STATIC) {
@@ -51,7 +53,9 @@ void Opera2D::BuildRadar(const OperaOption& opera_option) {
 
     radar->detecting_objects_types = radars[i].detecting_objects_types;
     RadarNoise* radar_noise = new RadarNoiseGauss(radar->level_noise);
+    garbage_.garbage_radar_noises.push_back(radar_noise);
     SectorRadar* sector_radar = new SectorRadar(radar, radar_noise);
+    garbage_.garbage_sector_radars.push_back(sector_radar);
     rep_radar_set->push_back(sector_radar);
   }
   radar_set_ = new RadarSet2D(rep_radar_set);
@@ -59,48 +63,59 @@ void Opera2D::BuildRadar(const OperaOption& opera_option) {
 
 void Opera2D::BuildTrack(const OperaOption& opera_option) {
   TrackSet2D::TrackSet *track_set_rep = new TrackSet2D::TrackSet();
+  garbage_.garbage_track_set2d_track_sets.push_back(track_set_rep);
   std::vector<OperaOption::TrackInternal> tracks
        = opera_option.tracks();
   std::vector<OperaOption::TrackUnitType> tracks_type;
   TrackSet2D::TrackSetPosition* track_set_position
        = new TrackSet2D::TrackSetPosition();;
+  garbage_.garbage_track_set2d_track_set_positions.push_back(track_set_position);
   double old_speed = 0.0;
   double current_speed = 0.0;
   TrackSet2D::TrackSetDelay* track_set_delay = new TrackSet2D::TrackSetDelay();
+  garbage_.garbage_track_set2d_track_set_delays.push_back(track_set_delay);
   for(std::size_t i=0; i != tracks.size(); ++i) {
     track_set_delay->push_back(tracks[i].time_delay / opera_option.interval());
     Track2D::TrackUnitSet* track_unit_set = new Track2D::TrackUnitSet();
+    garbage_.garbage_track2d_track_unit_sets.push_back(track_unit_set);
     int index_line = 0;
     int index_circle = 0;
+    Point2D* point = NULL;
     for (std::size_t j = 0; j != tracks[i].types.size(); ++j) {
       Shape2D* shape = 0;
       if (tracks[i].types[j] == OperaOption::LINE) {
-        if (j == 0)
-          track_set_position->push_back(new Point2D(
-              tracks[i].lines[index_line].start_x,
-              tracks[i].lines[index_line].start_y));
+        if (j == 0) {
+          point = new Point2D(tracks[i].lines[index_line].start_x,
+                              tracks[i].lines[index_line].start_y);
+          garbage_.garbage_points.push_back(point);
+          track_set_position->push_back(point);
+        }
         shape = new Line2D(Point2D(
             tracks[i].lines[index_line].end_x
             - tracks[i].lines[index_line].start_x,
             tracks[i].lines[index_line].end_y 
             - tracks[i].lines[index_line].start_y));
+        garbage_.garbage_shapes.push_back(shape);
         ++index_line;
       } else if (tracks[i].types[j] == OperaOption::CIRCLE) {
-        if (j == 0)
-          track_set_position->push_back(new Point2D(
-              tracks[i].circles[index_circle].start_x,
-              tracks[i].circles[index_circle].start_y));
-          shape = new Circle2D(Point2D(
-              tracks[i].circles[index_circle].center_x
-              - tracks[i].circles[index_circle].start_x,
-              tracks[i].circles[index_circle].center_y
-              - tracks[i].circles[index_circle].start_y),
-              tracks[i].circles[index_circle].angle);
-          ++index_circle;
+        if (j == 0) {
+          point = new Point2D(tracks[i].circles[index_circle].start_x,
+                              tracks[i].circles[index_circle].start_y);
+          garbage_.garbage_points.push_back(point);
+          track_set_position->push_back(point);
+        }
+        shape = new Circle2D(Point2D(
+            tracks[i].circles[index_circle].center_x
+            - tracks[i].circles[index_circle].start_x,
+            tracks[i].circles[index_circle].center_y
+            - tracks[i].circles[index_circle].start_y),
+            tracks[i].circles[index_circle].angle);
+        garbage_.garbage_shapes.push_back(shape);
+        ++index_circle;
       }
       Acceleration* acc_uniform = new ConstantAcceleration(
           tracks[i].acceleration[j]);
-
+      garbage_.garbage_accelerations.push_back(acc_uniform);
       if (0 == j)
        current_speed = tracks[i].start_speed;
      else
@@ -110,6 +125,7 @@ void Opera2D::BuildTrack(const OperaOption& opera_option) {
                                            acc_uniform,
                                            opera_option.interval(),
                                            current_speed);
+     garbage_.garbage_track_units.push_back(track_unit);
       old_speed = track_unit->GetEndSpeed();
       track_unit_set->push_back(track_unit);
     }
@@ -117,6 +133,7 @@ void Opera2D::BuildTrack(const OperaOption& opera_option) {
         track_unit_set,
         opera_option.interval(),
         tracks[i].start_speed);
+    garbage_.garbage_track2ds.push_back(track);
     track->set_track_type(tracks[i].track_type);
     track_set_rep->push_back(track);
   }
@@ -130,37 +147,69 @@ void Opera2D::BuildTrack(const OperaOption& opera_option) {
 }
 
 void Opera2D::Release() {
-  if (0 != radar_set_) {
-    std::size_t length = radar_set_->radar_set()->size();
-    RadarSet2D::RadarSet* radar_set = radar_set_->radar_set();
-    for (std::size_t i=0; i!=length; ++i)
-      delete (*radar_set)[i];
-    delete radar_set;
-    delete radar_set_;
-    radar_set_ = 0;
-  }
-  if (0 != track_set_) {
-    std::size_t length = track_set_->track_set()->size(); 
-    TrackSet2D::TrackSet* track_set = track_set_->track_set();
-    for (std::size_t i=0; i!=length; ++i) {
-      std::size_t len_track_unit = (*track_set)[i]->track_unit_set()->size();
-      Track2D::TrackUnitSet* track_unit_set = (*track_set)[i]->track_unit_set();
-      for (std::size_t j=0; j!=len_track_unit; ++j) {
-        delete (*track_unit_set)[j]->shape();
-        delete (*track_unit_set)[j]->acceleration();
-        delete (*track_unit_set)[j];
-      } 
-      delete track_unit_set;
-      delete (*track_set)[i];
-    }
-    delete track_set;
+  if (track_set_) {
     delete track_set_;
-    TrackSet2D::TrackSetPosition* track_set_pos = track_set_->track_set_position();
-    length = track_set_->track_set_position()->size();
-    for (std::size_t i=0; i!=length; ++i)
-      delete (*track_set_pos)[i];
-    track_set_ = 0;
+    track_set_ = NULL;
   }
+  if (radar_set_) {
+    delete radar_set_;
+    radar_set_ = NULL;
+  }
+  for (std::size_t i=0; i!=garbage_.garbage_radar_set2d_radar_sets.size(); ++i)
+    delete garbage_.garbage_radar_set2d_radar_sets[i];
+  garbage_.garbage_radar_set2d_radar_sets.clear();
+  
+  for (std::size_t i=0; i!=garbage_.garbage_sector_radar_radars.size(); ++i)
+    delete garbage_.garbage_sector_radar_radars[i];
+  garbage_.garbage_sector_radar_radars.clear();
+
+  for (std::size_t i=0; i!=garbage_.garbage_radar_noises.size(); ++i)
+    delete garbage_.garbage_radar_noises[i];
+  garbage_.garbage_radar_noises.clear();
+
+  for (std::size_t i=0; i!=garbage_.garbage_sector_radars.size(); ++i)
+    delete garbage_.garbage_sector_radars[i];
+  garbage_.garbage_sector_radars.clear();
+
+  for (std::size_t i=0; i!=garbage_.garbage_track_set2d_track_sets.size(); ++i)
+    delete garbage_.garbage_track_set2d_track_sets[i];
+  garbage_.garbage_track_set2d_track_sets.clear();
+
+  for (std::size_t i=0;
+      i!=garbage_.garbage_track_set2d_track_set_positions.size();
+      ++i)
+    delete garbage_.garbage_track_set2d_track_set_positions[i];
+  garbage_.garbage_track_set2d_track_set_positions.clear();
+
+  for (std::size_t i=0;
+      i!=garbage_.garbage_track_set2d_track_set_delays.size();
+      ++i)
+    delete garbage_.garbage_track_set2d_track_set_delays[i];
+  garbage_.garbage_track_set2d_track_set_delays.clear();
+
+  for (std::size_t i=0; i!=garbage_.garbage_track2d_track_unit_sets.size(); ++i)
+    delete garbage_.garbage_track2d_track_unit_sets[i];
+  garbage_.garbage_track2d_track_unit_sets.clear();
+
+  for (std::size_t i=0; i!=garbage_.garbage_points.size(); ++i)
+    delete garbage_.garbage_points[i];
+  garbage_.garbage_points.clear();
+
+  for (std::size_t i=0; i!=garbage_.garbage_shapes.size(); ++i)
+    delete garbage_.garbage_shapes[i];
+  garbage_.garbage_shapes.clear();
+
+  for (std::size_t i=0; i!=garbage_.garbage_accelerations.size(); ++i)
+    delete garbage_.garbage_accelerations[i];
+  garbage_.garbage_accelerations.clear();
+
+  for (std::size_t i=0; i!=garbage_.garbage_track_units.size(); ++i)
+    delete garbage_.garbage_track_units[i];
+  garbage_.garbage_track_units.clear();
+
+  for (std::size_t i=0; i!=garbage_.garbage_track2ds.size(); ++i)
+    delete garbage_.garbage_track2ds[i];
+  garbage_.garbage_track2ds.clear();
 }
 
 long long Opera2D::GetSumTick() const {
@@ -172,8 +221,28 @@ Opera2D::Iterator::Iterator(Opera2D* opera) {
   iter_track_set_ = new TrackSet2D::Iterator(opera_->track_set_);
 }
 
+Opera2D::Iterator::Iterator(const Iterator& iterator) {
+  opera_ = iterator.opera_;
+  iter_track_set_ = new TrackSet2D::Iterator(opera_->track_set_);
+  *iter_track_set_ = *(iterator.iter_track_set_); 
+}
+
+Opera2D::Iterator& Opera2D::Iterator::operator=(const Iterator& iterator) {
+  opera_ = iterator.opera_;
+  if (iter_track_set_) {
+    delete iter_track_set_;
+    iter_track_set_ = NULL;
+  }
+  iter_track_set_ = new TrackSet2D::Iterator(opera_->track_set_);
+  *iter_track_set_ = *(iterator.iter_track_set_); 
+  return *this;
+}
+
 Opera2D::Iterator::~Iterator() {
-  delete iter_track_set_;
+  if (iter_track_set_) {
+    delete iter_track_set_;
+    iter_track_set_ = NULL;
+  }
 }
 
 bool Opera2D::Iterator::Valid() const {

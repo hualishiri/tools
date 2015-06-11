@@ -9,7 +9,7 @@ RELEASE = -D NDEBUG
 GCC = $(CC) $(CCFLAG)
 OUTPUT = bin
 OBJECTS = testharness.o map.o map_projection.o tool.o logger.o \
-					line.o circle.o eclipse.o track_unit.o \
+					line.o circle.o track_unit.o \
 					track.o track_set.o radar_set.o \
 					opera_option.o opera.o radar_sector.o radar_noise_gauss.o \
 					opera_random.o opera_analysis.o
@@ -23,7 +23,6 @@ TESTS = \
 	logger_test \
 	line_test \
 	circle_test \
-	eclipse_test \
 	track_unit_test \
 	track_test \
 	track_set_test \
@@ -56,8 +55,6 @@ line.o : src/opera/line.h src/opera/line.cpp
 	$(GCC) -c src/opera/line.cpp -o $(OUTPUT)/line.o
 circle.o : src/opera/circle.h src/opera/circle.cpp
 	$(GCC) -c src/opera/circle.cpp -o $(OUTPUT)/circle.o
-eclipse.o : src/opera/eclipse.h src/opera/eclipse.cpp
-	$(GCC) -c src/opera/eclipse.cpp -o $(OUTPUT)/eclipse.o
 track_unit.o : src/opera/track_unit.h src/opera/track_unit.cpp
 	$(GCC) -c src/opera/track_unit.cpp -o $(OUTPUT)/track_unit.o
 track.o : src/opera/track.h src/opera/track.cpp
@@ -92,8 +89,6 @@ line_test.o : src/opera/line.h src/opera/line_test.cpp
 	$(GCC) -c src/opera/line_test.cpp -o $(OUTPUT)/line_test.o
 circle_test.o : src/opera/circle.h src/opera/circle_test.cpp
 	$(GCC) -c src/opera/circle_test.cpp -o $(OUTPUT)/circle_test.o
-eclipse_test.o : src/opera/eclipse.h src/opera/eclipse_test.cpp
-	$(GCC) -c src/opera/eclipse_test.cpp -o $(OUTPUT)/eclipse_test.o
 track_unit_test.o : src/opera/track_unit.h src/opera/track_unit_test.cpp
 	$(GCC) -c src/opera/track_unit_test.cpp -o $(OUTPUT)/track_unit_test.o
 track_test.o : src/opera/track.h src/opera/track_test.cpp
@@ -134,8 +129,6 @@ line_test : line_test.o
 	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/line_test.o -o $(OUTPUT)/line_test
 circle_test : circle_test.o
 	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/circle_test.o -o $(OUTPUT)/circle_test
-eclipse_test : eclipse_test.o
-	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/eclipse_test.o -o $(OUTPUT)/eclipse_test
 track_unit_test : track_unit_test.o
 	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/track_unit_test.o \
 		-o $(OUTPUT)/track_unit_test

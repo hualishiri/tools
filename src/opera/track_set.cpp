@@ -1,5 +1,7 @@
 #include "opera/track_set.h"
 
+#include <stdlib.h>
+
 namespace tools {
 
 long long TrackSet2D::GetSumTick() const{
@@ -58,6 +60,40 @@ TrackSet2D::Iterator::Iterator(TrackSet2D* track_set){
     track_set_iter_->push_back(Track2D::Iterator((*rep_track_set_)[i]));
 }
 
+TrackSet2D::Iterator::Iterator(const Iterator& iterator) {
+  track_set_ = iterator.track_set_;
+  rep_track_set_ = iterator.rep_track_set_;
+  count_invalid_track_ = iterator.count_invalid_track_;
+  track_set_iter_ = new TrackSetIterator();
+  *track_set_iter_ = *(iterator.track_set_iter_);
+  track_set_delay_ = iterator.track_set_delay_;
+  tick_current_ = iterator.tick_current_;
+  track_set_iter_ = iterator.track_set_iter_;
+}
+
+TrackSet2D::Iterator& TrackSet2D::Iterator::operator=(const Iterator& iterator) {
+  track_set_ = iterator.track_set_;
+  rep_track_set_ = iterator.rep_track_set_;
+  count_invalid_track_ = iterator.count_invalid_track_;
+  if (track_set_iter_) {
+    delete track_set_iter_;
+    track_set_iter_ = NULL;
+  }
+  track_set_iter_ = new TrackSetIterator();
+  *track_set_iter_ = *(iterator.track_set_iter_);
+  track_set_delay_ = iterator.track_set_delay_;
+  tick_current_ = iterator.tick_current_;
+  track_set_iter_ = iterator.track_set_iter_;
+  return *this;
+}
+
+TrackSet2D::Iterator::~Iterator(){
+  if (track_set_iter_ != NULL) {
+    delete track_set_iter_;
+    track_set_iter_ = NULL;
+  }
+}
+
 bool TrackSet2D::Iterator::Valid() const{
   return count_invalid_track_ > 0;
 }
@@ -94,14 +130,14 @@ void TrackSet2D::Iterator::Value(TrackSetState& track_set_state){
 void TrackSet2D::Iterator::Reset(){
   tick_current_ = 0;
   count_invalid_track_ = rep_track_set_->size();
-  delete track_set_iter_;
+  if (track_set_iter_ != NULL) {
+    delete track_set_iter_;
+    track_set_iter_ = NULL;
+  }
   track_set_iter_ = new TrackSetIterator();
   for(std::size_t i = 0; i != count_invalid_track_; ++i)
     track_set_iter_->push_back(Track2D::Iterator((*rep_track_set_)[i]));
 }
 
-TrackSet2D::Iterator::~Iterator(){
-  delete track_set_iter_;
-}
 
 } //namespace tools

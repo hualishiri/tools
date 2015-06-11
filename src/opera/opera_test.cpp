@@ -121,6 +121,7 @@ TEST(OPERA, Iterator) {
     iter.Next();
   }
   opera.Release();
+  delete opera_state;
 }
 
 TEST(OPERA, OperaState) {

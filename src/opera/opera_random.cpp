@@ -288,6 +288,7 @@ void OperaRandom::GetRandomPositionOrder(std::stack<int> &pos_order,
     array[track_unit_number-1-i] = temp;
     pos_order.push(array[track_unit_number-1-i]);
   }
+  delete [] array;
 }
 
 void OperaRandom::GetRandomAngle(std::stack<double> &angles,

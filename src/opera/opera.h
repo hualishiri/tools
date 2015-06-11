@@ -5,6 +5,7 @@
 
 #include "opera/opera_option.h"
 #include "opera/radar_set.h"
+#include "opera/radar_sector.h"
 #include "opera/track_set.h"
 #include "opera/opera_analysis.h"
 
@@ -27,6 +28,8 @@ class Opera2D {
   class Iterator {
    public:
     Iterator(Opera2D* opera);
+    Iterator(const Iterator& iterator);
+    Iterator& operator=(const Iterator& iterator);
     ~Iterator();
     bool Valid() const;
     void Next();
@@ -39,6 +42,23 @@ class Opera2D {
     Opera2D* opera_;
     TrackSet2D::Iterator *iter_track_set_;
   }; 
+
+  struct Garbage {
+    std::vector<RadarSet2D::RadarSet*> garbage_radar_set2d_radar_sets;
+    std::vector<SectorRadar::Radar*> garbage_sector_radar_radars;
+    std::vector<RadarNoise*> garbage_radar_noises;
+    std::vector<SectorRadar*> garbage_sector_radars;
+    std::vector<TrackSet2D::TrackSet*> garbage_track_set2d_track_sets;
+    std::vector<TrackSet2D::TrackSetPosition*> 
+        garbage_track_set2d_track_set_positions;
+    std::vector<TrackSet2D::TrackSetDelay*> garbage_track_set2d_track_set_delays;
+    std::vector<Track2D::TrackUnitSet*> garbage_track2d_track_unit_sets;
+    std::vector<Point2D*> garbage_points;
+    std::vector<Shape2D*> garbage_shapes;
+    std::vector<Acceleration*> garbage_accelerations;
+    std::vector<TrackUnit*> garbage_track_units;
+    std::vector<Track2D*> garbage_track2ds;
+  };
 
   Opera2D() : track_set_(0), radar_set_(0) {}
   Opera2D(TrackSet2D* track_set, RadarSet2D* radar_set)
@@ -55,6 +75,8 @@ class Opera2D {
 
   TrackSet2D* track_set_;
   RadarSet2D* radar_set_;
+
+  Garbage garbage_;
 
   friend class Iterator;
 };

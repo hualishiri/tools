@@ -5,7 +5,6 @@
 #include <set>
 #include <sstream>
 
-#include "map/map_projection.h"
 #include "util/tool.h"
 #include "util/logger.h"
 

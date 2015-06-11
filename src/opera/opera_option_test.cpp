@@ -125,13 +125,12 @@ TEST(OPERAOPTION, OPERATOR_OUT) {
 
   OperaOption opera_option_temp;
   istrstream >> opera_option_temp;
-  /*assert(opera_option == opera_option_temp);
+  assert(opera_option == opera_option_temp);
 
   strstream.clear();
   std::stringstream mystrstream;
   mystrstream << opera_option_temp;
   assert(0 == strcmp(strstream.str().c_str(), mystrstream.str().c_str()));
-  */
 }
 
 } //namespace tools
