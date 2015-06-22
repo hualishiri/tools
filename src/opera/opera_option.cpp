@@ -446,4 +446,31 @@ bool OperaOption::IsIDExistInTrackSet(long long id) const {
     return false;
 }
 
+void OperaOption::Radar::set_type(RadarType radar_type) {
+  type &= (~0x0ff);
+  type += radar_type;
+}
+
+OperaOption::RadarType OperaOption::Radar::get_type() const {
+  int result = type & 0x0ff;
+  if (0 == result)
+    return R_STATIC;
+  else
+    return R_DYNAMIC;
+}
+
+void OperaOption::Radar::set_type_trival(unsigned char type) {
+  int val = ~(0x0ff << 8);
+  this->type &= val;
+  val = type;
+  val = val << 0x08;
+  this->type |= val;
+}
+
+unsigned char OperaOption::Radar::get_type_trival() const {
+  int val = type;
+  val = (val >> 8) & 0x0ff;
+  return val;
+}
+
 } //namespace tools

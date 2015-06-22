@@ -14,8 +14,14 @@ class OperaOption {
   friend std::ostream& operator<< (std::ostream& os, const OperaOption& op);
   friend std::istream& operator>> (std::istream& in, OperaOption& op);
 
-  enum TrackUnitType { LINE=0, CIRCLE };
-  enum RadarType { R_STATIC=0, R_DYNAMIC };
+  enum TrackUnitType { 
+      LINE=0,             //直线
+      CIRCLE              //园  
+  };
+  enum RadarType { 
+      R_STATIC=0,         //静态雷达
+      R_DYNAMIC           //动态雷达
+  };
   enum ObjectType { AIRCRAFT=1, LANDCRAFT=2, UNDERCRAFT=4 };
 
     struct Error {
@@ -46,6 +52,11 @@ class OperaOption {
     struct Error error;
 
     std::vector<std::pair<double, double> > azimuth_range; 
+
+    void set_type(RadarType radar_type);
+    RadarType get_type() const;
+    void set_type_trival(unsigned char type);
+    unsigned char get_type_trival(void) const;
   };
   
   struct Line {

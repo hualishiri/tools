@@ -11,6 +11,21 @@ namespace tools {
 
 class OPERAOPTION {};
 
+TEST(OPERAOPTION, Radar) {
+  OperaOption::Radar radar;
+  radar.set_type(OperaOption::R_STATIC);
+  assert(radar.get_type() == OperaOption::R_STATIC);
+  
+  radar.set_type(OperaOption::R_DYNAMIC);
+  assert(radar.get_type() == OperaOption::R_DYNAMIC);
+
+  radar.set_type_trival(0x00);
+  assert(radar.get_type_trival() == 0x00);
+
+  radar.set_type_trival(0x01);
+  assert(radar.get_type_trival() == 0x01);
+}
+
 TEST(OPERAOPTION, PushBack) {
   OperaOption opera_option;
     for (int i = 1; i != 10; ++i) {
