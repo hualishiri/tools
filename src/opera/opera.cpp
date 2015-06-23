@@ -38,7 +38,7 @@ void Opera2D::BuildRadar(const OperaOption& opera_option) {
     radar->y = radars[i].radius_y;
     radar->azimuth_range = radars[i].azimuth_range;
 
-    radar->distance_detect = Distance2DArc(radars[i].start_x,
+    radar->distance_detect = Distance2D(radars[i].start_x,
                                            radars[i].start_y,
                                            radars[i].radius_x,
                                            radars[i].radius_y);
@@ -258,8 +258,6 @@ void Opera2D::Iterator::Value(OperaState& opera_state) {
   ChangeRadarPosition(opera_state);
   opera_->radar_set_->GetState(opera_state.track_set_state, 
                                opera_state.radar_set_state);
-  OperaAnalysis::Handle(opera_state.radar_set_state,
-                       opera_state.opera_analysis_state);
 }
 
 void Opera2D::OperaState::ConvertToWgs() {
