@@ -15,52 +15,74 @@ class OperaOption {
   friend std::istream& operator>> (std::istream& in, OperaOption& op);
 
   enum TrackUnitType { 
-      LINE=0,             //直线
-      CIRCLE              //园  
+      //直线
+      LINE=0,
+
+      //圆
+      CIRCLE                
   };
-  enum RadarType { 
-      R_STATIC=0,         //静态雷达
-      R_DYNAMIC           //动态雷达
+
+  enum RadarType {
+      //静态雷达 
+      R_STATIC=0,
+      
+      //动态雷达
+      R_DYNAMIC
   };
-  enum ObjectType { AIRCRAFT=1, LANDCRAFT=2, UNDERCRAFT=4 };
+
+  enum ObjectType { 
+      AIRCRAFT=1,         //空中目标
+      LANDCRAFT=2,        //陆地、水面目标
+      UNDERCRAFT=4        //水下目标
+  };
 
     struct Error {
-      double error_random_distance;
-      double error_random_azimuth;
-      double error_random_elevation;
-      double error_system_distance;
-      double error_system_azimuth;
-      double error_system_elevation;
+      double error_random_distance;       //随机误差:距离，单位：由使用者决定
+      double error_random_azimuth;        //随机误差：方位角，单位：度
+      double error_random_elevation;      //随机误差：俯仰角，单位：度
+      double error_system_distance;       //系统误差:距离，单位：由使用者决定
+      double error_system_azimuth;        //系统误差：方位角，单位：度
+      double error_system_elevation;      //系统误差：俯仰角，单位：度
     };
 
   struct Radar {
     long long id;
 
-    //RadarType
-    int type;
+    //雷达类型，取值范围： RadarType类型
+    //注意：该字段不能直接操作，需要通过函数操作
+    int type;                         
 
-    //The 'or' operators of ObjectType values
+    //雷达探测目标类型，取值范围:ObjectType
     int detecting_objects_types;
 
-    //The value of OperaOption::Track::ids
+    //当type的取值为：R_DYNAMIC时有效，表示雷达的轨迹
     int track_id;
 
-    double start_x; // longitude by degree
-    double start_y; // latitude by degree
+    //单位：由使用者决定
+    double start_x;
+    double start_y;
     double radius_x;
     double radius_y;
-    struct Error error;
 
+    //雷达的系统误差
+    struct Error error;   
+
+    //雷达的伞扫范围，<起始方位角，范围>
     std::vector<std::pair<double, double> > azimuth_range; 
 
+    //type字段的Getter和Ｓｅｔｔｅｒ
     void set_type(RadarType radar_type);
     RadarType get_type() const;
+
+    //无意义的操作函数
     void set_type_trival(unsigned char type);
     unsigned char get_type_trival(void) const;
   };
   
   struct Line {
     long long id;
+
+    //单位：由使用者决定
     double start_x;
     double start_y;
     double end_x;
@@ -69,29 +91,48 @@ class OperaOption {
   
   struct Circle {
     long long id;
+
+    //单位：由使用者决定
     double start_x;
     double start_y;
     double center_x;
     double center_y;
+
+    //单位：度，该变量有方向.范围：[-2.0*PI, 2.0*PI]
     double angle;
   };
   
+
   struct Track {
+    //该批量轨迹ID，无用
     long long id;
+
+    //目标的初始速度，单位：由使用者决定
     std::vector<double> start_speeds;
+
+    //目标的加速度，单位：由使用者决定
     std::vector<std::vector<float> > accelerations;
+    
+    //每条轨迹的延迟时间，单位：秒
     std::vector<double> time_delays;
+
+    //目标的批次
     short batch_count;
+
+    //同一批次的目标初始位置的随机噪声
     double level_noise_track;
+
+    //每个目标的ID
     std::vector<long long> ids;
     std::vector<Line> lines;
     std::vector<Circle> circles;
     std::vector<TrackUnitType> types;
 
-    //The 'or' operators of ObjectType values
+    //目标类型，取值：ObjectType
     std::vector<int> track_types;
   };
 
+  //内部使用的变量
   struct TrackInternal {
     long long id;
     double start_speed;
@@ -140,7 +181,10 @@ class OperaOption {
 
   static OperaOption* opera_option_;
 
+  //迭代的步长，单位：秒
   double interval_;
+
+
   std::vector<Radar> radars_;
   std::vector<Track> tracks_;
 };

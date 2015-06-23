@@ -13,14 +13,29 @@ public:
   typedef std::vector<TrackUnit*> TrackUnitSet;
   struct TrackState{
     long long id;
+
+    //目标当前的位置
     Point2D point;
+
+    //当前的机器时钟
     long long tick;
+
+    //目标的加速度，单位：由使用者决定
     float acc;
+    
+    //目标的速度，单位：由使用者决定
     float speed;
+
+    //目标距离初始位置的距离，单位：由使用者决定
     double distance;
+
+    //目标的方位角,单位：由使用者决定
     float azimuth;
+
+    //目标的类型
     int track_type;
   };
+
   class Iterator{
   public:
     explicit Iterator(Track2D* track);

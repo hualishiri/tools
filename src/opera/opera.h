@@ -22,7 +22,6 @@ class Opera2D {
 
     TrackSet2D::TrackSetState track_set_state;
     RadarSet2D::RadarSetState radar_set_state;
-    OperaAnalysis::OperaAnalysisState opera_analysis_state;
   };
 
   class Iterator {
