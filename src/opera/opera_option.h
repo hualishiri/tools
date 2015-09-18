@@ -107,6 +107,10 @@ class OperaOption {
     //该批量轨迹ID，无用
     long long id;
 
+    struct Reserve {
+        int type;
+    } reserve;
+
     //目标的初始速度，单位：由使用者决定
     std::vector<double> start_speeds;
 
@@ -171,6 +175,9 @@ class OperaOption {
   void ConvertToPlaneCoodinate(void (*)(double*, double*));
 
   bool operator==(const OperaOption& opera_option) const;
+
+  std::vector<int> get_track_types() const;
+  std::vector<Track> get_tracks_by_type(int type) const;
   
  private:
   void TrackInternalSift(TrackInternal& track_internal,

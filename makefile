@@ -12,7 +12,7 @@ OBJECTS = testharness.o map.o map_projection.o tool.o logger.o \
 					line.o circle.o track_unit.o \
 					track.o track_set.o radar_set.o \
 					opera_option.o opera.o radar_sector.o radar_noise_gauss.o \
-					opera_random.o opera_analysis.o
+					opera_random.o opera_analysis.o radar.o
 
 OUTPUTOJBECTS = $(patsubst %, $(OUTPUT)/%, $(OBJECTS))
 
@@ -32,7 +32,8 @@ TESTS = \
 	radar_noise_gauss_test \
 	opera_random_test \
 	opera_analysis_test \
-	radar_sector_test
+	radar_sector_test \
+	radar_test
 
 default : all
 	
@@ -75,6 +76,8 @@ opera_random.o : src/opera/opera_random.h src/opera/opera_random.cpp
 	$(GCC) -c src/opera/opera_random.cpp -o $(OUTPUT)/opera_random.o
 opera_analysis.o : src/opera/opera_analysis.h src/opera/opera_analysis.cpp
 	$(GCC) -c src/opera/opera_analysis.cpp -o $(OUTPUT)/opera_analysis.o
+radar.o : src/opera/radar.h src/opera/radar.cpp
+	$(GCC) -c src/opera/radar.cpp -o $(OUTPUT)/radar.o
 
 
 map_test.o : map.o src/map/map_test.cpp
@@ -113,6 +116,8 @@ opera_analysis_test.o : src/opera/opera_analysis.h src/opera/opera_analysis.cpp 
 radar_sector_test.o : src/opera/radar_sector.h src/opera/radar_sector.cpp \
 	src/opera/radar_sector_test.cpp
 	$(GCC) -c src/opera/radar_sector_test.cpp -o $(OUTPUT)/radar_sector_test.o
+radar_test.o : src/opera/radar.h src/opera/radar.cpp src/opera/radar_test.cpp
+	$(GCC) -c src/opera/radar_test.cpp -o $(OUTPUT)/radar_test.o
 	
 map_test : testharness.o map.o map_test.o
 	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/map_test.o -o $(OUTPUT)/map_test
@@ -151,6 +156,8 @@ opera_analysis_test : opera_analysis_test.o
 		$(OUTPUT)/opera_analysis_test
 radar_sector_test : radar_sector_test.o
 	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/radar_sector_test.o -o $(OUTPUT)/radar_sector_test
+radar_test : radar_test.o
+	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/radar_test.o -o $(OUTPUT)/radar_test
 	
 clean :
 	rm -rf $(OUTPUTOJBECTS)

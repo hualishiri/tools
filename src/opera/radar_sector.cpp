@@ -179,6 +179,15 @@ void SectorRadar::CalculateRadarState(RadarState& radar_state) {
         (radar_state.targets[i].y + 
         radar_state.targets_radar[i].y) / 2.0));
 
+    //TODO: something
+    radar_state.targets_error[i].error_distance = 
+        radar_state.targets_error[i].error_overall_distance;
+    radar_state.targets_error[i].error_velocity =
+        radar_state.targets_real_velocity[i] - 
+        radar_state.targets_detected_velocity[i];
+    radar_state.targets_error[i].error_direction = 
+        (radar_state.targets_error[i].error_overall_elevation +
+        radar_state.targets_error[i].error_overall_azimuth) / 2.0;
   }
 }
 

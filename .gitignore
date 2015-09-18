@@ -30,3 +30,7 @@
 
 *.swp
 *test
+*.gdb
+*.in
+*.out
+*.ans

@@ -2,6 +2,7 @@
 
 #include <assert.h>
 
+#include <algorithm>
 #include <set>
 #include <sstream>
 
@@ -144,8 +145,8 @@ std::vector<OperaOption::TrackInternal> OperaOption::tracks() const {
 void OperaOption::TrackInternalSift(TrackInternal& track_internal,
                                     double level_noise,
                                     int seed) const{
-  double x_sift = GetRandNumber(seed + 1) * level_noise;
-  double y_sift = GetRandNumber(seed + 2) * level_noise;
+  double x_sift = GetRandNumber(seed + 1) * level_noise / 200.0;
+  double y_sift = GetRandNumber(seed + 2) * level_noise / 200.0;
   for (std::size_t i=0; i!=track_internal.lines.size(); ++i) {
     track_internal.lines[i].start_x += x_sift;
     track_internal.lines[i].start_y += y_sift;
@@ -186,6 +187,7 @@ std::ostream& operator<< (std::ostream& os, const OperaOption& op) {
   os << op.tracks_.size() << " ";
   for (std::size_t i=0; i!=op.tracks_.size(); ++i) {
     os << op.tracks_[i].id << " ";
+    os << op.tracks_[i].reserve.type << " ";
     os << op.tracks_[i].batch_count << " ";
     os << op.tracks_[i].level_noise_track << " ";
 
@@ -278,6 +280,7 @@ std::istream& operator>> (std::istream& in, OperaOption& op) {
     track.track_types.clear();
     
     in >> track.id;
+    in >> track.reserve.type;
     in >> track.batch_count;
     in >> track.level_noise_track;
 
@@ -471,6 +474,24 @@ unsigned char OperaOption::Radar::get_type_trival() const {
   int val = type;
   val = (val >> 8) & 0x0ff;
   return val;
+}
+
+std::vector<int> OperaOption::get_track_types() const {
+    std::set<int> types;   
+    for (size_t i=0; i!=tracks_.size(); ++i)
+      types.insert(tracks_[i].reserve.type);
+    std::vector<int> result(types.size());
+    std::copy(types.begin(), types.end(), result.begin());
+    return result;
+}
+
+std::vector<OperaOption::Track> OperaOption::get_tracks_by_type(int type) const {
+    std::vector<Track> tracks;
+    for (size_t i=0; i!=tracks_.size(); ++i) {
+      if (type == tracks_[i].reserve.type)
+        tracks.push_back(tracks_[i]);
+    }
+    return tracks;
 }
 
 } //namespace tools

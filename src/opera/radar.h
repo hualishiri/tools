@@ -3,6 +3,8 @@
 
 #include "opera/sensor.h"
 
+#include <iostream>
+
 namespace tools {
 
 class Radar2D : public Sensor {
@@ -26,10 +28,24 @@ class Radar2D : public Sensor {
     //俯仰角的系统误差，单位：弧度
     double error_system_elevation;
 
-    //同上
+    //距离的系统误差，单位：由使用者决定
     double error_overall_distance;
+
+    //方位角的系统误差，单位：弧度
     double error_overall_azimuth;
+
+    //俯仰角的系统误差，单位：弧度
     double error_overall_elevation;
+
+    double error_distance;
+    double error_velocity;
+    double error_direction;
+
+    bool operator==(const RadarError& radar_error) const;
+
+    friend std::ostream& operator<<(std::ostream& out,
+                                    const RadarError& radar_error);
+    friend std::istream& operator>>(std::istream& in, RadarError& radar_error);
   };
 
   struct RadarState {
@@ -79,6 +95,12 @@ class Radar2D : public Sensor {
 
     //本次雷达探测到的目标所有误差
     std::vector<RadarError> targets_error;
+
+    bool operator==(const RadarState& lhs) const;
+
+    friend std::ostream& operator<<(std::ostream& out,
+                                    const RadarState& radar_state);
+    friend std::istream& operator>>(std::istream& in, RadarState& radar_state);
   };
 
   virtual void GetState(const TrackSet2D::TrackSetState& track_set_state,
