@@ -11,6 +11,12 @@ class RadarSet2D {
  public:
   struct RadarSetState {
     std::vector<Radar2D::RadarState> radar_set_state;
+
+    bool operator==(const RadarSetState& radar_set_state) const;
+    friend std::ostream& operator<<(std::ostream& out,
+        const RadarSetState& radar_set_state);
+    friend std::istream& operator>>(std::istream& in,
+        RadarSetState& radar_set_state);
   };
   typedef std::vector<Radar2D*> RadarSet;
 

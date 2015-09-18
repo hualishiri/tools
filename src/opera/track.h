@@ -1,6 +1,7 @@
 #ifndef TOOLS_OPERA_TRACK_H_
 #define TOOLS_OPERA_TRACK_H_
 
+#include <iostream>
 #include <vector>
 
 #include "opera/shape.h"
@@ -34,6 +35,12 @@ public:
 
     //目标的类型
     int track_type;
+
+    bool operator==(const TrackState& rhs) const;
+    friend std::ostream& operator<<(std::ostream& out,
+        const TrackState& track_state);
+    friend std::istream& operator>>(std::istream& in,
+        TrackState& track_state);
   };
 
   class Iterator{
@@ -96,6 +103,11 @@ private:
 
   friend class Iterator;
 };
+
+std::ostream& operator<<(std::ostream& out,
+    const Track2D::TrackState& track_state);
+std::istream& operator>>(std::istream& in,
+    Track2D::TrackState& track_state);
 
 } //namespace tools
 

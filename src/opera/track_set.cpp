@@ -139,5 +139,37 @@ void TrackSet2D::Iterator::Reset(){
     track_set_iter_->push_back(Track2D::Iterator((*rep_track_set_)[i]));
 }
 
+bool TrackSet2D::TrackSetState::operator==(
+    const TrackSetState& track_set_state) const {
+  if (this->track_set_state.size() != track_set_state.track_set_state.size())
+    return false;
+  for (std::size_t i=0; i!=this->track_set_state.size(); ++i)
+    if (!(this->track_set_state[i] == track_set_state.track_set_state[i]))
+      return false;
+  return true;
+}
+
+std::ostream& operator<<(std::ostream& out,
+    const TrackSet2D::TrackSetState& track_set_state) {
+  out << track_set_state.track_set_state.size() << " ";
+  for (std::size_t i=0; i!=track_set_state.track_set_state.size(); ++i)
+    out << track_set_state.track_set_state[i] << " ";
+  return out;
+}
+
+std::istream& operator>>(std::istream& in,
+    TrackSet2D::TrackSetState& track_set_state) {
+  std::size_t length;
+  Track2D::TrackState track_state;
+  track_set_state.track_set_state.clear();
+  
+  in >> length;
+  for (std::size_t i=0; i!=length; ++i) {
+    in >> track_state;
+    track_set_state.track_set_state.push_back(track_state);
+  }
+  
+  return in;
+}
 
 } //namespace tools

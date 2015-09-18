@@ -23,6 +23,12 @@ class TrackSet2D {
 
   struct TrackSetState {
     std::vector<Track2D::TrackState> track_set_state;
+    
+    bool operator==(const TrackSetState& track_set_state) const;
+    friend std::ostream& operator<<(std::ostream& out,
+        const TrackSetState& track_set_state);
+    friend std::istream& operator>>(std::istream& in,
+        TrackSetState& track_set_state);
   };
 
   class Iterator {
@@ -76,6 +82,11 @@ class TrackSet2D {
 
   friend class Iterator;
 };
+
+std::ostream& operator<<(std::ostream& out,
+    const TrackSet2D::TrackSetState& track_set_state);
+std::istream& operator>>(std::istream& in,
+    TrackSet2D::TrackSetState& track_set_state);
 
 } //namespace tools
 

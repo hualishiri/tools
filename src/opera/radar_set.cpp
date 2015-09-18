@@ -14,4 +14,10 @@ void RadarSet2D::GetState(const TrackSet2D::TrackSetState& track_set_state,
   }
 }
 
+bool RadarSet2D::RadarSetState::operator==(
+    const RadarSetState& radar_set_state) const {
+  if (this->radar_set_state.size() != radar_set_state.radar_set_state.size())
+    return false;
+}
+
 } //namespace tools

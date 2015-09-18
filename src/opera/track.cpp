@@ -2,6 +2,8 @@
 
 #include <stddef.h>
 
+#include <iomanip>
+
 #include "util/tool.h"
 
 namespace tools {
@@ -146,6 +148,53 @@ float Track2D::Iterator::Azimuth(float x, float y) const {
   else
     angle = 5.0 * T_PI / 2.0 - angle;
   return angle;
+}
+
+
+bool Track2D::TrackState::operator==(const TrackState& rhs) const {
+  if (this->id == rhs.id &&
+      DoubleEqual(this->point.x, rhs.point.x) &&
+      DoubleEqual(this->point.y, rhs.point.y) &&
+      this->tick == rhs.tick &&
+      DoubleEqual(static_cast<double>(this->acc),
+          static_cast<double>(rhs.acc)) &&
+      DoubleEqual(static_cast<double>(this->speed),
+          static_cast<double>(rhs.speed)) &&
+      DoubleEqual(this->distance, rhs.distance) &&
+      DoubleEqual(static_cast<double>(this->azimuth),
+          static_cast<double>(rhs.azimuth)) &&
+      this->track_type == rhs.track_type)
+    return true;
+  return false;
+}
+
+std::ostream& operator<<(std::ostream& out,
+    const Track2D::TrackState& track_state) {
+  out << std::fixed << std::setprecision(20);
+  out << track_state.id << " ";
+  out << track_state.point.x << " ";
+  out << track_state.point.y << " ";
+  out << track_state.tick << " ";
+  out << track_state.acc << " ";
+  out << track_state.speed << " ";
+  out << track_state.distance << " ";
+  out << track_state.azimuth << " ";
+  out << track_state.track_type << " ";
+  return out;
+}
+
+std::istream& operator>>(std::istream& in,
+    Track2D::TrackState& track_state) {
+  in >> track_state.id;
+  in >> track_state.point.x;
+  in >> track_state.point.y;
+  in >> track_state.tick;
+  in >> track_state.acc;
+  in >> track_state.speed;
+  in >> track_state.distance;
+  in >> track_state.azimuth;
+  in >> track_state.track_type;
+  return in;
 }
 
 } //namespace tools

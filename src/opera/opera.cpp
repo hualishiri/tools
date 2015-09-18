@@ -333,47 +333,8 @@ void Opera2D::Iterator::ChangeRadarPosition(OperaState& opera_state) {
 
 std::ostream& operator<<(std::ostream& out,
                          const Opera2D::OperaState& opera_state) {
-  out << opera_state.track_set_state.track_set_state.size() << " ";
-  std::size_t size_track = opera_state.track_set_state.track_set_state.size();
-  for (std::size_t i=0; i!=size_track; ++i) {
-    out << opera_state.track_set_state.track_set_state[i].id << " "
-        << opera_state.track_set_state.track_set_state[i].point.x << " "
-        << opera_state.track_set_state.track_set_state[i].point.y << " "
-        << opera_state.track_set_state.track_set_state[i].tick << " "
-        << opera_state.track_set_state.track_set_state[i].acc << " "
-        << opera_state.track_set_state.track_set_state[i].speed << " "
-        << opera_state.track_set_state.track_set_state[i].distance << " "
-        << opera_state.track_set_state.track_set_state[i].azimuth << " ";
-  }
-
-  out << opera_state.radar_set_state.radar_set_state.size() << " ";
-  std::size_t size_radar = opera_state.radar_set_state.radar_set_state.size();
-  for (std::size_t i=0; i!=size_radar; ++i) {
-    out << opera_state.radar_set_state.radar_set_state[i].id << " "
-        << opera_state.radar_set_state.radar_set_state[i].type<< " "
-        << opera_state.radar_set_state.radar_set_state[i].point.x << " "
-        << opera_state.radar_set_state.radar_set_state[i].point.y << " ";
-
-    out << opera_state.radar_set_state.radar_set_state[i].ids.size() << " ";
-    std::size_t size_object 
-        = opera_state.radar_set_state.radar_set_state[i].ids.size();
-    for (std::size_t j=0; j!=size_object; ++j) {
-      out << opera_state.radar_set_state.radar_set_state[i].targets[j].x << " "
-          << opera_state.radar_set_state.radar_set_state[i].targets[j].y << " "
-          << opera_state.radar_set_state.radar_set_state[i].targets_radar[j].x
-          << " "
-          << opera_state.radar_set_state.radar_set_state[i].targets_radar[j].y
-          << " "
-          << opera_state.radar_set_state.radar_set_state[i].targets_filter[j].x
-          << " "
-          << opera_state.radar_set_state.radar_set_state[i].targets_filter[j].y
-          << " "
-          << opera_state.radar_set_state.radar_set_state[i]
-              .targets_angle_azimuth[j]
-          << " "
-          << opera_state.radar_set_state.radar_set_state[i].ids[j] << " ";
-    }
-  }
+  out << opera_state.track_set_state << " ";
+  out << opera_state.radar_set_state << " ";
   return out;
 }
 
