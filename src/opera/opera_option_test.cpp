@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "util/testharness.h"
+#include "util/tool.h"
 
 namespace tools {
 
@@ -146,6 +147,98 @@ TEST(OPERAOPTION, OPERATOR_OUT) {
   std::stringstream mystrstream;
   mystrstream << opera_option_temp;
   assert(0 == strcmp(strstream.str().c_str(), mystrstream.str().c_str()));
+}
+
+TEST(OPERAOPTION, Reserve) {
+  OperaOption::Reserve reserve;
+  reserve.set_int(1, 3);
+  ASSERT_TRUE(3 == reserve.get_int(1)); 
+
+  reserve.set_int(1, 4);
+  ASSERT_TRUE(4 == reserve.get_int(1)); 
+
+  reserve.set_double(2, 3.5);
+  ASSERT_TRUE(DoubleEqual(3.5, reserve.get_double(2)));
+
+  reserve.set_double(2, 3.7);
+  ASSERT_TRUE(DoubleEqual(3.7, reserve.get_double(2)));
+
+  reserve.set_string(3, "caobingzhang");
+  ASSERT_TRUE("caobingzhang" == reserve.get_string(3));
+
+  reserve.set_string(3, "zhanghuali");
+  ASSERT_TRUE("zhanghuali" == reserve.get_string(3));
+
+  std::stringstream in, out;
+  out << reserve;
+  in.str(out.str());
+  OperaOption::Reserve temp;
+  in >> temp;
+  ASSERT_TRUE(temp == reserve);
+}
+
+TEST(OPERAOPTION, Error) {
+  OperaOption::Error error = {
+    43.34124312,
+    12.431512,
+    923.0431243,
+    12.7348794,
+    92.4317879,
+    431.431243
+  };
+
+  OperaOption::Error temp;
+  std::stringstream in, out;
+  out << error;
+  in.str(out.str());
+  in >> temp;
+  ASSERT_TRUE(temp == error);
+}
+
+TEST(OPERAOPTION, RadarOperator) {
+  OperaOption::Radar radar;
+  radar.id = 15;
+  radar.type = 17;
+  radar.detecting_objects_types = 2;
+  radar.track_id = 17;
+  radar.start_x = 14.031;
+  radar.start_y = 13.031;
+  radar.radius_x = 98.4312;
+  radar.radius_y = 88.4312;
+
+  OperaOption::Error error = {
+    43.34124312,
+    12.431512,
+    923.0431243,
+    12.7348794,
+    92.4317879,
+    431.431243
+  };
+
+  radar.error = error;
+
+  radar.azimuth_range.push_back(std::make_pair(14.43143, 89.4312));
+  radar.azimuth_range.push_back(std::make_pair(14.43143, 89.4312));
+  radar.azimuth_range.push_back(std::make_pair(14.43143, 89.4312));
+
+  OperaOption::Reserve reserve;
+  reserve.set_int(1, 34);
+  reserve.set_int(2, 38);
+  reserve.set_int(3, 38);
+  reserve.set_double(4, 89.4312);
+  reserve.set_double(5, 819.4312);
+  reserve.set_double(6, 43189.4312);
+  reserve.set_string(7, "woshishenme");
+  reserve.set_string(8, "nishishenmea");
+
+  radar.data = reserve;
+
+  OperaOption::Radar temp;
+  std::stringstream in, out;
+  out << radar;
+  in.str(out.str());
+  in >> temp;
+  ASSERT_TRUE(temp == radar);
 }
 
 } //namespace tools

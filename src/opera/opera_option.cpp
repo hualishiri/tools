@@ -163,6 +163,7 @@ void OperaOption::TrackInternalSift(TrackInternal& track_internal,
 }
 
 std::ostream& operator<< (std::ostream& os, const OperaOption& op) {
+  os << std::fixed << std::setprecision(20);
   os << op.radars_.size() << std::endl;
   for (std::size_t i=0; i!=op.radars_.size(); ++i) {
     os << op.radars_[i].id << " "
@@ -188,11 +189,11 @@ std::ostream& operator<< (std::ostream& os, const OperaOption& op) {
   os << op.tracks_.size() << " ";
   for (std::size_t i=0; i!=op.tracks_.size(); ++i) {
     os << op.tracks_[i].id << " ";
-    os << op.tracks_[i].reserve.data[0] << " ";
-    os << op.tracks_[i].reserve.data[1] << " ";
-    os << op.tracks_[i].reserve.data[2] << " ";
-    os << op.tracks_[i].reserve.data[3] << " ";
-    os << op.tracks_[i].reserve.data[4] << " ";
+//    os << op.tracks_[i].reserve.data[0] << " ";
+//    os << op.tracks_[i].reserve.data[1] << " ";
+//    os << op.tracks_[i].reserve.data[2] << " ";
+//    os << op.tracks_[i].reserve.data[3] << " ";
+//    os << op.tracks_[i].reserve.data[4] << " ";
     os << op.tracks_[i].reserve.type << " ";
     os << op.tracks_[i].batch_count << " ";
     os << op.tracks_[i].level_noise_track << " ";
@@ -286,11 +287,11 @@ std::istream& operator>> (std::istream& in, OperaOption& op) {
     track.track_types.clear();
     
     in >> track.id;
-    in >> track.reserve.data[0];
-    in >> track.reserve.data[1];
-    in >> track.reserve.data[2];
-    in >> track.reserve.data[3];
-    in >> track.reserve.data[4];
+//    in >> track.reserve.data[0];
+//    in >> track.reserve.data[1];
+//    in >> track.reserve.data[2];
+//    in >> track.reserve.data[3];
+//    in >> track.reserve.data[4];
     in >> track.reserve.type;
     in >> track.batch_count;
     in >> track.level_noise_track;
@@ -505,13 +506,38 @@ std::vector<OperaOption::Track> OperaOption::get_tracks_by_type(int type) const 
     return tracks;
 }
 
-int OperaOption::get_reserve_of_track(long long id, int index) const {
-  if (index < 0 || index > 4)
-    return 0;
-  for (std::size_t i=0; i!=tracks_.size(); ++i)
-    if (id == tracks_[i].id)
-      return tracks_[i].reserve.data[index];
-  return 0;
+bool OperaOption::Reserve::operator==(const Reserve& reserve) const {
+  if (this->data.size() != reserve.data.size())
+    return false;
+  for (std::size_t i=0; i!=reserve.data.size(); ++i)
+    if (!DoubleEqual(this->data[i], reserve.data[i]))
+      return false;
+  return true;
+}
+
+bool OperaOption::Reserve::operator!=(const Reserve& reserve) const {
+  return !(reserve == (*this));
+}
+
+std::istream& operator>>(std::istream& in, OperaOption::Reserve& reserve) {
+  reserve.data.clear();
+  std::size_t length;
+  double temp;
+
+  in >> length;
+  for (std::size_t i=0; i!=length; ++i) {
+    in >> temp;
+    reserve.data.push_back(temp); 
+  }
+  return in;
+}
+
+std::ostream& operator<< (std::ostream& out, const OperaOption::Reserve& reserve) {
+  out << std::fixed << std::setprecision(20);
+  out << reserve.data.size() << " ";
+  for (std::size_t i=0; i!=reserve.data.size(); ++i)
+    out << reserve.data[i] << " ";
+  return out;
 }
 
 bool OperaOption::Error::operator==(const Error& error) const {
@@ -536,15 +562,18 @@ std::istream& operator>> (std::istream& in, OperaOption::Error& error) {
   in >> error.error_system_distance;
   in >> error.error_system_azimuth;
   in >> error.error_system_elevation;
+  return in;
 }
 
 std::ostream& operator<< (std::ostream& out, const OperaOption::Error& error) {
+  out << std::fixed << std::setprecision(20);
   out << error.error_random_distance << " ";
   out << error.error_random_azimuth<< " ";
   out << error.error_random_elevation<< " ";
   out << error.error_system_distance << " ";
   out << error.error_system_azimuth << " ";
   out << error.error_system_elevation << " ";
+  return out;
 }
 
 
@@ -553,34 +582,23 @@ bool OperaOption::Radar::operator==(const OperaOption::Radar& radar) const {
       this->type != radar.type ||
       this->detecting_objects_types != radar.detecting_objects_types ||
       this->track_id != radar.track_id ||
-      DoubleEqual(this->start_x, radar.start_x) ||
-      DoubleEqual(this->start_y, radar.start_y) ||
-      DoubleEqual(this->radius_x, radar.radius_x) ||
-      DoubleEqual(this->radius_y, radar.radius_y) ||
+      !DoubleEqual(this->start_x, radar.start_x) ||
+      !DoubleEqual(this->start_y, radar.start_y) ||
+      !DoubleEqual(this->radius_x, radar.radius_x) ||
+      !DoubleEqual(this->radius_y, radar.radius_y) ||
       this->error != radar.error ||
       this->azimuth_range.size() != radar.azimuth_range.size() ||
-      this->reserve.ranges.size() != radar.reserve.ranges.size()
+      this->data != radar.data
       )
     return false;
-
-  for (std::size_t i=0; i!=this->azimuth_range.size(); ++i)
+  std::size_t length = radar.azimuth_range.size();
+  for (std::size_t i=0; i!=length; ++i) {
     if (!DoubleEqual(this->azimuth_range[i].first,
           radar.azimuth_range[i].first) ||
         !DoubleEqual(this->azimuth_range[i].second,
           radar.azimuth_range[i].second))
       return false;
-
-  for (std::size_t i=0; i!=this->reserve.ranges.size(); ++i)
-    if (!DoubleEqual(this->reserve.ranges[i].first,
-          reserve.ranges[i].first) ||
-        !DoubleEqual(this->reserve.ranges[i].second,
-          reserve.ranges[i].second))
-      return false;
-
-  for (std::size_t i=0; i!=kNameLength; ++i)
-    if (this->reserve.radar_name[i] != radar.reserve.radar_name[i])
-      return false;
-
+  }
   return true;
 }
 
@@ -603,18 +621,12 @@ std::ostream& operator<< (std::ostream& out, const OperaOption::Radar& radar) {
   for (std::size_t i=0; i!=radar.azimuth_range.size(); ++i)
     out << radar.azimuth_range[i].first << " "
         << radar.azimuth_range[i].second << " ";
-  out << radar.reserve.ranges.size() << " ";
-  for (std::size_t i=0; i!=radar.reserve.ranges.size(); ++i)
-    out << radar.reserve.ranges[i].first << " "
-        << radar.reserve.ranges[i].second << " ";
-  out << kNameLength << " ";
-  for (int i=0; i!=kNameLength; ++i)
-    out << static_cast<int>(radar.reserve.radar_name[i]) << " ";
+  out << radar.data << " ";
+  return out;
 }
 
 std::istream& operator>> (std::istream& in, OperaOption::Radar& radar) {
   radar.azimuth_range.clear();
-  radar.reserve.ranges.clear();
 
   in >> radar.id;
   in >> radar.type;
@@ -635,19 +647,8 @@ std::istream& operator>> (std::istream& in, OperaOption::Radar& radar) {
     in >> pair_double.first >> pair_double.second;
     radar.azimuth_range.push_back(pair_double);
   }
-
-  in >> length;
-  for (std::size_t i=0; i!=length; ++i) {
-    in >> pair_int.first >> pair_int.second;
-    radar.reserve.ranges.push_back(pair_int);
-  }
-
-  in >> length;
-  int temp;
-  for (std::size_t i=0; i!=length; ++i) {
-    in >> temp;
-    radar.reserve.radar_name[i] = static_cast<char>(temp);
-  }
+  in >> radar.data;
+  return in;
 }
 
 bool OperaOption::Line::operator==(const Line& line) const {
@@ -670,14 +671,17 @@ std::istream& operator>> (std::istream& in, OperaOption::Line& line) {
   in >> line.start_y;
   in >> line.end_x;
   in >> line.end_y;
+  return in;
 }
 
 std::ostream& operator<< (std::ostream& out, const OperaOption::Line& line) {
+  out << std::fixed << std::setprecision(20);
   out << line.id << " ";
   out << line.start_x << " ";
   out << line.start_y << " ";
   out << line.end_x << " ";
   out << line.end_y << " ";
+  return out;
 }
 
 bool OperaOption::Circle::operator==(const Circle& circle) const {
@@ -702,15 +706,111 @@ std::istream& operator>> (std::istream& in, OperaOption::Circle& circle) {
   in >> circle.center_x;
   in >> circle.center_y;
   in >> circle.angle;
+  return in;
 }
 
 std::ostream& operator<< (std::ostream& out, const OperaOption::Circle& circle) {
+  out << std::fixed << std::setprecision(20);
   out << circle.id << " ";
   out << circle.start_x << " ";
   out << circle.start_y << " ";
   out << circle.center_x << " ";
   out << circle.center_y << " ";
   out << circle.angle << " ";
+  return out;
+}
+
+bool OperaOption::Track::operator==(const Track& track) const {
+  if (this->id != track.id 
+)
+    return false;
+  return true;
+}
+
+bool OperaOption::Track::operator!=(const Track& track) const {
+  return !((*this) == track);
+}
+
+int OperaOption::Reserve::get_int(int id) const {
+  return static_cast<int>(get_double(id));
+}
+
+void OperaOption::Reserve::set_int(int id, int val) {
+  set_double(id, static_cast<double>(val));
+}
+
+double OperaOption::Reserve::get_double(int id) const {
+  std::size_t i = 0;
+  while (i < data.size()) {
+    if (static_cast<int>(data[i]) == id && static_cast<int>(data[i+1]) == kDouble) {
+      return data[i+2];
+    } else if ( static_cast<int>(data[i+1]) == kDouble ) {
+      i += 3;
+    } else if ( static_cast<int>(data[i+1]) == kString ) {
+      i += (3+static_cast<int>(data[i+2]));
+    }
+  }
+  return 0.0;
+}
+
+void OperaOption::Reserve::set_double(int id, double val) {
+  std::size_t i = 0;
+  while (i < data.size()) {
+    if (static_cast<int>(data[i]) == id && static_cast<int>(data[i+1]) == kDouble) {
+      data[i+2] = val;
+      return;
+    } else if ( static_cast<int>(data[i+1]) == kDouble ) {
+      i += 3;
+    } else if ( static_cast<int>(data[i+1]) == kString ) {
+      i += (3+static_cast<int>(data[i+2]));
+    }
+  }
+  data.push_back(static_cast<double>(id));   
+  data.push_back(static_cast<double>(kDouble));   
+  data.push_back(val);
+}
+
+std::string OperaOption::Reserve::get_string(int id) const {
+  std::size_t i = 0;
+  while (i < data.size()) {
+    if (static_cast<int>(data[i]) == id && static_cast<int>(data[i+1]) == kString) {
+      int len = static_cast<int>(data[i+2]);
+      char* tmp = new char[len+1];
+      for (int j=0; j!=len; ++j)
+        tmp[j] = static_cast<char>(data[i+3+j]);
+      tmp[len] = 0;
+      std::string str = tmp;
+      delete tmp;
+      return str;
+    } else if ( static_cast<int>(data[i+1]) == kDouble ) {
+      i += 3;
+    } else if ( static_cast<int>(data[i+1]) == kString ) {
+      i += (3+static_cast<int>(data[i+2]));
+    }
+  }
+  return "";
+}
+
+void OperaOption::Reserve::set_string(int id, const std::string& val) {
+  std::size_t i = 0;
+  while (i < data.size()) {
+    if (static_cast<int>(data[i]) == id && static_cast<int>(data[i+1]) == kString) {
+      int len = static_cast<int>(data[i+2]);
+      std::vector<double>::iterator iter = data.begin();
+      iter += i; 
+      data.erase(iter, iter+len+3);
+      break;
+    } else if ( static_cast<int>(data[i+1]) == kDouble ) {
+      i += 3;
+    } else if ( static_cast<int>(data[i+1]) == kString ) {
+      i += (3+static_cast<int>(data[i+2]));
+    }
+  }
+  data.push_back(static_cast<double>(id));   
+  data.push_back(static_cast<double>(kString));   
+  data.push_back(static_cast<double>(val.length()));
+  for (std::size_t i=0; i!=val.length(); ++i)
+    data.push_back(static_cast<double>(val[i]));
 }
 
 std::istream& operator>> (std::istream& in, OperaOption::Track& track);

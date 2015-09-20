@@ -7,19 +7,33 @@
 #include <string>
 #include <iostream>
 
-namespace {
-
-//雷达的名字长度
-const int kNameLength = 512;
-
-};
-
 namespace tools {
 
 class OperaOption {
  public:
   friend std::istream& operator>> (std::istream& in, OperaOption& op);
   friend std::ostream& operator<< (std::ostream& os, const OperaOption& op);
+
+  struct Reserve {
+    int get_int(int id) const;
+    void set_int(int id, int val);
+    double get_double(int id) const;
+    void set_double(int id, double val);
+    std::string get_string(int id) const;
+    void set_string(int id, const std::string& val);
+
+    bool operator==(const Reserve& reserve) const;
+    bool operator!=(const Reserve& reserve) const;
+
+    friend std::istream& operator>>(std::istream& in, OperaOption::Reserve& reserve); 
+    friend std::ostream& operator<< (std::ostream& os, const OperaOption::Reserve& reserve);
+  private:
+    enum {
+      kDouble = 0,
+      kString
+    };
+    std::vector<double> data;
+  };
 
   enum TrackUnitType { 
       //直线
@@ -82,10 +96,7 @@ class OperaOption {
     //雷达的伞扫范围，<起始方位角，范围>
     std::vector<std::pair<double, double> > azimuth_range; 
 
-    struct Reserve {
-      std::vector<std::pair<int, int> > ranges;
-      char radar_name[kNameLength];
-    } reserve;
+    Reserve data;
 
     //type字段的Getter和Ｓｅｔｔｅｒ
     void set_type(RadarType radar_type);
@@ -133,17 +144,14 @@ class OperaOption {
     friend std::istream& operator>> (std::istream& in, Circle& circle);
     friend std::ostream& operator<< (std::ostream& out, const Circle& circle);
   };
-  
 
   struct Track {
     //该批量轨迹ID，无用
     long long id;
 
-    struct Reserve {
-        int data[5]; //标示轨迹所绑定的目标实际类型,飞机，火箭
-        int type; //标示多个轨迹是相同的
-        char track_name[kNameLength];
-    } reserve;
+    Reserve data;
+
+    struct ReserveTrival { int type; } reserve;
 
     //目标的初始速度，单位：由使用者决定
     std::vector<double> start_speeds;
@@ -239,6 +247,9 @@ class OperaOption {
 
 std::istream& operator>> (std::istream& in, OperaOption& op);
 std::ostream& operator<< (std::ostream& os, const OperaOption& op);
+
+std::istream& operator>>(std::istream& in, OperaOption::Reserve& reserve); 
+std::ostream& operator<< (std::ostream& os, const OperaOption::Reserve& reserve);
 
 std::istream& operator>> (std::istream& in, OperaOption::Error& error);
 std::ostream& operator<< (std::ostream& out, const OperaOption::Error& error);
