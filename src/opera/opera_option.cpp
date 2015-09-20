@@ -187,6 +187,11 @@ std::ostream& operator<< (std::ostream& os, const OperaOption& op) {
   os << op.tracks_.size() << " ";
   for (std::size_t i=0; i!=op.tracks_.size(); ++i) {
     os << op.tracks_[i].id << " ";
+    os << op.tracks_[i].reserve.data[0] << " ";
+    os << op.tracks_[i].reserve.data[1] << " ";
+    os << op.tracks_[i].reserve.data[2] << " ";
+    os << op.tracks_[i].reserve.data[3] << " ";
+    os << op.tracks_[i].reserve.data[4] << " ";
     os << op.tracks_[i].reserve.type << " ";
     os << op.tracks_[i].batch_count << " ";
     os << op.tracks_[i].level_noise_track << " ";
@@ -280,6 +285,11 @@ std::istream& operator>> (std::istream& in, OperaOption& op) {
     track.track_types.clear();
     
     in >> track.id;
+    in >> track.reserve.data[0];
+    in >> track.reserve.data[1];
+    in >> track.reserve.data[2];
+    in >> track.reserve.data[3];
+    in >> track.reserve.data[4];
     in >> track.reserve.type;
     in >> track.batch_count;
     in >> track.level_noise_track;
@@ -492,6 +502,15 @@ std::vector<OperaOption::Track> OperaOption::get_tracks_by_type(int type) const 
         tracks.push_back(tracks_[i]);
     }
     return tracks;
+}
+
+int OperaOption::get_reserve_of_track(long long id, int index) const {
+  if (index < 0 || index > 4)
+    return 0;
+  for (std::size_t i=0; i!=tracks_.size(); ++i)
+    if (id == tracks_[i].id)
+      return tracks_[i].reserve.data[index];
+  return 0;
 }
 
 } //namespace tools

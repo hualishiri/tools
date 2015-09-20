@@ -3,6 +3,7 @@
 
 #include <iostream>
 
+#include "opera/algo_fusion.h"
 #include "opera/opera_option.h"
 #include "opera/radar_set.h"
 #include "opera/radar_sector.h"
@@ -22,6 +23,8 @@ class Opera2D {
 
     TrackSet2D::TrackSetState track_set_state;
     RadarSet2D::RadarSetState radar_set_state;
+
+    std::vector<AlgoFusion::FusionTarget> fusion_set_state;
   };
 
   class Iterator {

@@ -43,6 +43,7 @@ class OperaOption {
       double error_system_distance;       //系统误差:距离，单位：由使用者决定
       double error_system_azimuth;        //系统误差：方位角，单位：度
       double error_system_elevation;      //系统误差：俯仰角，单位：度
+      
     };
 
   struct Radar {
@@ -108,7 +109,8 @@ class OperaOption {
     long long id;
 
     struct Reserve {
-        int type;
+        int data[5]; //标示轨迹所绑定的目标实际类型,飞机，火箭
+        int type; //标示多个轨迹是相同的
     } reserve;
 
     //目标的初始速度，单位：由使用者决定
@@ -170,6 +172,8 @@ class OperaOption {
 
   inline void set_interval(double interval) { interval_ = interval; }
   inline double interval() const { return interval_; } 
+
+  int get_reserve_of_track(long long id, int index) const;
 
   void ConvertToPixel();
   void ConvertToPlaneCoodinate(void (*)(double*, double*));

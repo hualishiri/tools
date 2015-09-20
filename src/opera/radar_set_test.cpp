@@ -50,6 +50,10 @@ TEST(RADARSET, GetState) {
   }*/
 }
 
+TEST(RADARSET, Operator) {
+
+}
+
 } //namespace tools
 
 int main(int argc, char** argv) {

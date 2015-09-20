@@ -6,6 +6,7 @@
 
 #include "opera/acceleration.h"
 #include "opera/circle.h"
+#include "opera/algo_fusion.h"
 #include "opera/line.h"
 #include "opera/opera_option.h"
 #include "opera/radar_sector.h"
@@ -258,6 +259,12 @@ void Opera2D::Iterator::Value(OperaState& opera_state) {
   ChangeRadarPosition(opera_state);
   opera_->radar_set_->GetState(opera_state.track_set_state, 
                                opera_state.radar_set_state);
+  AlgoFusion algo_fusion;
+  AlgoFusion::Input input; 
+  AlgoFusion::Output output;
+  input.radar_set_state = &opera_state.radar_set_state.radar_set_state;
+  output.targets = &opera_state.fusion_set_state;
+  algo_fusion.Handle((void*)&input, (void*)&output);
 }
 
 void Opera2D::OperaState::ConvertToWgs() {
@@ -340,60 +347,8 @@ std::ostream& operator<<(std::ostream& out,
 
 std::istream& operator>>(std::istream& in,
     Opera2D::OperaState& opera_state) {
-  opera_state.track_set_state.track_set_state.clear();
-  opera_state.radar_set_state.radar_set_state.clear();
-  std::size_t size_track;
-  in >> size_track;
-  Track2D::TrackState track_state;
-  for (std::size_t i=0; i!=size_track; ++i) {
-    in >> track_state.id
-        >> track_state.point.x
-        >> track_state.point.y
-        >> track_state.tick
-        >> track_state.acc
-        >> track_state.speed
-        >> track_state.distance
-        >> track_state.azimuth;
-    opera_state.track_set_state.track_set_state.push_back(track_state);
-  }
-
-  Radar2D::RadarState radar_state;
-  std::size_t size_radar;
-  in >> size_radar;
-  for (std::size_t i=0; i!=size_radar; ++i) {
-    radar_state.targets.clear();
-    radar_state.targets_radar.clear();
-    radar_state.targets_filter.clear();
-    radar_state.targets_angle_azimuth.clear();
-    radar_state.ids.clear();
-    
-    in >> radar_state.id
-        >> radar_state.type
-        >> radar_state.point.x
-        >> radar_state.point.y;
-
-    Point2D point;
-    float angle_azimuth;
-    long long id;
-    std::size_t size_ids;
-    in >> size_ids;
-    for (std::size_t j=0; j!=size_ids; ++j) {
-      in >> point.x
-        >> point.y;
-      radar_state.targets.push_back(point);
-      in >> point.x
-        >> point.y;
-      radar_state.targets_radar.push_back(point);
-      in >> point.x
-        >> point.y;
-      radar_state.targets_filter.push_back(point);
-      in >> angle_azimuth;
-      radar_state.targets_angle_azimuth.push_back(angle_azimuth);
-      in >> id;
-      radar_state.ids.push_back(id);
-    }
-    opera_state.radar_set_state.radar_set_state.push_back(radar_state);
-  }
+  in >> opera_state.track_set_state;
+  in >> opera_state.radar_set_state;
   return in;
 }
 

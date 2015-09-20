@@ -12,7 +12,7 @@ OBJECTS = testharness.o map.o map_projection.o tool.o logger.o \
 					line.o circle.o track_unit.o \
 					track.o track_set.o radar_set.o \
 					opera_option.o opera.o radar_sector.o radar_noise_gauss.o \
-					opera_random.o opera_analysis.o radar.o
+					opera_random.o opera_analysis.o radar.o algo_fusion.o
 
 OUTPUTOJBECTS = $(patsubst %, $(OUTPUT)/%, $(OBJECTS))
 
@@ -33,7 +33,8 @@ TESTS = \
 	opera_random_test \
 	opera_analysis_test \
 	radar_sector_test \
-	radar_test
+	radar_test \
+	algo_fusion_test
 
 default : all
 	
@@ -78,6 +79,8 @@ opera_analysis.o : src/opera/opera_analysis.h src/opera/opera_analysis.cpp
 	$(GCC) -c src/opera/opera_analysis.cpp -o $(OUTPUT)/opera_analysis.o
 radar.o : src/opera/radar.h src/opera/radar.cpp
 	$(GCC) -c src/opera/radar.cpp -o $(OUTPUT)/radar.o
+algo_fusion.o : src/opera/algorithm.h src/opera/algo_fusion.h src/opera/algo_fusion.cpp
+	$(GCC) -c src/opera/algo_fusion.cpp -o $(OUTPUT)/algo_fusion.o
 
 
 map_test.o : map.o src/map/map_test.cpp
@@ -118,6 +121,10 @@ radar_sector_test.o : src/opera/radar_sector.h src/opera/radar_sector.cpp \
 	$(GCC) -c src/opera/radar_sector_test.cpp -o $(OUTPUT)/radar_sector_test.o
 radar_test.o : src/opera/radar.h src/opera/radar.cpp src/opera/radar_test.cpp
 	$(GCC) -c src/opera/radar_test.cpp -o $(OUTPUT)/radar_test.o
+algo_fusion_test.o : src/opera/algorithm.h src/opera/algo_fusion.h \
+	src/opera/algo_fusion.cpp src/opera/algo_fusion_test.cpp
+	$(GCC) -c src/opera/algo_fusion_test.cpp -o $(OUTPUT)/algo_fusion_test.o
+	
 	
 map_test : testharness.o map.o map_test.o
 	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/map_test.o -o $(OUTPUT)/map_test
@@ -158,6 +165,8 @@ radar_sector_test : radar_sector_test.o
 	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/radar_sector_test.o -o $(OUTPUT)/radar_sector_test
 radar_test : radar_test.o
 	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/radar_test.o -o $(OUTPUT)/radar_test
+algo_fusion_test : algo_fusion_test.o
+	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/algo_fusion_test.o -o $(OUTPUT)/algo_fusion_test
 	
 clean :
 	rm -rf $(OUTPUTOJBECTS)
