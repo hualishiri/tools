@@ -7,12 +7,19 @@
 #include <string>
 #include <iostream>
 
+namespace {
+
+//雷达的名字长度
+const int kNameLength = 512;
+
+};
+
 namespace tools {
 
 class OperaOption {
  public:
-  friend std::ostream& operator<< (std::ostream& os, const OperaOption& op);
   friend std::istream& operator>> (std::istream& in, OperaOption& op);
+  friend std::ostream& operator<< (std::ostream& os, const OperaOption& op);
 
   enum TrackUnitType { 
       //直线
@@ -44,6 +51,10 @@ class OperaOption {
       double error_system_azimuth;        //系统误差：方位角，单位：度
       double error_system_elevation;      //系统误差：俯仰角，单位：度
       
+      bool operator==(const Error& error) const;  
+      bool operator!=(const Error& error) const;
+      friend std::istream& operator>> (std::istream& in, Error& error);
+      friend std::ostream& operator<< (std::ostream& out, const Error& error);
     };
 
   struct Radar {
@@ -71,6 +82,11 @@ class OperaOption {
     //雷达的伞扫范围，<起始方位角，范围>
     std::vector<std::pair<double, double> > azimuth_range; 
 
+    struct Reserve {
+      std::vector<std::pair<int, int> > ranges;
+      char radar_name[kNameLength];
+    } reserve;
+
     //type字段的Getter和Ｓｅｔｔｅｒ
     void set_type(RadarType radar_type);
     RadarType get_type() const;
@@ -78,6 +94,11 @@ class OperaOption {
     //无意义的操作函数
     void set_type_trival(unsigned char type);
     unsigned char get_type_trival(void) const;
+
+    bool operator==(const Radar& radar) const;  
+    bool operator!=(const Radar& radar) const;
+    friend std::istream& operator>> (std::istream& in, Radar& radar);
+    friend std::ostream& operator<< (std::ostream& out, const Radar& radar);
   };
   
   struct Line {
@@ -88,6 +109,11 @@ class OperaOption {
     double start_y;
     double end_x;
     double end_y;
+
+    bool operator==(const Line& line) const;  
+    bool operator!=(const Line& line) const;
+    friend std::istream& operator>> (std::istream& in, Line& line);
+    friend std::ostream& operator<< (std::ostream& out, const Line& line);
   };
   
   struct Circle {
@@ -101,6 +127,11 @@ class OperaOption {
 
     //单位：度，该变量有方向.范围：[-2.0*PI, 2.0*PI]
     double angle;
+
+    bool operator==(const Circle& circle) const;  
+    bool operator!=(const Circle& circle) const;
+    friend std::istream& operator>> (std::istream& in, Circle& circle);
+    friend std::ostream& operator<< (std::ostream& out, const Circle& circle);
   };
   
 
@@ -111,6 +142,7 @@ class OperaOption {
     struct Reserve {
         int data[5]; //标示轨迹所绑定的目标实际类型,飞机，火箭
         int type; //标示多个轨迹是相同的
+        char track_name[kNameLength];
     } reserve;
 
     //目标的初始速度，单位：由使用者决定
@@ -136,6 +168,11 @@ class OperaOption {
 
     //目标类型，取值：ObjectType
     std::vector<int> track_types;
+
+    bool operator==(const Track& track) const;  
+    bool operator!=(const Track& track) const;
+    friend std::istream& operator>> (std::istream& in, Track& track);
+    friend std::ostream& operator<< (std::ostream& out, const Track& track);
   };
 
   //内部使用的变量
@@ -200,8 +237,23 @@ class OperaOption {
   std::vector<Track> tracks_;
 };
 
-std::ostream& operator<< (std::ostream& os, const OperaOption& op);
 std::istream& operator>> (std::istream& in, OperaOption& op);
+std::ostream& operator<< (std::ostream& os, const OperaOption& op);
+
+std::istream& operator>> (std::istream& in, OperaOption::Error& error);
+std::ostream& operator<< (std::ostream& out, const OperaOption::Error& error);
+
+std::istream& operator>> (std::istream& in, OperaOption::Radar& radar);
+std::ostream& operator<< (std::ostream& out, const OperaOption::Radar& radar);
+
+std::ostream& operator<< (std::ostream& out, const OperaOption::Line& line);
+std::istream& operator>> (std::istream& in, OperaOption::Line& line);
+
+std::ostream& operator<< (std::ostream& out, const OperaOption::Circle& circle);
+std::istream& operator>> (std::istream& in, OperaOption::Circle& circle);
+
+std::ostream& operator<< (std::ostream& out, const OperaOption::Track& track);
+std::istream& operator>> (std::istream& in, OperaOption::Track& track);
 
 } //namespace tools
 

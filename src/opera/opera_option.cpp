@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <set>
 #include <sstream>
+#include <iomanip>
 
 #include "util/tool.h"
 #include "util/logger.h"
@@ -512,5 +513,207 @@ int OperaOption::get_reserve_of_track(long long id, int index) const {
       return tracks_[i].reserve.data[index];
   return 0;
 }
+
+bool OperaOption::Error::operator==(const Error& error) const {
+  if (DoubleEqual(this->error_random_azimuth, error.error_random_azimuth) &&
+      DoubleEqual(this->error_random_distance, error.error_random_distance) &&
+      DoubleEqual(this->error_random_elevation, error.error_random_elevation) &&
+      DoubleEqual(this->error_system_azimuth, error.error_system_azimuth) &&
+      DoubleEqual(this->error_system_distance, error.error_system_distance) &&
+      DoubleEqual(this->error_system_elevation, error.error_system_elevation))
+    return true;
+  return false;
+}
+
+bool OperaOption::Error::operator!=(const Error& error) const {
+  return !(error == (*this));
+}
+
+std::istream& operator>> (std::istream& in, OperaOption::Error& error) {
+  in >> error.error_random_distance;
+  in >> error.error_random_azimuth;
+  in >> error.error_random_elevation;
+  in >> error.error_system_distance;
+  in >> error.error_system_azimuth;
+  in >> error.error_system_elevation;
+}
+
+std::ostream& operator<< (std::ostream& out, const OperaOption::Error& error) {
+  out << error.error_random_distance << " ";
+  out << error.error_random_azimuth<< " ";
+  out << error.error_random_elevation<< " ";
+  out << error.error_system_distance << " ";
+  out << error.error_system_azimuth << " ";
+  out << error.error_system_elevation << " ";
+}
+
+
+bool OperaOption::Radar::operator==(const OperaOption::Radar& radar) const {
+  if (this->id != radar.id ||
+      this->type != radar.type ||
+      this->detecting_objects_types != radar.detecting_objects_types ||
+      this->track_id != radar.track_id ||
+      DoubleEqual(this->start_x, radar.start_x) ||
+      DoubleEqual(this->start_y, radar.start_y) ||
+      DoubleEqual(this->radius_x, radar.radius_x) ||
+      DoubleEqual(this->radius_y, radar.radius_y) ||
+      this->error != radar.error ||
+      this->azimuth_range.size() != radar.azimuth_range.size() ||
+      this->reserve.ranges.size() != radar.reserve.ranges.size()
+      )
+    return false;
+
+  for (std::size_t i=0; i!=this->azimuth_range.size(); ++i)
+    if (!DoubleEqual(this->azimuth_range[i].first,
+          radar.azimuth_range[i].first) ||
+        !DoubleEqual(this->azimuth_range[i].second,
+          radar.azimuth_range[i].second))
+      return false;
+
+  for (std::size_t i=0; i!=this->reserve.ranges.size(); ++i)
+    if (!DoubleEqual(this->reserve.ranges[i].first,
+          reserve.ranges[i].first) ||
+        !DoubleEqual(this->reserve.ranges[i].second,
+          reserve.ranges[i].second))
+      return false;
+
+  for (std::size_t i=0; i!=kNameLength; ++i)
+    if (this->reserve.radar_name[i] != radar.reserve.radar_name[i])
+      return false;
+
+  return true;
+}
+
+bool OperaOption::Radar::operator!=(const OperaOption::Radar& radar) const {
+  return !(radar == (*this));
+}
+
+std::ostream& operator<< (std::ostream& out, const OperaOption::Radar& radar) {
+  out << std::fixed << std::setprecision(20);
+  out << radar.id << " ";
+  out << radar.type << " ";
+  out << radar.detecting_objects_types << " ";
+  out << radar.track_id << " ";
+  out << radar.start_x << " ";
+  out << radar.start_y << " ";
+  out << radar.radius_x << " ";
+  out << radar.radius_y << " ";
+  out << radar.error << " ";
+  out << radar.azimuth_range.size() << " ";
+  for (std::size_t i=0; i!=radar.azimuth_range.size(); ++i)
+    out << radar.azimuth_range[i].first << " "
+        << radar.azimuth_range[i].second << " ";
+  out << radar.reserve.ranges.size() << " ";
+  for (std::size_t i=0; i!=radar.reserve.ranges.size(); ++i)
+    out << radar.reserve.ranges[i].first << " "
+        << radar.reserve.ranges[i].second << " ";
+  out << kNameLength << " ";
+  for (int i=0; i!=kNameLength; ++i)
+    out << static_cast<int>(radar.reserve.radar_name[i]) << " ";
+}
+
+std::istream& operator>> (std::istream& in, OperaOption::Radar& radar) {
+  radar.azimuth_range.clear();
+  radar.reserve.ranges.clear();
+
+  in >> radar.id;
+  in >> radar.type;
+  in >> radar.detecting_objects_types;
+  in >> radar.track_id;
+  in >> radar.start_x;
+  in >> radar.start_y;
+  in >> radar.radius_x;
+  in >> radar.radius_y;
+  in >> radar.error;
+
+  std::size_t length;
+  std::pair<double, double> pair_double;
+  std::pair<int, int> pair_int;
+
+  in >> length;
+  for (std::size_t i=0; i!=length; ++i) {
+    in >> pair_double.first >> pair_double.second;
+    radar.azimuth_range.push_back(pair_double);
+  }
+
+  in >> length;
+  for (std::size_t i=0; i!=length; ++i) {
+    in >> pair_int.first >> pair_int.second;
+    radar.reserve.ranges.push_back(pair_int);
+  }
+
+  in >> length;
+  int temp;
+  for (std::size_t i=0; i!=length; ++i) {
+    in >> temp;
+    radar.reserve.radar_name[i] = static_cast<char>(temp);
+  }
+}
+
+bool OperaOption::Line::operator==(const Line& line) const {
+  if (this->id == line.id &&
+      DoubleEqual(this->start_x, line.start_x) &&
+      DoubleEqual(this->start_y, line.start_y) &&
+      DoubleEqual(this->end_x, line.end_x) &&
+      DoubleEqual(this->end_y, line.end_y))
+    return true;
+  return false;
+}
+
+bool OperaOption::Line::operator!=(const Line& line) const {
+  return !((*this) == line);
+}
+
+std::istream& operator>> (std::istream& in, OperaOption::Line& line) {
+  in >> line.id;
+  in >> line.start_x;
+  in >> line.start_y;
+  in >> line.end_x;
+  in >> line.end_y;
+}
+
+std::ostream& operator<< (std::ostream& out, const OperaOption::Line& line) {
+  out << line.id << " ";
+  out << line.start_x << " ";
+  out << line.start_y << " ";
+  out << line.end_x << " ";
+  out << line.end_y << " ";
+}
+
+bool OperaOption::Circle::operator==(const Circle& circle) const {
+  if (this->id == circle.id &&
+      DoubleEqual(this->start_x, circle.start_x) &&
+      DoubleEqual(this->start_y, circle.start_y) &&
+      DoubleEqual(this->center_x, circle.center_x) &&
+      DoubleEqual(this->center_y, circle.center_y) &&
+      DoubleEqual(this->angle, circle.angle))
+    return true;
+  return false;
+}
+
+bool OperaOption::Circle::operator!=(const Circle& circle) const {
+  return !((*this) == circle);
+}
+
+std::istream& operator>> (std::istream& in, OperaOption::Circle& circle) {
+  in >> circle.id;
+  in >> circle.start_x;
+  in >> circle.start_y;
+  in >> circle.center_x;
+  in >> circle.center_y;
+  in >> circle.angle;
+}
+
+std::ostream& operator<< (std::ostream& out, const OperaOption::Circle& circle) {
+  out << circle.id << " ";
+  out << circle.start_x << " ";
+  out << circle.start_y << " ";
+  out << circle.center_x << " ";
+  out << circle.center_y << " ";
+  out << circle.angle << " ";
+}
+
+std::istream& operator>> (std::istream& in, OperaOption::Track& track);
+std::ostream& operator<< (std::ostream& out, const OperaOption::Track& track);
 
 } //namespace tools
