@@ -157,7 +157,7 @@ class OperaOption {
     std::vector<double> start_speeds;
 
     //目标的加速度，单位：由使用者决定
-    std::vector<std::vector<float> > accelerations;
+    std::vector<std::vector<double> > accelerations;
     
     //每条轨迹的延迟时间，单位：秒
     std::vector<double> time_delays;
@@ -177,8 +177,8 @@ class OperaOption {
     //目标类型，取值：ObjectType
     std::vector<int> track_types;
 
-    bool operator==(const Track& track) const;  
-    bool operator!=(const Track& track) const;
+    bool operator==(const OperaOption::Track& track) const;  
+    bool operator!=(const OperaOption::Track& track) const;
     friend std::istream& operator>> (std::istream& in, Track& track);
     friend std::ostream& operator<< (std::ostream& out, const Track& track);
   };
@@ -187,7 +187,7 @@ class OperaOption {
   struct TrackInternal {
     long long id;
     double start_speed;
-    std::vector<float> acceleration;
+    std::vector<double> acceleration;
     double time_delay;
     int track_type;
     std::vector<Line> lines;

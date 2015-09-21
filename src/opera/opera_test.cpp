@@ -65,7 +65,7 @@ TEST(OPERA, Iterator) {
 
   std::size_t size_batch = static_cast<std::size_t>(track.batch_count);
   for (std::size_t i=0; i!=size_batch; ++i) {
-    std::vector<float> acc;
+    std::vector<double> acc;
     track.accelerations.push_back(acc);
     for (std::size_t j=0; j!=track.types.size(); ++j)
       track.accelerations[i].push_back(0);

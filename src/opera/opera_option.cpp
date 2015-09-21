@@ -56,6 +56,50 @@ void OperaOption::pop_radar(long long id) {
   }
 }
 
+template <class T>
+void transform_to_ostream(std::ostream& out, const std::vector<T>& vec) {
+  out << vec.size() << " ";
+  for (std::size_t i=0; i!=vec.size(); ++i)
+    out << vec[i] << " ";
+}
+
+void transform_to_ostream(std::ostream& out,
+    const std::vector<OperaOption::TrackUnitType>& vec) {
+  out << vec.size() << " ";
+  for (std::size_t i=0; i!=vec.size(); ++i)
+    if (vec[i] == OperaOption::LINE)
+      out << 0 << " ";
+    else if (vec[i] == OperaOption::CIRCLE)
+      out << 1 << " ";
+}
+
+template <class T>
+void transform_from_istream(std::istream& in, std::vector<T>& vec) {
+  vec.clear();
+  std::size_t length;
+  in >> length;
+  T temp;
+  for (std::size_t i=0; i!=length; ++i) {
+    in >> temp; 
+    vec.push_back(temp);
+  }
+}
+
+void transform_from_istream(std::istream& in,
+    std::vector<OperaOption::TrackUnitType>& vec) {
+  vec.clear();
+  std::size_t length;
+  in >> length;
+  int temp;
+  for (std::size_t i=0; i!=length; ++i) {
+    in >> temp; 
+    if (0 == temp)
+      vec.push_back(OperaOption::LINE);
+    else if (1 == temp)
+      vec.push_back(OperaOption::CIRCLE);
+  }
+}
+
 void OperaOption::push_back_track(Track& track) {
   assert(track.lines.size() + track.circles.size() == track.types.size());
   assert(track.ids.size() == static_cast<std::size_t>(track.batch_count));
@@ -162,199 +206,17 @@ void OperaOption::TrackInternalSift(TrackInternal& track_internal,
   }
 }
 
-std::ostream& operator<< (std::ostream& os, const OperaOption& op) {
-  os << std::fixed << std::setprecision(20);
-  os << op.radars_.size() << std::endl;
-  for (std::size_t i=0; i!=op.radars_.size(); ++i) {
-    os << op.radars_[i].id << " "
-        << op.radars_[i].type << " " 
-        << op.radars_[i].start_x << " "   
-        << op.radars_[i].start_y << " "   
-        << op.radars_[i].radius_x << " "   
-        << op.radars_[i].radius_y << " "   
-        << op.radars_[i].detecting_objects_types << " "
-        << op.radars_[i].error.error_random_azimuth << " "   
-        << op.radars_[i].error.error_random_distance << " "   
-        << op.radars_[i].error.error_random_elevation << " "
-        << op.radars_[i].error.error_system_azimuth << " "
-        << op.radars_[i].error.error_system_distance << " "
-        << op.radars_[i].error.error_system_elevation << " ";
-
-    os << op.radars_[i].azimuth_range.size() << " ";
-    for (std::size_t j=0; j!=op.radars_[i].azimuth_range.size(); ++j) {
-      os << op.radars_[i].azimuth_range[j].first << " ";
-      os << op.radars_[i].azimuth_range[j].second << " ";
-    }
-  }
-  os << op.tracks_.size() << " ";
-  for (std::size_t i=0; i!=op.tracks_.size(); ++i) {
-    os << op.tracks_[i].id << " ";
-//    os << op.tracks_[i].reserve.data[0] << " ";
-//    os << op.tracks_[i].reserve.data[1] << " ";
-//    os << op.tracks_[i].reserve.data[2] << " ";
-//    os << op.tracks_[i].reserve.data[3] << " ";
-//    os << op.tracks_[i].reserve.data[4] << " ";
-    os << op.tracks_[i].reserve.type << " ";
-    os << op.tracks_[i].batch_count << " ";
-    os << op.tracks_[i].level_noise_track << " ";
-
-    os << op.tracks_[i].start_speeds.size() << " ";
-    
-    for (std::size_t j=0; j!=op.tracks_[i].start_speeds.size(); ++j) {
-      os << op.tracks_[i].start_speeds[j] << " "
-         << op.tracks_[i].time_delays[j] << " "
-         << op.tracks_[i].ids[j] << " ";
-
-      os << op.tracks_[i].accelerations[j].size() << " ";
-      for (std::size_t k=0; k!=op.tracks_[i].accelerations[j].size(); ++k)
-         os << op.tracks_[i].accelerations[j][k] << " ";
-    }
-
-    int line_index = 0, circle_index = 0;
-    os << op.tracks_[i].types.size() << " ";
-    for (std::size_t j=0; j!=op.tracks_[i].types.size(); ++j) {
-      if (OperaOption::LINE == op.tracks_[i].types[j]) {
-        os << 0<< " "
-            << op.tracks_[i].lines[line_index].id << " "
-            << op.tracks_[i].lines[line_index].start_x << " "
-            << op.tracks_[i].lines[line_index].start_y << " "
-            << op.tracks_[i].lines[line_index].end_x << " "
-            << op.tracks_[i].lines[line_index].end_y << " ";
-        ++line_index;
-      } else if (OperaOption::CIRCLE == op.tracks_[i].types[j]) {
-        os << 1 << " "
-            << op.tracks_[i].circles[circle_index].id << " "
-            << op.tracks_[i].circles[circle_index].start_x << " "
-            << op.tracks_[i].circles[circle_index].start_y << " "
-            << op.tracks_[i].circles[circle_index].center_x << " "
-            << op.tracks_[i].circles[circle_index].center_y << " "
-            << op.tracks_[i].circles[circle_index].angle << " ";
-      }
-    }
-
-    os << op.tracks_[i].track_types.size() << " "; 
-    for (std::size_t j=0; j!=op.tracks_[i].track_types.size(); ++j)
-      os << op.tracks_[i].track_types[j] << " ";
-  }
-  return os;
+std::ostream& operator<< (std::ostream& out, const OperaOption& op) {
+  out << op.interval_ << " ";
+  transform_to_ostream(out, op.radars_);
+  transform_to_ostream(out, op.tracks_);
+  return out;
 }
     
 std::istream& operator>> (std::istream& in, OperaOption& op) {
-  op.radars_.clear();
-  op.tracks_.clear();
-  std::size_t size_radar;
-  in >> size_radar;
-  for (std::size_t i=0; i!=size_radar; ++i) {
-    OperaOption::Radar radar;
-    in >> radar.id
-        >> radar.type
-        >> radar.start_x
-        >> radar.start_y
-        >> radar.radius_x
-        >> radar.radius_y
-        >> radar.detecting_objects_types
-        >> radar.error.error_random_azimuth
-        >> radar.error.error_random_distance
-        >> radar.error.error_random_elevation
-        >> radar.error.error_system_azimuth
-        >> radar.error.error_system_distance
-        >> radar.error.error_system_elevation;
-
-    std::size_t size_azimuth_range = 0;
-    in >> size_azimuth_range;
-    double angle_azimuth;
-    double angle_sector_range;
-    for (std::size_t j=0; j!=size_azimuth_range; ++j) {
-      in >> angle_azimuth
-          >> angle_sector_range;
-      radar.azimuth_range.push_back(
-          std::make_pair(angle_azimuth, angle_sector_range));
-    }
-    op.push_back_radar(radar); 
-  }
-
-  std::size_t size_track;
-  in >> size_track;
-  OperaOption::Track track;
-  for (std::size_t i=0; i!=size_track; ++i) {
-    track.start_speeds.clear();
-    track.accelerations.clear();
-    track.time_delays.clear();
-    track.ids.clear();
-    track.circles.clear();
-    track.lines.clear();
-    track.types.clear();
-    track.track_types.clear();
-    
-    in >> track.id;
-//    in >> track.reserve.data[0];
-//    in >> track.reserve.data[1];
-//    in >> track.reserve.data[2];
-//    in >> track.reserve.data[3];
-//    in >> track.reserve.data[4];
-    in >> track.reserve.type;
-    in >> track.batch_count;
-    in >> track.level_noise_track;
-
-    std::size_t size_ids;
-    in >> size_ids;
-
-    double temp;
-    for (std::size_t j=0; j!=size_ids; ++j) {
-      in >> temp;
-      track.start_speeds.push_back(temp);
-      in >> temp;
-      track.time_delays.push_back(temp);
-      in >> temp;
-      track.ids.push_back(static_cast<long long>(temp));
-
-      float acc = 0.0f;
-      size_t size_accele;
-      in >> size_accele;
-      std::vector<float> vec_acc;
-      track.accelerations.push_back(vec_acc);
-      for (std::size_t k=0; k!=size_accele; ++k) {
-        in >> acc;
-        track.accelerations[j].push_back(acc);
-      }
-    }
-
-    std::size_t size_type;
-    int track_unit_type;
-    in >> size_type;
-    OperaOption::Line line;
-    OperaOption::Circle circle;
-    for (std::size_t j=0; j!=size_type; ++j) {
-      in >> track_unit_type;
-      if (0 == track_unit_type) {
-        in >> line.id
-            >> line.start_x
-            >> line.start_y
-            >> line.end_x
-            >> line.end_y;
-        track.lines.push_back(line);
-        track.types.push_back(OperaOption::LINE);
-      } else if (1==track_unit_type) {
-        in >> circle.id
-            >> circle.start_x
-            >> circle.start_y
-            >> circle.center_x
-            >> circle.center_y
-            >> circle.angle;
-        track.circles.push_back(circle);
-        track.types.push_back(OperaOption::CIRCLE);
-      }
-    }
-    
-    std::size_t size_track_types;
-    in >> size_track_types;
-    int track_type = 0;
-    for (std::size_t j=0; j!=size_track_types; ++j) {
-      in >> track_type;
-      track.track_types.push_back(track_type);
-    }
-    op.push_back_track(track);
-  }
+  in >> op.interval_;
+  transform_from_istream(in, op.radars_);
+  transform_from_istream(in, op.tracks_);
   return in;
 }
 
@@ -721,9 +583,58 @@ std::ostream& operator<< (std::ostream& out, const OperaOption::Circle& circle) 
 }
 
 bool OperaOption::Track::operator==(const Track& track) const {
-  if (this->id != track.id 
-)
+  if (this->id != track.id ||
+      this->data != track.data ||
+      this->reserve.type != track.reserve.type ||
+      this->start_speeds.size() != track.start_speeds.size() ||
+      this->accelerations.size() != track.accelerations.size() ||
+      this->time_delays.size() != track.time_delays.size() ||
+      this->batch_count != track.batch_count ||
+      !DoubleEqual(this->level_noise_track, track.level_noise_track) ||
+      this->ids.size() != track.ids.size() ||
+      this->lines.size() != track.lines.size() ||
+      this->circles.size() != track.circles.size() ||
+      this->types.size() != track.types.size() ||
+      this->track_types.size() != track.track_types.size() )
     return false;
+
+  for (std::size_t i=0; i!=this->start_speeds.size(); ++i)
+    if (!DoubleEqual(this->start_speeds[i], track.start_speeds[i]))
+      return false;
+
+  for (std::size_t i=0; i!=this->accelerations.size(); ++i) {
+    if (this->accelerations[i].size() != track.accelerations[i].size())
+      return false;
+    for (std::size_t j=0; j!=this->accelerations[i].size(); ++j)
+      if (!DoubleEqual(static_cast<double>(this->accelerations[i][j]),
+            static_cast<double>(track.accelerations[i][j])))
+        return false;
+  }
+
+  for (std::size_t i=0; i!=this->time_delays.size(); ++i)
+    if (!DoubleEqual(this->time_delays[i], track.time_delays[i]))
+      return false;
+
+  for (std::size_t i=0; i!=this->ids.size(); ++i)
+    if (this->ids[i] != track.ids[i])
+      return false;
+
+  for (std::size_t i=0; i!=this->lines.size(); ++i)
+    if (this->lines[i] != track.lines[i])
+      return false;
+
+  for (std::size_t i=0; i!=this->circles.size(); ++i)
+    if (this->circles[i] != track.circles[i])
+      return false;
+
+  for (std::size_t i=0; i!=this->types.size(); ++i)
+    if (this->types[i] != track.types[i])
+      return false;
+
+  for (std::size_t i=0; i!=this->track_types.size(); ++i)
+    if (this->track_types[i] != track.track_types[i])
+      return false;
+
   return true;
 }
 
@@ -813,7 +724,59 @@ void OperaOption::Reserve::set_string(int id, const std::string& val) {
     data.push_back(static_cast<double>(val[i]));
 }
 
-std::istream& operator>> (std::istream& in, OperaOption::Track& track);
-std::ostream& operator<< (std::ostream& out, const OperaOption::Track& track);
+std::istream& operator>> (std::istream& in, OperaOption::Track& track) {
+  in >> track.id;
+  in >> track.data;
+  in >> track.reserve.type;
+  transform_from_istream(in, track.start_speeds);
+
+  std::size_t length;
+  in >> length;
+  for (std::size_t i=0; i!=length; ++i) {
+    std::vector<double> temp;
+    transform_from_istream(in, temp);
+    track.accelerations.push_back(temp);
+  }
+
+  transform_from_istream(in, track.time_delays);
+  
+  in >> track.batch_count;
+  in >> track.level_noise_track;
+
+  transform_from_istream(in, track.ids);
+  transform_from_istream(in, track.lines);
+  transform_from_istream(in, track.circles);
+  transform_from_istream(in, track.types);
+  transform_from_istream(in, track.track_types);
+
+  return in;
+}
+
+std::ostream& operator<< (std::ostream& out, const OperaOption::Track& track) {
+  out << std::fixed << std::setprecision(20);
+  out << track.id << " ";
+  out << track.data << " ";
+  out << track.reserve.type << " ";
+
+  transform_to_ostream(out, track.start_speeds);
+
+  out << track.accelerations.size() << " ";
+  for (std::size_t i=0; i!=track.accelerations.size(); ++i) {
+    transform_to_ostream(out, track.accelerations[i]);
+  }
+
+  transform_to_ostream(out, track.time_delays);
+  
+  out << track.batch_count << " ";
+  out << track.level_noise_track << " ";
+
+  transform_to_ostream(out, track.ids);
+  transform_to_ostream(out, track.lines);
+  transform_to_ostream(out, track.circles);
+  transform_to_ostream(out, track.types);
+  transform_to_ostream(out, track.track_types);
+
+  return out;
+}
 
 } //namespace tools
