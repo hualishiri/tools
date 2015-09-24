@@ -15,10 +15,13 @@ class OperaOption {
   friend std::ostream& operator<< (std::ostream& os, const OperaOption& op);
 
   struct Reserve {
+
     int get_int(int id) const;
     void set_int(int id, int val);
+
     double get_double(int id) const;
     void set_double(int id, double val);
+
     std::string get_string(int id) const;
     void set_string(int id, const std::string& val);
 
@@ -27,11 +30,13 @@ class OperaOption {
 
     friend std::istream& operator>>(std::istream& in, OperaOption::Reserve& reserve); 
     friend std::ostream& operator<< (std::ostream& os, const OperaOption::Reserve& reserve);
+
   private:
     enum {
       kDouble = 0,
       kString
     };
+
     std::vector<double> data;
   };
 
@@ -105,6 +110,8 @@ class OperaOption {
     //无意义的操作函数
     void set_type_trival(unsigned char type);
     unsigned char get_type_trival(void) const;
+
+    Radar() : type(0) {}
 
     bool operator==(const Radar& radar) const;  
     bool operator!=(const Radar& radar) const;

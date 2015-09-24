@@ -16,6 +16,7 @@ extern const double kRadius = 6378137.0;
 namespace {
   
 long long id = 0x0beef;
+long long seed_base = 0x00;
 
 MapProjection::WgsPoint wgs_point;
 MapProjection::PixelPoint pixel_point;
@@ -135,7 +136,8 @@ void FromPixelToWgs(double* x, double* y) {
 
 /* Generates a double number ranging from -1.0 to 1.0 */
 double GetRandNumber(int seed) {
-  srand(static_cast<unsigned>(time(NULL)) + seed);
+  seed_base += 0x0deadbeef;
+  srand(static_cast<unsigned>(time(NULL)) + seed + seed_base);
   double number = rand() / (double)RAND_MAX;
   number *= 10000;
   number = number - static_cast<long long>(number);

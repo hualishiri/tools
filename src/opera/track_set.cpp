@@ -2,6 +2,8 @@
 
 #include <stdlib.h>
 
+#include <iomanip>
+
 namespace tools {
 
 long long TrackSet2D::GetSumTick() const{
@@ -151,6 +153,7 @@ bool TrackSet2D::TrackSetState::operator==(
 
 std::ostream& operator<<(std::ostream& out,
     const TrackSet2D::TrackSetState& track_set_state) {
+  out << std::fixed << std::setprecision(20);
   out << track_set_state.track_set_state.size() << " ";
   for (std::size_t i=0; i!=track_set_state.track_set_state.size(); ++i)
     out << track_set_state.track_set_state[i] << " ";

@@ -1,5 +1,7 @@
 #include "opera/radar_set.h"
 
+#include <iomanip>
+
 namespace tools {
 
 void RadarSet2D::GetState(const TrackSet2D::TrackSetState& track_set_state,
@@ -25,6 +27,7 @@ bool RadarSet2D::RadarSetState::operator==(
 }
 std::ostream& operator<<(std::ostream& out,
     const RadarSet2D::RadarSetState& radar_set_state) {
+  out << std::fixed << std::setprecision(20);
   out << radar_set_state.radar_set_state.size() << " ";    
   for (std::size_t i=0; i!=radar_set_state.radar_set_state.size(); ++i)
     out << radar_set_state.radar_set_state[i] << " "; 

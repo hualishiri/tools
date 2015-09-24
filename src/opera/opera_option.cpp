@@ -33,10 +33,10 @@ void OperaOption::push_back_radar(Radar& radar) {
     assert(ValidOfCircleAngle(radar.azimuth_range[i].second));
   }
 
-  if (radar.type == R_STATIC) {
+  if (radar.get_type() == R_STATIC) {
     radar.track_id = 0;
   } 
-  if (radar.type == R_DYNAMIC){
+  if (radar.get_type() == R_DYNAMIC){
     assert(IsIDExistInTrackSet(radar.track_id));
   }
   assert(((~(AIRCRAFT | LANDCRAFT | UNDERCRAFT)) & 
@@ -58,6 +58,7 @@ void OperaOption::pop_radar(long long id) {
 
 template <class T>
 void transform_to_ostream(std::ostream& out, const std::vector<T>& vec) {
+  out << std::fixed << std::setprecision(20);
   out << vec.size() << " ";
   for (std::size_t i=0; i!=vec.size(); ++i)
     out << vec[i] << " ";
@@ -65,6 +66,7 @@ void transform_to_ostream(std::ostream& out, const std::vector<T>& vec) {
 
 void transform_to_ostream(std::ostream& out,
     const std::vector<OperaOption::TrackUnitType>& vec) {
+  out << std::fixed << std::setprecision(20);
   out << vec.size() << " ";
   for (std::size_t i=0; i!=vec.size(); ++i)
     if (vec[i] == OperaOption::LINE)
@@ -207,6 +209,7 @@ void OperaOption::TrackInternalSift(TrackInternal& track_internal,
 }
 
 std::ostream& operator<< (std::ostream& out, const OperaOption& op) {
+  out << std::fixed << std::setprecision(20);
   out << op.interval_ << " ";
   transform_to_ostream(out, op.radars_);
   transform_to_ostream(out, op.tracks_);

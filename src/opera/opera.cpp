@@ -3,6 +3,7 @@
 #include <assert.h>
 
 #include <vector>
+#include <iomanip>
 
 #include "opera/acceleration.h"
 #include "opera/circle.h"
@@ -340,6 +341,7 @@ void Opera2D::Iterator::ChangeRadarPosition(OperaState& opera_state) {
 
 std::ostream& operator<<(std::ostream& out,
                          const Opera2D::OperaState& opera_state) {
+  out << std::fixed << std::setprecision(20);
   out << opera_state.track_set_state << " ";
   out << opera_state.radar_set_state << " ";
   return out;
