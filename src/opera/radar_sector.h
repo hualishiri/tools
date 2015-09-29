@@ -19,6 +19,7 @@ class SectorRadar : public Radar2D {
     int type;
     double x;
     double y;
+    double height;
     long long track_id;
     std::vector<std::pair<double, double> > azimuth_range;
     double distance_detect;
@@ -59,11 +60,13 @@ class SectorRadar : public Radar2D {
                                double azimuth,
                                double distance,
                                Point2D& target);
+  void CalculateObjectCourse(RadarState& radar_state);
   void ClearRadarState(RadarState& radar_state) const;
 
   Radar* radar_;
   RadarNoise* radar_noise_;
   RadarError error_;
+  RadarState radar_state_last_;
 };
 
 } //namespace tools

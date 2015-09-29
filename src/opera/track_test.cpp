@@ -86,7 +86,7 @@ TEST(TRACK, Iterator) {
   track_units.push_back(track_unit);
   track_unit_set->push_back(track_unit);
 
-  Track2D track(0x01, track_unit_set, interval, init_speed);
+  Track2D track(0x01, track_unit_set, interval, init_speed, 1000);
   Track2D::Iterator iter(&track);
   Track2D::TrackState track_state;
   while(iter.Valid()){

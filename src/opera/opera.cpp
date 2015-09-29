@@ -38,6 +38,7 @@ void Opera2D::BuildRadar(const OperaOption& opera_option) {
     }
     radar->x = radars[i].radius_x;
     radar->y = radars[i].radius_y;
+    radar->height = radars[i].height;
     radar->azimuth_range = radars[i].azimuth_range;
 
     radar->distance_detect = Distance2D(radars[i].start_x,
@@ -134,7 +135,8 @@ void Opera2D::BuildTrack(const OperaOption& opera_option) {
     Track2D* track = new Track2D(tracks[i].id,
         track_unit_set,
         opera_option.interval(),
-        tracks[i].start_speed);
+        tracks[i].start_speed,
+        tracks[i].height);
     garbage_.garbage_track2ds.push_back(track);
     track->set_track_type(tracks[i].track_type);
     track_set_rep->push_back(track);

@@ -73,11 +73,13 @@ TEST(RADAR2D, RadarStateOperator) {
   for (std::size_t i=0; i!=length; ++i) {
     lhs.ids.push_back(static_cast<long long>(i*i));
     lhs.targets.push_back(Point2D(i/1.0/(i+1), i/1.0/(i+1)));
+    lhs.targets_height.push_back(i*i/1.0/(i+2));
     lhs.targets_angle_azimuth.push_back(i*i/1.0/(i+2));
     lhs.targets_real_distance.push_back(i*i/1.0/(i+2));
     lhs.targets_real_elevation.push_back(i*i/1.0/(i+2));
     lhs.targets_real_velocity.push_back(i*i/1.0/(i+2));
     lhs.targets_radar.push_back(Point2D(i/1.0/(i+1), i/1.0/(i+1)));
+    lhs.targets_radar_height.push_back(i*i/1.0/(i+2));
     lhs.targets_detected_azimuth.push_back(i*i/1.0/(i+2));
     lhs.targets_detected_distance.push_back(i*i/1.0/(i+2));
     lhs.targets_detected_elevation.push_back(i*i/1.0/(i+2));
@@ -107,11 +109,13 @@ TEST(RADAR2D, RadarStateOperator) {
   for (std::size_t i=0; i!=length; ++i) {
     rhs.ids.push_back(static_cast<long long>(i*i));
     rhs.targets.push_back(Point2D(i/1.0/(i+1), i/1.0/(i+1)));
+    rhs.targets_height.push_back(i*i/1.0/(i+2));
     rhs.targets_angle_azimuth.push_back(i*i/1.0/(i+2));
     rhs.targets_real_distance.push_back(i*i/1.0/(i+2));
     rhs.targets_real_elevation.push_back(i*i/1.0/(i+2));
     rhs.targets_real_velocity.push_back(i*i/1.0/(i+2));
     rhs.targets_radar.push_back(Point2D(i/1.0/(i+1), i/1.0/(i+1)));
+    rhs.targets_radar_height.push_back(i*i/1.0/(i+2));
     rhs.targets_detected_azimuth.push_back(i*i/1.0/(i+2));
     rhs.targets_detected_distance.push_back(i*i/1.0/(i+2));
     rhs.targets_detected_elevation.push_back(i*i/1.0/(i+2));

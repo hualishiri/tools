@@ -114,6 +114,7 @@ void Track2D::Iterator::Value(TrackState& track_state){
   track_state.id = track_->id_;
   track_state.point.x = origin_current_.x + track_unit_state_.point.x;
   track_state.point.y = origin_current_.y + track_unit_state_.point.y; 
+  track_state.height = track_->height_;
   track_state.tick = tick_current_;
   track_state.acc = track_unit_state_.acc;
   track_state.speed =track_unit_state_.speed;
@@ -155,6 +156,7 @@ bool Track2D::TrackState::operator==(const TrackState& rhs) const {
   if (this->id == rhs.id &&
       DoubleEqual(this->point.x, rhs.point.x) &&
       DoubleEqual(this->point.y, rhs.point.y) &&
+      DoubleEqual(this->height, rhs.height) &&
       this->tick == rhs.tick &&
       DoubleEqual(static_cast<double>(this->acc),
           static_cast<double>(rhs.acc)) &&
@@ -168,12 +170,17 @@ bool Track2D::TrackState::operator==(const TrackState& rhs) const {
   return false;
 }
 
+bool Track2D::TrackState::operator!=(const TrackState& rhs) const {
+  return !(*this == rhs);
+}
+
 std::ostream& operator<<(std::ostream& out,
     const Track2D::TrackState& track_state) {
   out << std::fixed << std::setprecision(20);
   out << track_state.id << " ";
   out << track_state.point.x << " ";
   out << track_state.point.y << " ";
+  out << track_state.height<< " ";
   out << track_state.tick << " ";
   out << track_state.acc << " ";
   out << track_state.speed << " ";
@@ -188,6 +195,7 @@ std::istream& operator>>(std::istream& in,
   in >> track_state.id;
   in >> track_state.point.x;
   in >> track_state.point.y;
+  in >> track_state.height;
   in >> track_state.tick;
   in >> track_state.acc;
   in >> track_state.speed;

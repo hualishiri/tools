@@ -94,6 +94,7 @@ class OperaOption {
     double start_y;
     double radius_x;
     double radius_y;
+    double height;
 
     //雷达的系统误差
     struct Error error;   
@@ -156,6 +157,8 @@ class OperaOption {
     //该批量轨迹ID，无用
     long long id;
 
+    double height;
+
     Reserve data;
 
     struct ReserveTrival { int type; } reserve;
@@ -197,6 +200,7 @@ class OperaOption {
     std::vector<double> acceleration;
     double time_delay;
     int track_type;
+    double height;
     std::vector<Line> lines;
     std::vector<Circle> circles;
     std::vector<TrackUnitType> types;

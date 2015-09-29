@@ -18,6 +18,8 @@ public:
     //目标当前的位置
     Point2D point;
 
+    double height;
+
     //当前的机器时钟
     long long tick;
 
@@ -37,6 +39,7 @@ public:
     int track_type;
 
     bool operator==(const TrackState& rhs) const;
+    bool operator!=(const TrackState& rhs) const;
     friend std::ostream& operator<<(std::ostream& out,
         const TrackState& track_state);
     friend std::istream& operator>>(std::istream& in,
@@ -79,11 +82,13 @@ public:
   Track2D(long long id, 
       TrackUnitSet* track_unit_set, 
       long long interval, 
-      float init_speed)
+      float init_speed,
+      double height)
     :id_(id),
     track_unit_set_(track_unit_set), 
     init_speed_(init_speed), 
-    interval_(interval){
+    interval_(interval),
+    height_(height){
       track_type_ = ~0x00;
     }
   long long id(){ return id_; }
@@ -96,6 +101,7 @@ private:
   TrackUnitSet* track_unit_set_;
   float init_speed_;
   const long long interval_;    //the inverval of iteration
+  double height_;
   int track_type_;
 
   Track2D(const Track2D&);

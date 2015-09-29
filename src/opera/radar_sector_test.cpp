@@ -15,6 +15,7 @@ TEST(RADARSECTOR, GetState) {
   radar.type = 0;
   radar.x = 1.0;
   radar.y = 1.0;
+  radar.height = 13.314312;
   radar.track_id = 0x01;
   radar.azimuth_range.push_back(std::make_pair(0.0, 6.24));
   radar.distance_detect = 20;
@@ -36,6 +37,7 @@ TEST(RADARSECTOR, GetState) {
   track_state.id = 0x02;
   track_state.point.x = 3.0;
   track_state.point.y = 3.0;
+  track_state.height = 43.431;
   track_state.tick = 5243;
   track_state.acc = 3.0f;
   track_state.speed = 2.0;

@@ -122,10 +122,13 @@ std::istream& operator>>(std::istream& in, Radar2D::RadarError& radar_error) {
 
 bool Radar2D::RadarState::operator==(const RadarState& lhs) const {
   if (this->id == lhs.id &&
-      this->point.x == lhs.point.x &&
-      this->point.y == lhs.point.y &&
+      DoubleEqual(this->point.x, lhs.point.x) &&
+      DoubleEqual(this->point.y, lhs.point.y) &&
+      DoubleEqual(this->height, lhs.height) &&
       EqualOfVectorOfLong(this->ids, lhs.ids) &&
       EqualOfVectorOfPoint2D(this->targets, lhs.targets) &&
+      EqualOfVectorOfDouble(this->targets_height,
+          lhs.targets_height) &&
       EqualOfVectorOfDouble(this->targets_angle_azimuth,
           lhs.targets_angle_azimuth) &&
       EqualOfVectorOfDouble(this->targets_real_distance,
@@ -135,6 +138,8 @@ bool Radar2D::RadarState::operator==(const RadarState& lhs) const {
       EqualOfVectorOfDouble(this->targets_real_velocity,
           lhs.targets_real_velocity) &&
       EqualOfVectorOfPoint2D(this->targets_radar, lhs.targets_radar) &&
+      EqualOfVectorOfDouble(this->targets_radar_height,
+          lhs.targets_radar_height) &&
       EqualOfVectorOfDouble(this->targets_detected_distance,
           lhs.targets_detected_distance) &&
       EqualOfVectorOfDouble(this->targets_detected_elevation,
@@ -155,6 +160,7 @@ std::ostream& operator<<(std::ostream& out,
   out << radar_state.type<< " ";
   out << radar_state.point.x << " ";
   out << radar_state.point.y << " ";
+  out << radar_state.height << " ";
 
   out << radar_state.ids.size() << " ";
   for (std::size_t i=0; i!=radar_state.ids.size(); ++i)
@@ -165,6 +171,10 @@ std::ostream& operator<<(std::ostream& out,
     out << radar_state.targets[i].x << " ";
     out << radar_state.targets[i].y << " ";
   }
+
+  out << radar_state.targets_height.size() << " ";
+  for (std::size_t i=0; i!=radar_state.targets_height.size(); ++i)
+    out << radar_state.targets_height[i] << " ";
 
   out << radar_state.targets_angle_azimuth.size() << " ";
   for (std::size_t i=0; i!=radar_state.targets_angle_azimuth.size(); ++i)
@@ -188,8 +198,12 @@ std::ostream& operator<<(std::ostream& out,
     out << radar_state.targets_radar[i].y << " ";
   }
 
-  out << radar_state.targets_angle_azimuth.size() << " ";
-  for (std::size_t i=0; i!=radar_state.targets_angle_azimuth.size(); ++i)
+  out << radar_state.targets_radar_height.size() << " ";
+  for (std::size_t i=0; i!=radar_state.targets_radar_height.size(); ++i)
+    out << radar_state.targets_angle_azimuth[i] << " ";
+
+  out << radar_state.targets_detected_azimuth.size() << " ";
+  for (std::size_t i=0; i!=radar_state.targets_detected_azimuth.size(); ++i)
     out << radar_state.targets_angle_azimuth[i] << " ";
 
   out << radar_state.targets_detected_distance.size() << " ";
@@ -215,7 +229,7 @@ std::ostream& operator<<(std::ostream& out,
     out << radar_state.targets_error[i] << " ";
   return out;
 }
-                                    
+
 std::istream& operator>>(std::istream& in, Radar2D::RadarState& radar_state) {
   radar_state.ids.clear();
   radar_state.targets.clear();
@@ -235,6 +249,7 @@ std::istream& operator>>(std::istream& in, Radar2D::RadarState& radar_state) {
   in >> radar_state.type;
   in >> radar_state.point.x;
   in >> radar_state.point.y;
+  in >> radar_state.height;
 
   std::size_t length;
 
@@ -253,6 +268,12 @@ std::istream& operator>>(std::istream& in, Radar2D::RadarState& radar_state) {
   }
 
   double temp_double;
+  in >> length;
+  for (std::size_t i=0; i!=length; ++i) {
+    in >> temp_double;
+    radar_state.targets_height.push_back(temp_double);
+  }
+
   in >> length;
   for (std::size_t i=0; i!=length; ++i) {
     in >> temp_double;
@@ -281,6 +302,12 @@ std::istream& operator>>(std::istream& in, Radar2D::RadarState& radar_state) {
   for (std::size_t i=0; i!=length; ++i) {
     in >> point.x >> point.y;
     radar_state.targets_radar.push_back(point);
+  }
+
+  in >> length;
+  for (std::size_t i=0; i!=length; ++i) {
+    in >> temp_double;
+    radar_state.targets_radar_height.push_back(temp_double);
   }
 
   in >> length;

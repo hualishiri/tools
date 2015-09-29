@@ -63,7 +63,8 @@ TEST(TRACKSET, IteratorSuper) {
         Track2D* track = new Track2D(index++,
                                      track_unit_set1,
                                      interval,
-                                     init_speed);
+                                     init_speed,
+                                     421);
         track_set_rep.push_back(track);
 
         garbage_shapes.push_back(line);

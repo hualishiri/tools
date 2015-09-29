@@ -24,17 +24,21 @@ TEST(ALGOFUSION, Handle) {
       Point2D point;
       point.x = point.y = static_cast<double>(j);
       radar_state.targets.push_back(point);
+      radar_state.targets_height.push_back(1.0 * i * j);
       radar_state.targets_angle_azimuth.push_back(1.0 * i * j);
       radar_state.targets_real_distance.push_back(1.0 * i * j);
       radar_state.targets_real_elevation.push_back(1.0 * i * j);
       radar_state.targets_real_velocity.push_back(1.0 * i * j);
+      radar_state.targets_real_course.push_back(1.0 * i * j);
 
       point.x = point.y = static_cast<double>(1.0 * i * j);
       radar_state.targets_radar.push_back(point);
+      radar_state.targets_radar_height.push_back(1.0 * i * j);
       radar_state.targets_detected_azimuth.push_back(1.0 * i * j);
       radar_state.targets_detected_distance.push_back(1.0 * i * j);
       radar_state.targets_detected_elevation.push_back(1.0 * i * j);
       radar_state.targets_detected_velocity.push_back(1.0 * i * j);
+      radar_state.targets_detected_course.push_back(1.0 * i * j);
       Radar2D::RadarError radar_error;
       radar_state.targets_error.push_back(radar_error);
       radar_set_state.push_back(radar_state);

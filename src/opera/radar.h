@@ -57,11 +57,16 @@ class Radar2D : public Sensor {
     //雷达的位置
     Point2D point;
 
+    double height;
+
     //该雷达探测到的所有目标id
     std::vector<long long> ids;
 
     //目标位置，单位：由使用者决定
     std::vector<Point2D> targets;
+
+    //目标高度，单位：由使用者决定
+    std::vector<double> targets_height;
 
     //目标的方位角，单位：弧度
     std::vector<double> targets_angle_azimuth;
@@ -75,8 +80,14 @@ class Radar2D : public Sensor {
     //目标的真实的速度，单位：单位：由使用者决定
     std::vector<double> targets_real_velocity;
 
+    //目标的真实的航向，单位：单位：弧度
+    std::vector<double> targets_real_course;
+
     //雷达探测到的目标所在位置，单位：由使用者决定
     std::vector<Point2D> targets_radar;
+
+    //雷达探测到的目标所在高度，单位：由使用者决定
+    std::vector<double> targets_radar_height;
 
     //雷达探测到的目标的方位角，单位：弧度
     std::vector<double> targets_detected_azimuth;
@@ -89,6 +100,9 @@ class Radar2D : public Sensor {
 
     //雷达探测到的目标的速度，单位：单位：由使用者决定
     std::vector<double> targets_detected_velocity;
+
+    //雷达探测到的目标的航向，单位：弧度
+    std::vector<double> targets_detected_course;
 
     //暂时无用
     std::vector<Point2D> targets_filter;

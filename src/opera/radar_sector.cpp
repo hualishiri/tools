@@ -1,5 +1,7 @@
 #include "opera/radar_sector.h"
 
+#include <map>
+
 #include "util/logger.h"
 #include "util/tool.h"
 
@@ -38,6 +40,7 @@ void SectorRadar::GetState(
   radar_state.type = radar_->type;
   radar_state.point.x = radar_->x;
   radar_state.point.y = radar_->y;
+  radar_state.height = radar_->height;
   ClearRadarState(radar_state);
 
   std::size_t index_i = -1;
@@ -50,10 +53,13 @@ void SectorRadar::GetState(
     if (IsCaptured(*radar_, target)) {
       radar_state.ids.push_back(iter->id);
       radar_state.targets.push_back(iter->point);  
+      radar_state.targets_height.push_back(iter->height);
       radar_state.targets_real_velocity.push_back(iter->speed);
     } 
   }
   CalculateRadarState(radar_state);
+  radar_state_last_ = radar_state;
+  CalculateObjectCourse(radar_state);
 
   assert(radar_state.ids.size() == radar_state.targets.size());
   assert(radar_state.ids.size() == radar_state.targets_angle_azimuth.size());
@@ -146,7 +152,7 @@ void SectorRadar::CalculateRadarState(RadarState& radar_state) {
                                        radar_state.targets[i].y));
     radar_state.targets_real_elevation.push_back(Elevation(
         radar_state.targets_real_distance[i],
-        1000));
+        radar_state.targets_height[i]));
 
     radar_state.targets_detected_azimuth.push_back(
       radar_state.targets_angle_azimuth[i] + 
@@ -164,9 +170,13 @@ void SectorRadar::CalculateRadarState(RadarState& radar_state) {
     Point2D target;
     CalculateObjectPosition(radar_state.point,
                             radar_state.targets_detected_azimuth[i],
+                            cos(radar_state.targets_detected_elevation[i]) *
                             radar_state.targets_detected_distance[i],
                             target);
     radar_state.targets_radar.push_back(target);
+    radar_state.targets_radar_height.push_back(
+        sin(radar_state.targets_detected_elevation[i]) *
+        radar_state.targets_detected_distance[i]);
     
     radar_state.targets_detected_velocity.push_back(
         radar_state.targets_real_velocity[i] *
@@ -213,6 +223,51 @@ void SectorRadar::ClearRadarState(RadarState& radar_state) const {
   radar_state.targets_detected_velocity.clear();
   radar_state.targets_error.clear();
   radar_state.ids.clear();
+}
+
+void SectorRadar::CalculateObjectCourse(RadarState& radar_state) {
+  std::map<long long, std::pair<double, double> > real_old_position;
+  for (std::size_t i=0; i!=radar_state_last_.ids.size(); ++i)
+    real_old_position.insert(std::make_pair(radar_state_last_.ids[i],
+        std::make_pair(radar_state_last_.targets[i].x,
+        radar_state_last_.targets[i].y)));
+  radar_state.targets_real_course.clear();
+  for (std::size_t i=0; i!=radar_state.ids.size(); ++i) {
+    if (0 == real_old_position.count(radar_state.ids[i])) {
+      radar_state.targets_real_course.push_back(0.0);
+    } else {
+      std::pair<double, double> temp = real_old_position[radar_state.ids[i]];
+      radar_state.targets_real_course.push_back(AngleFromStartByClockInCircle(
+         temp.first,
+         temp.second + 1.0,
+         temp.first,
+         temp.second,
+         radar_state.targets[i].x,
+         radar_state.targets[i].y
+         ));
+    }
+  }
+
+  std::map<long long, std::pair<double, double> > detected_old_position;
+  for (std::size_t i=0; i!=radar_state_last_.ids.size(); ++i)
+    detected_old_position.insert(std::make_pair(radar_state_last_.ids[i],
+        std::make_pair(radar_state_last_.targets_radar[i].x,
+        radar_state_last_.targets_radar[i].y)));
+  radar_state.targets_detected_course.clear();
+  for (std::size_t i=0; i!=radar_state.ids.size(); ++i) {
+    if (0 == detected_old_position.count(radar_state.ids[i])) {
+      radar_state.targets_detected_course.push_back(0.0);
+    } else {
+      std::pair<double, double> temp = detected_old_position[radar_state.ids[i]];
+      radar_state.targets_detected_course.push_back(AngleFromStartByClockInCircle(
+         temp.first,
+         temp.second + 1.0,
+         temp.first,
+         temp.second,
+         radar_state.targets[i].x,
+         radar_state.targets[i].y));
+    }
+  }
 }
 
 } //namespace tools

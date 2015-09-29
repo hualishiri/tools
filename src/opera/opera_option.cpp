@@ -23,7 +23,7 @@ OperaOption* OperaOption::Instance() {
 
 void OperaOption::push_back_radar(Radar& radar) {
   assert(radar.id > 0);
-  assert(radar.type == R_STATIC || radar.type == R_DYNAMIC);
+  assert(radar.get_type() == R_STATIC || radar.get_type() == R_DYNAMIC);
   assert(ValidOfLongitude(radar.start_x));
   assert(ValidOfLatitude(radar.start_y));
   assert(ValidOfLongitude(radar.radius_x));
@@ -177,6 +177,7 @@ std::vector<OperaOption::TrackInternal> OperaOption::tracks() const {
         tracks_[i].accelerations[j],
         tracks_[i].time_delays[j],
         tracks_[i].track_types[j],
+        tracks_[i].height,
         tracks_[i].lines,
         tracks_[i].circles,
         tracks_[i].types
@@ -451,6 +452,7 @@ bool OperaOption::Radar::operator==(const OperaOption::Radar& radar) const {
       !DoubleEqual(this->start_y, radar.start_y) ||
       !DoubleEqual(this->radius_x, radar.radius_x) ||
       !DoubleEqual(this->radius_y, radar.radius_y) ||
+      !DoubleEqual(this->height, radar.height) ||
       this->error != radar.error ||
       this->azimuth_range.size() != radar.azimuth_range.size() ||
       this->data != radar.data
@@ -481,6 +483,7 @@ std::ostream& operator<< (std::ostream& out, const OperaOption::Radar& radar) {
   out << radar.start_y << " ";
   out << radar.radius_x << " ";
   out << radar.radius_y << " ";
+  out << radar.height << " ";
   out << radar.error << " ";
   out << radar.azimuth_range.size() << " ";
   for (std::size_t i=0; i!=radar.azimuth_range.size(); ++i)
@@ -501,6 +504,7 @@ std::istream& operator>> (std::istream& in, OperaOption::Radar& radar) {
   in >> radar.start_y;
   in >> radar.radius_x;
   in >> radar.radius_y;
+  in >> radar.height;
   in >> radar.error;
 
   std::size_t length;
@@ -587,6 +591,7 @@ std::ostream& operator<< (std::ostream& out, const OperaOption::Circle& circle) 
 
 bool OperaOption::Track::operator==(const Track& track) const {
   if (this->id != track.id ||
+      !DoubleEqual(this->height, track.height) ||
       this->data != track.data ||
       this->reserve.type != track.reserve.type ||
       this->start_speeds.size() != track.start_speeds.size() ||
@@ -729,6 +734,7 @@ void OperaOption::Reserve::set_string(int id, const std::string& val) {
 
 std::istream& operator>> (std::istream& in, OperaOption::Track& track) {
   in >> track.id;
+  in >> track.height;
   in >> track.data;
   in >> track.reserve.type;
   transform_from_istream(in, track.start_speeds);
@@ -758,6 +764,7 @@ std::istream& operator>> (std::istream& in, OperaOption::Track& track) {
 std::ostream& operator<< (std::ostream& out, const OperaOption::Track& track) {
   out << std::fixed << std::setprecision(20);
   out << track.id << " ";
+  out << track.height << " ";
   out << track.data << " ";
   out << track.reserve.type << " ";
 

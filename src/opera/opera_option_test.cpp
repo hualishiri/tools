@@ -37,6 +37,7 @@ TEST(OPERAOPTION, PushBack) {
       radar.start_y = 15.32;
       radar.radius_x = 98.321;
       radar.radius_y = 19.1342;
+      radar.height = 1432.4314312;
 
       radar.error.error_random_azimuth = 0.001;
       radar.error.error_random_distance = 1.0;
@@ -80,6 +81,7 @@ TEST(OPERAOPTION, OPERATOR_OUT) {
     radar.start_y = 15.32;
     radar.radius_x = 98.321;
     radar.radius_y = 19.1342;
+    radar.height = 23.4312431;
     radar.error.error_random_azimuth = 0.01;
     radar.error.error_random_distance = 1.0;
     radar.error.error_random_distance = 0.01;
@@ -205,6 +207,7 @@ TEST(OPERAOPTION, RadarOperator) {
   radar.start_y = 13.031;
   radar.radius_x = 98.4312;
   radar.radius_y = 88.4312;
+  radar.height = 98.3412123;
 
   OperaOption::Error error = {
     43.34124312,
