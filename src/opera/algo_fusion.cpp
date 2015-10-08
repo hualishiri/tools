@@ -21,6 +21,8 @@ void AlgoFusion::Handle(void* input, void* output) {
   FusionTarget target;
   std::map<long long, StatisticsTarget> statistics; 
   for (std::size_t i=0; i!=in->radar_set_state->size(); ++i) {
+    if(6 == (*in->radar_set_state)[i].get_type_trival())
+      continue;
     for (std::size_t j=0; j!=(*in->radar_set_state)[i].ids.size(); ++j) {
       if (0 == statistics.count((*in->radar_set_state)[i].ids[j])) {
         target.id_target = (*in->radar_set_state)[i].ids[j];

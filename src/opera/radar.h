@@ -115,6 +115,12 @@ class Radar2D : public Sensor {
     friend std::ostream& operator<<(std::ostream& out,
                                     const RadarState& radar_state);
     friend std::istream& operator>>(std::istream& in, RadarState& radar_state);
+
+    unsigned char get_type_trival() const {
+      int val = type;
+      val = (val >> 8) & 0x0ff;
+      return val;
+    };
   };
 
   virtual void GetState(const TrackSet2D::TrackSetState& track_set_state,
