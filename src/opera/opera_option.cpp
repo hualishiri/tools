@@ -80,8 +80,8 @@ void transform_from_istream(std::istream& in, std::vector<T>& vec) {
   vec.clear();
   std::size_t length;
   in >> length;
-  T temp;
   for (std::size_t i=0; i!=length; ++i) {
+    T temp;
     in >> temp; 
     vec.push_back(temp);
   }
