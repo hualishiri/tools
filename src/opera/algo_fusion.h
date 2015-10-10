@@ -24,6 +24,8 @@ public:
     long long tick;
     long long id_target;
 
+    std::vector<long long> radar_ids;
+
     Point2D real_position;
     double real_height;
     double real_azimuth;

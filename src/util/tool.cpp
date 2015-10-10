@@ -136,6 +136,16 @@ void FromPixelToWgs(double* x, double* y) {
 
 /* Generates a double number ranging from -1.0 to 1.0 */
 double GetRandNumber(int seed) {
+  double error_gauss = GetRandNumberGaussian();
+  if (error_gauss > 3.0)
+    error_gauss = 3.0;
+  if (error_gauss < -3.0)
+    error_gauss = -3.0;
+  return error_gauss / 3.0;
+
+  int i = 0;
+  if (0 == i)
+    return GetRandNumberGaussian();
   seed_base += 0x0deadbeef;
   srand(static_cast<unsigned>(time(NULL)) + seed + seed_base);
   double number = rand() / (double)RAND_MAX;
@@ -145,6 +155,31 @@ double GetRandNumber(int seed) {
   number = number / 10000000000.0;
   number = number * 2.0 - 1.0;
   return number;
+}
+
+double GetRandNumberGaussian() {
+  static double V1, V2, S;
+  static int phase = 0;
+  double X;
+  
+  if ( phase == 0 ) {
+    do {
+      double U1 = (double)rand() / RAND_MAX;
+      double U2 = (double)rand() / RAND_MAX;
+      
+      V1 = 2 * U1 - 1;
+      V2 = 2 * U2 - 1;
+      S = V1 * V1 + V2 * V2;
+    } while(S >= 1 || S == 0);
+      
+    X = V1 * sqrt(-2 * log(S) / S);
+  } else {
+    X = V2 * sqrt(-2 * log(S) / S);
+  }
+                                         
+  phase = 1 - phase;
+                                     
+  return X;
 }
 
 double Radius(double angle) {

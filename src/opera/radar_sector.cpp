@@ -5,6 +5,14 @@
 #include "util/logger.h"
 #include "util/tool.h"
 
+namespace {
+
+double GetRandError(int seed, double data) {
+  return data * 3.0 * tools::GetRandNumber(seed);
+}
+
+}
+
 namespace tools {
 
 SectorRadar::SectorRadar(Radar* radar, RadarNoise* radar_noise)
@@ -116,18 +124,14 @@ bool SectorRadar::IsInRange(
 }
 
 void SectorRadar::CalculateRadarError(int seed) {
-  error_.error_random_distance = radar_->error_random_distance 
-      * GetRandNumber(seed);
-  error_.error_random_azimuth = radar_->error_random_azimuth 
-      * GetRandNumber(seed + 1);
-  error_.error_random_elevation = radar_->error_random_elevation
-      * GetRandNumber(seed + 2);
-  error_.error_system_distance = radar_->error_system_distance
-      * GetRandNumber(seed + 3);
-  error_.error_system_azimuth = radar_->error_system_azimuth
-      * GetRandNumber(seed + 4);
-  error_.error_system_elevation = radar_->error_system_elevation
-      * GetRandNumber(seed + 5);
+  error_.error_random_distance = GetRandError(seed, radar_->error_random_distance);
+  error_.error_random_azimuth = GetRandError(seed, radar_->error_random_azimuth);
+  error_.error_random_elevation = GetRandError(seed, radar_->error_random_elevation);
+
+  error_.error_system_distance = radar_->error_system_distance;
+  error_.error_system_azimuth = radar_->error_system_azimuth;
+  error_.error_system_elevation = radar_->error_system_elevation;
+
   error_.error_overall_distance = error_.error_random_distance
       + error_.error_system_distance;
   error_.error_overall_azimuth = error_.error_random_azimuth

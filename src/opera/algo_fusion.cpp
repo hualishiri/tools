@@ -6,10 +6,10 @@
 
 namespace tools {
 
-  struct StatisticsTarget {
-    struct AlgoFusion::FusionTarget target;
-    int count;
-  };
+struct StatisticsTarget {
+  struct AlgoFusion::FusionTarget target;
+  int count;
+};
 
 void AlgoFusion::Handle(void* input, void* output) {
   if (NULL == input || NULL == output)
@@ -44,6 +44,9 @@ void AlgoFusion::Handle(void* input, void* output) {
         target.fusion_elevation = (*in->radar_set_state)[i].targets_detected_elevation[j];
         target.fusion_velocity = (*in->radar_set_state)[i].targets_detected_velocity[j];
         target.fusion_course = (*in->radar_set_state)[i].targets_detected_course[j];
+        target.radar_ids.clear();
+        target.radar_ids.push_back((*in->radar_set_state)[i].id);
+
         StatisticsTarget temp;
         temp.count = 1;
         temp.target = target;
@@ -67,6 +70,8 @@ void AlgoFusion::Handle(void* input, void* output) {
             += (*in->radar_set_state)[i].targets_detected_velocity[j];
         statistics[target.id_target].target.fusion_course
             += (*in->radar_set_state)[i].targets_detected_course[j];
+        statistics[target.id_target].target.radar_ids.push_back(
+            (*in->radar_set_state)[i].id);
         ++statistics[target.id_target].count;
       }
     }

@@ -8,6 +8,7 @@
 #include "opera/acceleration.h"
 #include "opera/circle.h"
 #include "opera/algo_fusion.h"
+#include "opera/algo_filter.h"
 #include "opera/line.h"
 #include "opera/opera_option.h"
 #include "opera/radar_sector.h"
@@ -268,6 +269,15 @@ void Opera2D::Iterator::Value(OperaState& opera_state) {
   input.radar_set_state = &opera_state.radar_set_state.radar_set_state;
   output.targets = &opera_state.fusion_set_state;
   algo_fusion.Handle((void*)&input, (void*)&output);
+
+  AlgoFilter algo_filter;
+  AlgoFilter::Input filter_input; 
+  AlgoFilter::Output filter_output;
+  filter_input.radar_set_state = &opera_state.radar_set_state.radar_set_state;
+  filter_output.targets = &opera_state.filter_set_state;
+  algo_filter.Handle((void*)&filter_input, (void*)&filter_output);
+
+
 }
 
 void Opera2D::OperaState::ConvertToWgs() {

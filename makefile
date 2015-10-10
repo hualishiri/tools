@@ -12,7 +12,7 @@ OBJECTS = testharness.o map.o map_projection.o tool.o logger.o \
 					line.o circle.o track_unit.o \
 					track.o track_set.o radar_set.o \
 					opera_option.o opera.o radar_sector.o radar_noise_gauss.o \
-					opera_random.o opera_analysis.o radar.o algo_fusion.o
+					opera_random.o opera_analysis.o radar.o algo_fusion.o algo_filter.o
 
 OUTPUTOJBECTS = $(patsubst %, $(OUTPUT)/%, $(OBJECTS))
 
@@ -34,7 +34,8 @@ TESTS = \
 	opera_analysis_test \
 	radar_sector_test \
 	radar_test \
-	algo_fusion_test
+	algo_fusion_test \
+	algo_filter_test
 
 default : all
 	
@@ -81,6 +82,8 @@ radar.o : src/opera/radar.h src/opera/radar.cpp
 	$(GCC) -c src/opera/radar.cpp -o $(OUTPUT)/radar.o
 algo_fusion.o : src/opera/algorithm.h src/opera/algo_fusion.h src/opera/algo_fusion.cpp
 	$(GCC) -c src/opera/algo_fusion.cpp -o $(OUTPUT)/algo_fusion.o
+algo_filter.o : src/opera/algorithm.h src/opera/algo_filter.h src/opera/algo_filter.cpp
+	$(GCC) -c src/opera/algo_filter.cpp -o $(OUTPUT)/algo_filter.o
 
 
 map_test.o : map.o src/map/map_test.cpp
@@ -124,6 +127,9 @@ radar_test.o : src/opera/radar.h src/opera/radar.cpp src/opera/radar_test.cpp
 algo_fusion_test.o : src/opera/algorithm.h src/opera/algo_fusion.h \
 	src/opera/algo_fusion.cpp src/opera/algo_fusion_test.cpp
 	$(GCC) -c src/opera/algo_fusion_test.cpp -o $(OUTPUT)/algo_fusion_test.o
+algo_filter_test.o : src/opera/algorithm.h src/opera/algo_filter.h \
+	src/opera/algo_filter.cpp src/opera/algo_filter_test.cpp
+	$(GCC) -c src/opera/algo_filter_test.cpp -o $(OUTPUT)/algo_filter_test.o
 	
 	
 map_test : testharness.o map.o map_test.o
@@ -167,6 +173,8 @@ radar_test : radar_test.o
 	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/radar_test.o -o $(OUTPUT)/radar_test
 algo_fusion_test : algo_fusion_test.o
 	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/algo_fusion_test.o -o $(OUTPUT)/algo_fusion_test
+algo_filter_test : algo_filter_test.o
+	$(GCC) $(OUTPUTOJBECTS) $(OUTPUT)/algo_filter_test.o -o $(OUTPUT)/algo_filter_test
 	
 clean :
 	rm -rf $(OUTPUTOJBECTS)

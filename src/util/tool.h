@@ -30,6 +30,8 @@ void FromPixelToWgs(double* x, double* y);
 
 double GetRandNumber(int seed);
 
+double GetRandNumberGaussian();
+
 double Radius(double angle);
 
 double Distance2D(double lhs_x, double lhs_y, double rhs_x, double rhs_y);
