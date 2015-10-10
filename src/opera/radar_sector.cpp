@@ -165,8 +165,12 @@ void SectorRadar::CalculateRadarState(RadarState& radar_state) {
         radar_state.targets_real_distance[i] + 
         radar_state.targets_error[i].error_overall_distance);
     radar_state.targets_detected_elevation.push_back(
-        radar_state.targets_real_elevation[i] + 
+        radar_state.targets_real_elevation[i] +
         radar_state.targets_error[i].error_overall_elevation);
+    if (radar_state.targets_detected_elevation[i] > 2.0 * T_PI)
+      radar_state.targets_detected_elevation[i] -= 2.0 * T_PI;
+    else if (radar_state.targets_detected_elevation[i] < 0.0)
+      radar_state.targets_detected_elevation[i] += 2.0 * T_PI;   
     Point2D target;
     CalculateObjectPosition(radar_state.point,
                             radar_state.targets_detected_azimuth[i],
@@ -210,19 +214,23 @@ void SectorRadar::CalculateObjectPosition(const Point2D& radar,
 }
 
 void SectorRadar::ClearRadarState(RadarState& radar_state) const {
+  radar_state.ids.clear();
   radar_state.targets.clear();
-  radar_state.targets_radar.clear();
-  radar_state.targets_filter.clear();
+  radar_state.targets_height.clear();
   radar_state.targets_angle_azimuth.clear();
   radar_state.targets_real_distance.clear();
   radar_state.targets_real_elevation.clear();
   radar_state.targets_real_velocity.clear();
+  radar_state.targets_real_course.clear();
+  radar_state.targets_radar.clear();
+  radar_state.targets_radar_height.clear();
   radar_state.targets_detected_azimuth.clear();
   radar_state.targets_detected_distance.clear();
   radar_state.targets_detected_elevation.clear();
   radar_state.targets_detected_velocity.clear();
+  radar_state.targets_detected_course.clear();
+  radar_state.targets_filter.clear();
   radar_state.targets_error.clear();
-  radar_state.ids.clear();
 }
 
 void SectorRadar::CalculateObjectCourse(RadarState& radar_state) {
