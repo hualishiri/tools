@@ -14,6 +14,9 @@
 #include "opera/radar_sector.h"
 #include "opera/radar_noise_gauss.h"
 #include "util/tool.h"
+#include "opera/track_set.h"
+#include "opera/radar_set.h"
+#include "opera/opera_option.h"
 
 namespace tools {
 
@@ -364,6 +367,16 @@ std::istream& operator>>(std::istream& in,
   in >> opera_state.track_set_state;
   in >> opera_state.radar_set_state;
   return in;
+}
+
+void ReadFromFile(std::istream& in, Opera2D::OperaState& opera_state) {
+  ReadFromFile(in, opera_state.radar_set_state);
+  ReadFromFile(in, opera_state.track_set_state);
+}
+
+void WriteToFile(std::ostream& os, const Opera2D::OperaState& opera_state) {
+  WriteToFile(os, opera_state.radar_set_state);
+  WriteToFile(os, opera_state.track_set_state);
 }
 
 } //namespace tools

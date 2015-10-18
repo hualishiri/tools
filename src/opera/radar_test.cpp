@@ -133,6 +133,13 @@ TEST(RADAR2D, RadarStateOperator) {
   Radar2D::RadarState radar_state_result;
   in >> radar_state_result;
   ASSERT_TRUE(lhs == radar_state_result);
+
+  std::stringstream stream_bin;
+  WriteToFile(stream_bin, lhs);
+  stream_bin.seekg(0, stream_bin.beg);
+  Radar2D::RadarState temp_bin;
+  ReadFromFile(stream_bin, temp_bin);
+  ASSERT_TRUE(temp_bin == lhs);
 }
 
 }

@@ -116,6 +116,9 @@ class Radar2D : public Sensor {
                                     const RadarState& radar_state);
     friend std::istream& operator>>(std::istream& in, RadarState& radar_state);
 
+    friend void ReadFromFile(std::istream& in, Radar2D::RadarState& radar_state);
+    friend void WriteToFile(std::ostream& os, const Radar2D::RadarState& radar_state);
+
     unsigned char get_type_trival() const {
       int val = type;
       val = (val >> 8) & 0x0ff;
@@ -130,6 +133,9 @@ class Radar2D : public Sensor {
   virtual int type() const = 0;
   virtual long long track_id() const = 0;
 };
+
+void ReadFromFile(std::istream& in, Radar2D::RadarState& radar_state);
+void WriteToFile(std::ostream& os, const Radar2D::RadarState& radar_state);
 
 } //namespace tools
 

@@ -6,6 +6,13 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <iomanip>
+
+#include "opera/radar_set.h"
+#include "opera/track_set.h"
+#include "opera/shape.h"
+#include "opera/radar.h"
+#include "opera/track.h"
 
 namespace tools {
 
@@ -13,6 +20,9 @@ class OperaOption {
  public:
   friend std::istream& operator>> (std::istream& in, OperaOption& op);
   friend std::ostream& operator<< (std::ostream& os, const OperaOption& op);
+
+  friend void ReadFromFile(std::istream& in, OperaOption& op);
+  friend void WriteToFile(std::ostream& os, OperaOption& op);
 
   struct Reserve {
 
@@ -28,8 +38,13 @@ class OperaOption {
     bool operator==(const Reserve& reserve) const;
     bool operator!=(const Reserve& reserve) const;
 
-    friend std::istream& operator>>(std::istream& in, OperaOption::Reserve& reserve); 
-    friend std::ostream& operator<< (std::ostream& os, const OperaOption::Reserve& reserve);
+    friend std::istream& operator>>(std::istream& in,
+        OperaOption::Reserve& reserve); 
+    friend std::ostream& operator<< (std::ostream& os,
+        const OperaOption::Reserve& reserve);
+
+  friend void ReadFromFile(std::istream& in, OperaOption::Reserve& reserve);
+  friend void WriteToFile(std::ostream& os, OperaOption::Reserve& reserve);
 
   private:
     enum {
@@ -118,6 +133,9 @@ class OperaOption {
     bool operator!=(const Radar& radar) const;
     friend std::istream& operator>> (std::istream& in, Radar& radar);
     friend std::ostream& operator<< (std::ostream& out, const Radar& radar);
+
+    friend void ReadFromFile(std::istream& in, OperaOption::Radar& radar);
+    friend void WriteToFile(std::ostream& os, OperaOption::Radar& radar);
   };
   
   struct Line {
@@ -191,6 +209,10 @@ class OperaOption {
     bool operator!=(const OperaOption::Track& track) const;
     friend std::istream& operator>> (std::istream& in, Track& track);
     friend std::ostream& operator<< (std::ostream& out, const Track& track);
+
+
+    friend void ReadFromFile(std::istream& in, OperaOption::Track& track);
+    friend void WriteToFile(std::ostream& os, OperaOption::Track& track);
   };
 
   //内部使用的变量
@@ -276,6 +298,80 @@ std::istream& operator>> (std::istream& in, OperaOption::Circle& circle);
 
 std::ostream& operator<< (std::ostream& out, const OperaOption::Track& track);
 std::istream& operator>> (std::istream& in, OperaOption::Track& track);
+
+template <class T>
+void transform_to_ostream(std::ostream& out, const std::vector<T>& vec) {
+  out << std::fixed << std::setprecision(20);
+  out << vec.size() << " ";
+  for (std::size_t i=0; i!=vec.size(); ++i)
+    out << vec[i] << " ";
+}
+
+template <class T>
+void transform_from_istream(std::istream& in, std::vector<T>& vec) {
+  vec.clear();
+  std::size_t length;
+  in >> length;
+  for (std::size_t i=0; i!=length; ++i) {
+    T temp;
+    in >> temp; 
+    vec.push_back(temp);
+  }
+}
+
+template <typename T> 
+void transform_from_istream_bin(std::istream& in, std::vector<T>& vec) {
+  vec.clear();
+  std::size_t len;
+  in.read((char*)(&len), sizeof(len));
+  for (std::size_t i=0; i!=len; ++i) {
+    T temp;
+    in.read((char*)(&temp), sizeof(T));
+    vec.push_back(temp);
+  }
+}
+
+template <typename T>
+void transform_to_ostream_bin(std::ostream& os, const std::vector<T>& vec) {
+  std::size_t len = vec.size();
+  os.write((char*)(&len), sizeof(len));
+  for (std::size_t i=0; i!=len; ++i) {
+    os.write((char*)(&vec[i]), sizeof(T));
+  }
+}
+
+template <typename T> 
+void transform_from_istream_bin_trans(std::istream& in, std::vector<T>& vec) {
+  vec.clear();
+  std::size_t len;
+  in.read((char*)(&len), sizeof(len));
+  for (std::size_t i=0; i!=len; ++i) {
+    T temp;
+    ReadFromFile(in, temp);
+    vec.push_back(temp);
+  }
+}
+
+template <typename T>
+void transform_to_ostream_bin_trans(std::ostream& os, const std::vector<T>& vec) {
+  std::size_t len = vec.size();
+  os.write((char*)(&len), sizeof(len));
+  for (std::size_t i=0; i!=len; ++i) {
+    WriteToFile(os, vec[i]);
+  }
+}
+
+void ReadFromFile(std::istream& in, OperaOption::Reserve& reserve);
+void WriteToFile(std::ostream& os, OperaOption::Reserve& reserve);
+
+void ReadFromFile(std::istream& in, OperaOption::Radar& radar);
+void WriteToFile(std::ostream& os, OperaOption::Radar& radar);
+
+void ReadFromFile(std::istream& in, OperaOption::Track& track);
+void WriteToFile(std::ostream& os, OperaOption::Track& track);
+
+void ReadFromFile(std::istream& in, OperaOption& op);
+void WriteToFile(std::ostream& os, OperaOption& op);
 
 } //namespace tools
 

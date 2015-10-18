@@ -29,6 +29,11 @@ class TrackSet2D {
         const TrackSetState& track_set_state);
     friend std::istream& operator>>(std::istream& in,
         TrackSetState& track_set_state);
+
+    friend void ReadFromFile(std::istream& in,
+        TrackSet2D::TrackSetState& track_set_state);
+    friend void WriteToFile(std::ostream& os,
+        const TrackSet2D::TrackSetState& track_set_state);
   };
 
   class Iterator {
@@ -87,6 +92,9 @@ std::ostream& operator<<(std::ostream& out,
     const TrackSet2D::TrackSetState& track_set_state);
 std::istream& operator>>(std::istream& in,
     TrackSet2D::TrackSetState& track_set_state);
+
+void ReadFromFile(std::istream& in, TrackSet2D::TrackSetState& track_set_state);
+void WriteToFile(std::ostream& os, const TrackSet2D::TrackSetState& track_set_state);
 
 } //namespace tools
 

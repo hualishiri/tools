@@ -164,6 +164,17 @@ TEST(OPERA, OperaState) {
   std::ostringstream ostrstream_temp;
   ostrstream_temp << opera_state_temp;
   assert(0 == strcmp(ostrstream.str().c_str(), ostrstream_temp.str().c_str()));
+
+
+  std::stringstream stream_bin;
+  WriteToFile(stream_bin, opera_state);
+  stream_bin.seekg(0, stream_bin.beg);
+  Opera2D::OperaState opera_state_temp_bin;
+  ReadFromFile(stream_bin, opera_state_temp_bin);
+
+  std::stringstream stream_bin_temp;
+  WriteToFile(stream_bin_temp, opera_state_temp_bin);
+  assert(0 == strcmp(stream_bin.str().c_str(), stream_bin_temp.str().c_str()));
 }
 
 } //namespace tools

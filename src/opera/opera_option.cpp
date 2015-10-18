@@ -9,6 +9,9 @@
 
 #include "util/tool.h"
 #include "util/logger.h"
+#include "opera/radar_set.h"
+#include "opera/track_set.h"
+#include "opera/shape.h"
 
 namespace tools {
 
@@ -56,13 +59,6 @@ void OperaOption::pop_radar(long long id) {
   }
 }
 
-template <class T>
-void transform_to_ostream(std::ostream& out, const std::vector<T>& vec) {
-  out << std::fixed << std::setprecision(20);
-  out << vec.size() << " ";
-  for (std::size_t i=0; i!=vec.size(); ++i)
-    out << vec[i] << " ";
-}
 
 void transform_to_ostream(std::ostream& out,
     const std::vector<OperaOption::TrackUnitType>& vec) {
@@ -75,17 +71,6 @@ void transform_to_ostream(std::ostream& out,
       out << 1 << " ";
 }
 
-template <class T>
-void transform_from_istream(std::istream& in, std::vector<T>& vec) {
-  vec.clear();
-  std::size_t length;
-  in >> length;
-  for (std::size_t i=0; i!=length; ++i) {
-    T temp;
-    in >> temp; 
-    vec.push_back(temp);
-  }
-}
 
 void transform_from_istream(std::istream& in,
     std::vector<OperaOption::TrackUnitType>& vec) {
@@ -787,6 +772,149 @@ std::ostream& operator<< (std::ostream& out, const OperaOption::Track& track) {
   transform_to_ostream(out, track.track_types);
 
   return out;
+}
+
+void ReadFromFile(std::istream& in, OperaOption::Reserve& reserve) {
+  transform_from_istream_bin(in, reserve.data);
+}
+
+void WriteToFile(std::ostream& os, OperaOption::Reserve& reserve) {
+  transform_to_ostream_bin(os, reserve.data);
+}
+
+void ReadFromFile(std::istream& in, OperaOption::Track& track) {
+  in.read((char*)(&track.id), sizeof(track.id));
+  in.read((char*)(&track.height), sizeof(track.height));
+  ReadFromFile(in, track.data);
+  in.read((char*)(&track.reserve), sizeof(track.reserve));
+  track.start_speeds.clear();
+  transform_from_istream_bin(in, track.start_speeds);
+  std::size_t len = 0;
+  in.read((char*)(&len), sizeof(len));
+  track.accelerations.clear();
+  for (std::size_t i=0; i!=len; ++i) {
+    std::vector<double> temp;
+    transform_from_istream_bin(in, temp);
+    track.accelerations.push_back(temp);
+  }
+  track.time_delays.clear();
+  transform_from_istream_bin(in, track.time_delays);
+  in.read((char*)(&track.batch_count), sizeof(track.batch_count));
+  in.read((char*)(&track.level_noise_track), sizeof(track.level_noise_track));
+  track.ids.clear();
+  transform_from_istream_bin(in, track.ids);
+  track.lines.clear();
+  transform_from_istream_bin(in, track.lines);
+  track.circles.clear();
+  transform_from_istream_bin(in, track.circles);
+  track.types.clear();
+  transform_from_istream_bin(in, track.types);
+  track.track_types.clear();
+  transform_from_istream_bin(in, track.track_types);
+}
+
+void WriteToFile(std::ostream& os, OperaOption::Track& track) {
+  os.write((char*)(&track.id), sizeof(track.id));
+  os.write((char*)(&track.height), sizeof(track.height));
+  WriteToFile(os, track.data);
+  os.write((char*)(&track.reserve), sizeof(track.reserve));
+  transform_to_ostream_bin(os, track.start_speeds);
+  std::size_t len = track.accelerations.size();
+  os.write((char*)(&len), sizeof(len));
+  for (std::size_t i=0; i!=len; ++i) {
+    transform_to_ostream_bin(os, track.accelerations[i]);
+  }
+  transform_to_ostream_bin(os, track.time_delays);
+  os.write((char*)(&track.batch_count), sizeof(track.batch_count));
+  os.write((char*)(&track.level_noise_track), sizeof(track.level_noise_track));
+  transform_to_ostream_bin(os, track.ids);
+  transform_to_ostream_bin(os, track.lines);
+  transform_to_ostream_bin(os, track.circles);
+  transform_to_ostream_bin(os, track.types);
+  transform_to_ostream_bin(os, track.track_types);
+}
+
+void ReadFromFile(std::istream& in, OperaOption::Radar& radar) {
+  in.read((char*)(&radar.id), sizeof(radar.id));
+  in.read((char*)(&radar.type), sizeof(radar.type));
+  in.read((char*)(&radar.detecting_objects_types), sizeof(radar.detecting_objects_types));
+  in.read((char*)(&radar.track_id), sizeof(radar.track_id));
+  in.read((char*)(&radar.start_x), sizeof(radar.start_x));
+  in.read((char*)(&radar.start_y), sizeof(radar.start_y));
+  in.read((char*)(&radar.radius_x), sizeof(radar.radius_x));
+  in.read((char*)(&radar.radius_y), sizeof(radar.radius_y));
+  in.read((char*)(&radar.height), sizeof(radar.height));
+  in.read((char*)(&radar.error), sizeof(radar.error));
+  
+  radar.azimuth_range.clear();
+  std::size_t len = 0;
+  in.read((char*)(&len), sizeof(len));
+  double temp1, temp2;
+  for (std::size_t i=0; i!=len; ++i) {
+    in.read((char*)(&temp1), sizeof(temp1));
+    in.read((char*)(&temp2), sizeof(temp2));
+    radar.azimuth_range.push_back(std::make_pair(temp1, temp2));
+  }
+  ReadFromFile(in, radar.data);
+}
+
+void WriteToFile(std::ostream& os, OperaOption::Radar& radar) {
+  os.write((char*)(&radar.id), sizeof(radar.id));
+  os.write((char*)(&radar.type), sizeof(radar.type));
+  os.write((char*)(&radar.detecting_objects_types), sizeof(radar.detecting_objects_types));
+  os.write((char*)(&radar.track_id), sizeof(radar.track_id));
+  os.write((char*)(&radar.start_x), sizeof(radar.start_x));
+  os.write((char*)(&radar.start_y), sizeof(radar.start_y));
+  os.write((char*)(&radar.radius_x), sizeof(radar.radius_x));
+  os.write((char*)(&radar.radius_y), sizeof(radar.radius_y));
+  os.write((char*)(&radar.height), sizeof(radar.height));
+  os.write((char*)(&radar.error), sizeof(radar.error));
+  
+  std::size_t len = radar.azimuth_range.size();
+  os.write((char*)(&len), sizeof(len));
+  double temp = 0.0;
+  for (std::size_t i=0; i!=len; ++i) {
+    temp = radar.azimuth_range[i].first;
+    os.write((char*)(&temp), sizeof(temp));
+    temp = radar.azimuth_range[i].second;
+    os.write((char*)(&temp), sizeof(temp));
+  }
+  WriteToFile(os, radar.data);
+  
+}
+
+void ReadFromFile(std::istream& in, OperaOption& op) {
+  op.radars_.clear();
+  op.tracks_.clear();
+
+  in.read((char*)(&op.interval_), sizeof(op.interval_));
+  std::size_t len = 0;
+  in.read((char*)(&len), sizeof(len));
+  for (std::size_t i=0; i!=len; ++i) {
+    OperaOption::Radar radar;
+    ReadFromFile(in, radar);
+    op.radars_.push_back(radar);
+  }
+
+  in.read((char*)(&len), sizeof(len));
+  for (std::size_t i=0; i!=len; ++i) {
+    OperaOption::Track track;
+    ReadFromFile(in, track);
+    op.tracks_.push_back(track);
+  }
+}
+
+void WriteToFile(std::ostream& os, OperaOption& op) {
+  os.write((char*)(&op.interval_), sizeof(op.interval_));
+  std::size_t len = op.radars_.size();
+  os.write((char*)(&len), sizeof(len));
+  for (std::size_t i=0; i!=len; ++i)
+    WriteToFile(os, op.radars_[i]);
+
+  len = op.tracks_.size();
+  os.write((char*)(&len), sizeof(len));
+  for (std::size_t i=0; i!=len; ++i)
+    WriteToFile(os, op.tracks_[i]);
 }
 
 } //namespace tools

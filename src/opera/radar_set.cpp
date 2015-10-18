@@ -1,4 +1,5 @@
 #include "opera/radar_set.h"
+#include "opera_option.h"
 
 #include <iomanip>
 
@@ -44,6 +45,14 @@ std::istream& operator>>(std::istream& in,
     radar_set_state.radar_set_state.push_back(radar_state);
   }
   return in;
+}
+
+void ReadFromFile(std::istream& in, RadarSet2D::RadarSetState& radar_set_state) {
+  transform_from_istream_bin_trans(in, radar_set_state.radar_set_state);
+}
+
+void WriteToFile(std::ostream& os, const RadarSet2D::RadarSetState& radar_set_state) {
+  transform_to_ostream_bin_trans(os, radar_set_state.radar_set_state);
 }
 
 } //namespace tools

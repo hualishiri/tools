@@ -19,6 +19,10 @@ class Opera2D {
     friend std::ostream& operator<<(std::ostream& out,
                                     const OperaState& opera_state);
     friend std::istream& operator>>(std::istream& in, OperaState& opera_state);
+
+    friend void ReadFromFile(std::istream& in, Opera2D::OperaState& opera_state);
+    friend void WriteToFile(std::ostream& os, const Opera2D::OperaState& opera_state);
+
     void ConvertToWgs();
     void ConvertToWgs(void (*)(double*, double*));
 
@@ -89,6 +93,9 @@ class Opera2D {
 std::ostream& operator<<(std::ostream& out,
                          const Opera2D::OperaState& opera_state);
 std::istream& operator>>(std::istream& in, Opera2D::OperaState& opera_state);
+
+void ReadFromFile(std::istream& in, Opera2D::OperaState& opera_state);
+void WriteToFile(std::ostream& os, const Opera2D::OperaState& opera_state);
 
 } //namespace tools
 

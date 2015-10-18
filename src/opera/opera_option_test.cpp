@@ -148,7 +148,18 @@ TEST(OPERAOPTION, OPERATOR_OUT) {
   strstream.clear();
   std::stringstream mystrstream;
   mystrstream << opera_option_temp;
+
+  std::stringstream strstream_bin;
+  ASSERT_TRUE(opera_option == opera_option_temp);
+
+  std::stringstream stream_bin;
+  WriteToFile(stream_bin, opera_option);
+  stream_bin.seekg(0, stream_bin.beg);
+  OperaOption temp_bin;
+  ReadFromFile(stream_bin, temp_bin);
+  ASSERT_TRUE(temp_bin == opera_option);
   //assert(0 == strcmp(strstream.str().c_str(), mystrstream.str().c_str()));
+
 }
 
 TEST(OPERAOPTION, Reserve) {
@@ -242,6 +253,13 @@ TEST(OPERAOPTION, RadarOperator) {
   in.str(out.str());
   in >> temp;
   ASSERT_TRUE(temp == radar);
+
+  std::stringstream stream_bin;
+  WriteToFile(stream_bin, radar);
+  stream_bin.seekg(0, stream_bin.beg);
+  OperaOption::Radar temp_bin;
+  ReadFromFile(stream_bin, temp_bin);
+  ASSERT_TRUE(temp_bin == radar);
 }
 
 TEST(OPERAOPTION, Shape) {
@@ -349,6 +367,13 @@ TEST(OPERAOPTION, TrackOperator) {
   OperaOption::Track temp_track;
   strstream >> temp_track;
   ASSERT_TRUE(track == temp_track);
+
+  std::stringstream stream_bin;
+  WriteToFile(stream_bin, track);
+  stream_bin.seekg(0, stream_bin.beg);
+  OperaOption::Track temp_bin;
+  ReadFromFile(stream_bin, temp_bin);
+  ASSERT_TRUE(temp_bin == track);
 }
 
 } //namespace tools

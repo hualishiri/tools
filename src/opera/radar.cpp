@@ -1,7 +1,9 @@
 #include "opera/radar.h"
-#include "util/tool.h"
 
 #include <iomanip>
+
+#include "util/tool.h"
+#include "opera/opera_option.h"
 
 namespace {
 
@@ -348,6 +350,54 @@ std::istream& operator>>(std::istream& in, Radar2D::RadarState& radar_state) {
   }
 
   return in;
+}
+
+void ReadFromFile(std::istream& in, Radar2D::RadarState& radar_state) {
+  in.read((char*)(&(radar_state.id)), sizeof(radar_state.id)); 
+  in.read((char*)(&radar_state.type), sizeof(radar_state.type)); 
+  in.read((char*)(&radar_state.point), sizeof(radar_state.point)); 
+  in.read((char*)(&radar_state.height), sizeof(radar_state.height)); 
+  transform_from_istream_bin(in, radar_state.ids);
+  transform_from_istream_bin<Point2D>(in, radar_state.targets);
+  transform_from_istream_bin(in, radar_state.targets_height);
+  transform_from_istream_bin(in, radar_state.targets_angle_azimuth);
+  transform_from_istream_bin(in, radar_state.targets_real_distance);
+  transform_from_istream_bin(in, radar_state.targets_real_elevation);
+  transform_from_istream_bin(in, radar_state.targets_real_velocity);
+  transform_from_istream_bin(in, radar_state.targets_real_course);
+  transform_from_istream_bin(in, radar_state.targets_radar);
+  transform_from_istream_bin(in, radar_state.targets_radar_height);
+  transform_from_istream_bin(in, radar_state.targets_detected_azimuth);
+  transform_from_istream_bin(in, radar_state.targets_detected_distance);
+  transform_from_istream_bin(in, radar_state.targets_detected_elevation);
+  transform_from_istream_bin(in, radar_state.targets_detected_velocity);
+  transform_from_istream_bin(in, radar_state.targets_detected_course);
+  transform_from_istream_bin(in, radar_state.targets_filter);
+  transform_from_istream_bin(in, radar_state.targets_error);
+}
+
+void WriteToFile(std::ostream& os, const Radar2D::RadarState& radar_state) {
+  os.write((char*)(&(radar_state.id)), sizeof(radar_state.id)); 
+  os.write((char*)(&radar_state.type), sizeof(radar_state.type)); 
+  os.write((char*)(&radar_state.point), sizeof(radar_state.point)); 
+  os.write((char*)(&radar_state.height), sizeof(radar_state.height)); 
+  transform_to_ostream_bin(os, radar_state.ids);
+  transform_to_ostream_bin(os, radar_state.targets);
+  transform_to_ostream_bin(os, radar_state.targets_height);
+  transform_to_ostream_bin(os, radar_state.targets_angle_azimuth);
+  transform_to_ostream_bin(os, radar_state.targets_real_distance);
+  transform_to_ostream_bin(os, radar_state.targets_real_elevation);
+  transform_to_ostream_bin(os, radar_state.targets_real_velocity);
+  transform_to_ostream_bin(os, radar_state.targets_real_course);
+  transform_to_ostream_bin(os, radar_state.targets_radar);
+  transform_to_ostream_bin(os, radar_state.targets_radar_height);
+  transform_to_ostream_bin(os, radar_state.targets_detected_azimuth);
+  transform_to_ostream_bin(os, radar_state.targets_detected_distance);
+  transform_to_ostream_bin(os, radar_state.targets_detected_elevation);
+  transform_to_ostream_bin(os, radar_state.targets_detected_velocity);
+  transform_to_ostream_bin(os, radar_state.targets_detected_course);
+  transform_to_ostream_bin(os, radar_state.targets_filter);
+  transform_to_ostream_bin(os, radar_state.targets_error);
 }
 
 } //namespace tools

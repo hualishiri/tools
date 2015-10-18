@@ -1,4 +1,5 @@
 #include "opera/track_set.h"
+#include "opera/opera_option.h"
 
 #include <stdlib.h>
 
@@ -173,6 +174,14 @@ std::istream& operator>>(std::istream& in,
   }
   
   return in;
+}
+
+void ReadFromFile(std::istream& in, TrackSet2D::TrackSetState& track_set_state) {
+  transform_from_istream_bin(in, track_set_state.track_set_state);
+}
+
+void WriteToFile(std::ostream& os, const TrackSet2D::TrackSetState& track_set_state) {
+  transform_to_ostream_bin(os, track_set_state.track_set_state);
 }
 
 } //namespace tools

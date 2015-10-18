@@ -17,6 +17,11 @@ class RadarSet2D {
         const RadarSetState& radar_set_state);
     friend std::istream& operator>>(std::istream& in,
         RadarSetState& radar_set_state);
+
+    friend void ReadFromFile(std::istream& in,
+        RadarSet2D::RadarSetState& radar_set_state);
+    friend void WriteToFile(std::ostream& os,
+        const RadarSet2D::RadarSetState& radar_set_state);
   };
   typedef std::vector<Radar2D*> RadarSet;
 
@@ -28,6 +33,9 @@ class RadarSet2D {
  private:
   RadarSet* radar_set_;
 };
+
+void ReadFromFile(std::istream& in, RadarSet2D::RadarSetState& radar_set_state);
+void WriteToFile(std::ostream& os, const RadarSet2D::RadarSetState& radar_set_state);
 
 } //namespace tools
 
