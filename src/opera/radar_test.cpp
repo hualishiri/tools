@@ -1,6 +1,7 @@
 #include "opera/radar.h"
 
 #include <sstream>
+#include <fstream>
 
 #include "util/testharness.h"
 #include "util/tool.h"
@@ -136,7 +137,16 @@ TEST(RADAR2D, RadarStateOperator) {
 
   std::stringstream stream_bin;
   WriteToFile(stream_bin, lhs);
+
+  std::ofstream ofstream_bin("test.dat", std::ios::binary);
+  ofstream_bin << stream_bin.rdbuf();
+  ofstream_bin.close();
+
+  std::ifstream ifstream_bin("test.dat", std::ios::binary);
+  stream_bin.str("");
+  stream_bin << ifstream_bin.rdbuf();
   stream_bin.seekg(0, stream_bin.beg);
+
   Radar2D::RadarState temp_bin;
   ReadFromFile(stream_bin, temp_bin);
   ASSERT_TRUE(temp_bin == lhs);

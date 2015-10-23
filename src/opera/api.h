@@ -3,7 +3,7 @@
 
 namespace tools {
 
-Struct SCSMXPHead{
+struct SCSMXPHead{
 unsigned short  length;//报文长度
 unsigned short  reserve;//备用
 unsigned int    send;//报文源地址
@@ -36,7 +36,7 @@ unsigned int  Reserve9:1; //B13
 unsigned int  Reserve10:1; //B14
 unsigned int  TgtName:1; //B15名称
 unsigned int  TgtAttr:1; //B16 属性
-unsigned int  TgtType:1 //B17 类型
+unsigned int  TgtType:1; //B17 类型
 unsigned int  TgtKind:1; //B18 种类
 unsigned int  TgtNation:1; //B19 国籍
 unsigned int  TgtBoardID:1; //B20 机舷号
@@ -51,9 +51,9 @@ unsigned int  Reserve16:1; //B28
 unsigned int  Reserve17:1; //B29
 unsigned int  Reserve18:1; //B30
 unsigned int  Reserve19:1; //B31
-}
+};
 
-Struct SrcTgtTrk //原始航迹报文
+struct SrcTgtTrk //原始航迹报文
 {
 short  nPlatID;//平台号
 short  nInfSrcID;//信源号
@@ -102,7 +102,7 @@ char  nAttr;//属性
 char  nType;//类型
 short  nKind;//种类
 short  nNation;//国籍
-short  nKind;//种类
+//short  nKind;//种类
 short  nModel;//目标型号
 short nReserve3;//备用
  
@@ -116,7 +116,7 @@ char nReserve10;
 char nReserve11;
  
 long nRadarT; //天线扫描周期 单位：0.001秒
-}
+};
 
 } //namespace tools
 

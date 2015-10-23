@@ -1,8 +1,13 @@
 #include "opera/radar.h"
 
+#include <string.h>
+
 #include <iomanip>
+#include <sstream>
+#include <fstream>
 
 #include "util/tool.h"
+#include "opera/api.h"
 #include "opera/opera_option.h"
 
 namespace {
@@ -374,6 +379,13 @@ void ReadFromFile(std::istream& in, Radar2D::RadarState& radar_state) {
   transform_from_istream_bin(in, radar_state.targets_detected_course);
   transform_from_istream_bin(in, radar_state.targets_filter);
   transform_from_istream_bin(in, radar_state.targets_error);
+
+  SCSMXPHead scsmxp_head;
+  WdTgtTrk wdtgt_trk;
+  memset((char*)(&scsmxp_head), sizeof(scsmxp_head), 0);
+  memset((char*)(&wdtgt_trk), sizeof(wdtgt_trk), 0);
+  in.read((char*)(&scsmxp_head), sizeof(scsmxp_head));
+  in.read((char*)(&wdtgt_trk), sizeof(wdtgt_trk));
 }
 
 void WriteToFile(std::ostream& os, const Radar2D::RadarState& radar_state) {
@@ -398,6 +410,12 @@ void WriteToFile(std::ostream& os, const Radar2D::RadarState& radar_state) {
   transform_to_ostream_bin(os, radar_state.targets_detected_course);
   transform_to_ostream_bin(os, radar_state.targets_filter);
   transform_to_ostream_bin(os, radar_state.targets_error);
+  SCSMXPHead scsmxp_head;
+  WdTgtTrk wdtgt_trk;
+  memset((char*)(&scsmxp_head), sizeof(scsmxp_head), 0);
+  memset((char*)(&wdtgt_trk), sizeof(wdtgt_trk), 0);
+  os.write((char*)(&scsmxp_head), sizeof(scsmxp_head));
+  os.write((char*)(&wdtgt_trk), sizeof(wdtgt_trk));
 }
 
 } //namespace tools
