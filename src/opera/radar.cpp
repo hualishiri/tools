@@ -382,8 +382,8 @@ void ReadFromFile(std::istream& in, Radar2D::RadarState& radar_state) {
 
   SCSMXPHead scsmxp_head;
   WdTgtTrk wdtgt_trk;
-  memset((char*)(&scsmxp_head), sizeof(scsmxp_head), 0);
-  memset((char*)(&wdtgt_trk), sizeof(wdtgt_trk), 0);
+  memset((char*)(&scsmxp_head), sizeof(scsmxp_head), (size_t)0);
+  memset((char*)(&wdtgt_trk), sizeof(wdtgt_trk), (size_t)0);
   in.read((char*)(&scsmxp_head), sizeof(scsmxp_head));
   in.read((char*)(&wdtgt_trk), sizeof(wdtgt_trk));
 }
@@ -412,8 +412,8 @@ void WriteToFile(std::ostream& os, const Radar2D::RadarState& radar_state) {
   transform_to_ostream_bin(os, radar_state.targets_error);
   SCSMXPHead scsmxp_head;
   WdTgtTrk wdtgt_trk;
-  memset((char*)(&scsmxp_head), sizeof(scsmxp_head), 0);
-  memset((char*)(&wdtgt_trk), sizeof(wdtgt_trk), 0);
+  memset((char*)(&scsmxp_head), sizeof(scsmxp_head), (size_t)0);
+  memset((char*)(&wdtgt_trk), sizeof(wdtgt_trk), (size_t)0);
   os.write((char*)(&scsmxp_head), sizeof(scsmxp_head));
   os.write((char*)(&wdtgt_trk), sizeof(wdtgt_trk));
 }
