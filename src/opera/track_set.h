@@ -66,6 +66,7 @@ class TrackSet2D {
         track_set_init_pos_(track_set_option.track_set_position),
         track_set_delay_(track_set_option.track_set_delay),
         interval_(track_set_option.interval) {
+  this->interval_ = track_set_option.interval;
       assert(track_set_option.track_set->size() ==
           track_set_option.track_set_position->size());
   }

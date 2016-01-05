@@ -17,6 +17,7 @@ namespace tools {
 
 SectorRadar::SectorRadar(Radar* radar, RadarNoise* radar_noise)
   : radar_(radar), radar_noise_(radar_noise) {
+  this->radar_noise_ = radar_noise;
   assert(radar_->id > 0);
 
   for (std::size_t i=0; i!=radar->azimuth_range.size(); ++i) {

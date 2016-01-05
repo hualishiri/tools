@@ -24,12 +24,12 @@ TEST(CIRCLE, GetLength) {
         Point2D temp_std(0.0, 0.0);
 
         Point2D temp(0.0, 0.0);
-        line->GetPoint(fabs(k), temp);
+        line->GetPoint(std::abs(k), temp);
 
-        GetPoint(circle, k, fabs(k), temp_std);
+        GetPoint(circle, k, std::abs(k), temp_std);
         ASSERT_TRUE(DoubleEqual(temp.x, temp_std.x));
         ASSERT_TRUE(DoubleEqual(temp.y, temp_std.y));
-        ASSERT_TRUE(DoubleEqual(line->GetLength(), fabs(k) * sqrt(i * i + j * j)));   
+        ASSERT_TRUE(DoubleEqual(line->GetLength(), std::abs(k) * sqrt(i * i + j * j)));   
         delete line;
         line = NULL;
       }

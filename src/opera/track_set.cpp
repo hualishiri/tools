@@ -31,7 +31,7 @@ double TrackSet2D::GetSumLength() const{
 }
 
 const Point2D& TrackSet2D::GetInitPosition(long long id) const{
-    TrackSet::iterator iter_track_set = rep_track_set_->begin();
+    //TrackSet::iterator iter_track_set = rep_track_set_->begin();
     for(std::size_t i = 0; i!= rep_track_set_->size(); ++i){
       if((*rep_track_set_)[i]->id() == id)
         return *(*track_set_init_pos_)[i];
